@@ -99,7 +99,7 @@ public class Selection extends JPanel implements ActionListener, Observable,
 		scrollSpr.setMinimumSize(new Dimension(nbrColonnesAff * lc + 30,
 		        nbrLignesAff * hc));
 		scrollSpr.setMaximumSize(new Dimension(nbrColonnesAff * lc + 30,
-		        nbrLignesAff * hc + 30));
+		        nbrLignesAff * hc + 60));
 		scrollSpr
 		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -113,7 +113,6 @@ public class Selection extends JPanel implements ActionListener, Observable,
 		add(scrollSpr, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
 		        GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(5,
 		                5, 10, 5), 0, 0));
-
 	}
 
 	/**

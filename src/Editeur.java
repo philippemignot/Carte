@@ -141,11 +141,12 @@ public class Editeur
 		// Affichage de la fenêtre
 		fenetre.setContentPane(conteneur);
 		fenetre.setResizable(false);
-		fenetre.pack();
+		
 		fenetre.setMinimumSize(new Dimension(150, 50));
 		fenetre.setLocationRelativeTo(null);
-		fenetre.setVisible(true);
 		menuNew.doClick();
+		fenetre.setVisible(true);
+		fenetre.pack();
 	}
 
 	private void initMenu()
@@ -189,9 +190,7 @@ public class Editeur
 			        {"Nombre de niveaux", "Taille d'un sprite (en px)",
 			                "Nombre de lignes", "Nombre de colonne"};
 			String[] defaults =
-			        {String.valueOf(nbrNiveaux), String.valueOf(nbrPixels),
-			                String.valueOf(nbrLignes),
-			                String.valueOf(nbrColonnes)};
+				getParametersFromProperties(proprietes, parametersKeys);
 			InputDialog dialogNew =
 			        new InputDialog(null, "Nouvelle carte", true, titles,
 			                defaults);
@@ -225,6 +224,17 @@ public class Editeur
 			}
 		}
 	}
+
+	public void cleanCarte()
+    {
+    	// Ajouts des observateurs
+    	selection.rmvObservateur(carte);
+    	options.rmvObservateur(carte);
+    
+    	conteneur.remove(selection);
+    	conteneur.remove(carte);
+    	conteneur.remove(options);
+    }
 
 	/**
 	 * Ecouteur du menu Nouvelle Carte
@@ -267,17 +277,6 @@ public class Editeur
 			}
 			verifPropietes(proprietes);
 		}
-	}
-
-	public void cleanCarte()
-	{
-		// Ajouts des observateurs
-		selection.rmvObservateur(carte);
-		options.rmvObservateur(carte);
-
-		conteneur.remove(selection);
-		conteneur.remove(carte);
-		conteneur.remove(options);
 	}
 
 	public String[] getParametersFromProperties(Properties prop, String[] keys)
