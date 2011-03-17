@@ -2,6 +2,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -27,10 +28,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 public class Editeur
 {
+	// Généraux
+	private Insets insetsScreen;
+	private Dimension maxSize;
 	// Paramètres
 	private Properties proprietes;
 	private String[] parametersKeys = {"nbrNiveaux", "nbrPixels", "nbrLignes",
@@ -52,6 +57,9 @@ public class Editeur
 
 	// Elements
 	private JFrame fenetre; // La fenetre
+	private JScrollPane scrollCarte;
+	private JScrollPane scrollOptions;
+	private JScrollPane scrollSelection;
 	private Selection selection; // Le panneau de sélection des sprites
 	private Carte carte; // La carte contenant les sprites
 	private Options options; // Le panneau contenant les options de la carte
@@ -71,6 +79,15 @@ public class Editeur
 	private UndoAction undoAction; // Action annuler avec ctrl + Z
 	private AleaAction aleaAction; // Action pour switcher le mode aléatoire
 	                               // avec ctrl + R
+
+	/**
+	 * @param args
+	 *        Les paramètres d'entrée de l'application
+	 */
+	public static void main(String[] args)
+	{
+		Editeur editeur = new Editeur(lireConfig("parametres.txt"));
+	}
 
 	/**
 	 * @param nbrNiv
@@ -122,11 +139,7 @@ public class Editeur
 		fenetre = new JFrame();
 		fenetre.setTitle("Éditeur de carte");
 		fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		/*
-		 * Pour plus tard : gestion de la taille de la fenêtre Toolkit t =
-		 * fenetre.getToolkit(); Dimension d = t.getScreenSize();
-		 */
+		
 
 		// Initialisation du menu
 		initMenu();
@@ -137,17 +150,47 @@ public class Editeur
 
 		// Gestion du clavier
 		initActions();
+		
+		
 
 		// Affichage de la fenêtre
 		fenetre.setContentPane(conteneur);
 		fenetre.setResizable(false);
-		
+
 		fenetre.setMinimumSize(new Dimension(150, 50));
-		fenetre.setLocationRelativeTo(null);
 		menuNew.doClick();
-		fenetre.setVisible(true);
+		
 		fenetre.pack();
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		Dimension d = tk.getScreenSize();
+		insetsScreen = tk.getScreenInsets(fenetre.getGraphicsConfiguration());
+		Insets insetsAppli = fenetre.getInsets();
+		int width = (int) (d.getWidth() - (insetsScreen.left + insetsAppli.left) - (insetsScreen.right + insetsAppli.right));
+		int height = (int) (d.getHeight() - (insetsScreen.top + insetsScreen.bottom ));//+ insetsAppli.top +insetsAppli.bottom)); A priori on en a pas besoin... A tester sous linux
+		maxSize = new Dimension(width, height);
+		fenetre.setMaximumSize(maxSize);
+		
+		fenetre.setLocation(insetsScreen.left, insetsScreen.top);
+		fenetre.setVisible(true);
+		setMaxSizeAgain();
+		System.out.println("hauteur et largeur max calculées : " + width + "  " + height + " + insets : " +
+				"" +insetsAppli.top + " " +insetsAppli.bottom);
+		System.out.println("taille fenetre : " + fenetre.getSize().width + "  " + fenetre.getSize().height + " + insets : " +
+				"" + fenetre.getInsets().top + " " + fenetre.getInsets().bottom);
 	}
+
+	private void setMaxSizeAgain()
+    {
+		int width = fenetre.getSize().width;
+		int height = fenetre.getSize().height;
+	    if( width > maxSize.width)
+	    	width = maxSize.width;
+	    if(height > maxSize.height)
+	    	height = maxSize.height;
+	    fenetre.setSize(width, height);
+	    fenetre.validate();
+	    fenetre.repaint();
+    }
 
 	private void initMenu()
 	{
@@ -190,7 +233,7 @@ public class Editeur
 			        {"Nombre de niveaux", "Taille d'un sprite (en px)",
 			                "Nombre de lignes", "Nombre de colonne"};
 			String[] defaults =
-				getParametersFromProperties(proprietes, parametersKeys);
+			        getParametersFromProperties(proprietes, parametersKeys);
 			InputDialog dialogNew =
 			        new InputDialog(null, "Nouvelle carte", true, titles,
 			                defaults);
@@ -224,17 +267,6 @@ public class Editeur
 			}
 		}
 	}
-
-	public void cleanCarte()
-    {
-    	// Ajouts des observateurs
-    	selection.rmvObservateur(carte);
-    	options.rmvObservateur(carte);
-    
-    	conteneur.remove(selection);
-    	conteneur.remove(carte);
-    	conteneur.remove(options);
-    }
 
 	/**
 	 * Ecouteur du menu Nouvelle Carte
@@ -279,18 +311,6 @@ public class Editeur
 		}
 	}
 
-	public String[] getParametersFromProperties(Properties prop, String[] keys)
-	{
-		String[] results = new String[keys.length];
-
-		for (int i = 0; i < keys.length; i++)
-		{
-			results[i] = prop.getProperty(keys[i], "");
-		}
-
-		return results;
-	}
-
 	public void createCarte()
 	{
 		// Création de la carte :
@@ -311,30 +331,57 @@ public class Editeur
 		selection.addObservateur(carte);
 		options.addObservateur(carte);
 
-		conteneur.add(selection, new GridBagConstraints(0, 0, 2, 1, 1.0, 0.0,
+		// Ajoute une scroll bar
+		scrollCarte = new JScrollPane(carte);
+		scrollOptions = new JScrollPane(options);
+		scrollSelection = new JScrollPane(selection);
+
+		scrollCarte
+		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollCarte
+		        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+		scrollOptions
+		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollOptions
+		        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollSelection
+		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollSelection
+		        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+		conteneur.add(scrollSelection, new GridBagConstraints(0, 0, 2, 1, 1.0, 0.30,
 		        GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(5,
 		                5, 5, 5), 0, 0));
-		conteneur.add(carte, new GridBagConstraints(0, 1, 1,
-		        GridBagConstraints.REMAINDER, 1.0, 1.0,
+		conteneur.add(scrollCarte, new GridBagConstraints(0, 1, 1,
+		        GridBagConstraints.REMAINDER, 0.70, 0.66,
 		        GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
 		                5, 5, 5, 5), 0, 0));
-		conteneur.add(options, new GridBagConstraints(1, 1,
+		conteneur.add(scrollOptions, new GridBagConstraints(1, 1,
 		        GridBagConstraints.REMAINDER, GridBagConstraints.REMAINDER,
-		        1.0, 1.0, GridBagConstraints.EAST, GridBagConstraints.VERTICAL,
+		        0.15, 0.66, GridBagConstraints.EAST, GridBagConstraints.BOTH,
 		        new Insets(5, 5, 5, 5), 0, 0));
 
-		fenetre.repaint();
+		
+		
 		fenetre.pack();
-		fenetre.setLocationRelativeTo(null);
+		//fenetre.validate();
+		if(insetsScreen != null)
+			fenetre.setLocation(insetsScreen.left, insetsScreen.top);
+		//else()
+		
+		fenetre.repaint();
 	}
 
-	/**
-	 * @param args
-	 *        Les paramètres d'entrée de l'application
-	 */
-	public static void main(String[] args)
+	public void cleanCarte()
 	{
-		Editeur editeur = new Editeur(lireConfig("parametres.txt"));
+		// Ajouts des observateurs
+		selection.rmvObservateur(carte);
+		options.rmvObservateur(carte);
+
+		conteneur.remove(scrollSelection);
+		conteneur.remove(scrollCarte);
+		conteneur.remove(scrollOptions);
 	}
 
 	/**
@@ -357,7 +404,8 @@ public class Editeur
 			                new FileOutputStream(config)));
 			try
 			{
-				prop.store(dos, null); // Le second argument permet d'enregistrer des commentaires
+				prop.store(dos, null); // Le second argument permet
+				                       // d'enregistrer des commentaires
 			}
 			catch (IOException e)
 			{
@@ -424,6 +472,18 @@ public class Editeur
 		}
 
 		return prop;
+	}
+
+	public String[] getParametersFromProperties(Properties prop, String[] keys)
+	{
+		String[] results = new String[keys.length];
+
+		for (int i = 0; i < keys.length; i++)
+		{
+			results[i] = prop.getProperty(keys[i], "");
+		}
+
+		return results;
 	}
 
 	public void verifPropietes(Properties prop)

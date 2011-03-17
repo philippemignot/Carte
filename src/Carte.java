@@ -95,8 +95,8 @@ public class Carte extends JPanel implements Observateur, MouseListener
 		this.add(pCases, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
 						20, 20, 20, 20), 0, 0));
-		//this.validate();
-		//this.repaint();
+
+		repaint();
 	}
 
 	@Override

@@ -1,3 +1,4 @@
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -68,13 +69,22 @@ public class Options extends JPanel implements Observable
 				updateObservateur();
 			}
 		});
+		this.setMinimumSize(new Dimension((230 + nbrNiv*30), 250));
+		this.setLayout(new GridBagLayout());
+		setNiveauOptions();
+		setAleaOptions();
 
-		JPanel pNiveaux = new JPanel();
-		nivAff = new JCheckBox[nbrNiv];
-		JPanel pNivSelect = new JPanel();
-		nivChoix = new JRadioButton[nbrNiv];
-		ButtonGroup bg = new ButtonGroup();
+		
+		this.add(titre, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0,
+		        GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(
+		                5, 10, 25, 10), 0, 0));
+		this.add(quadrillage, new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0,
+		        GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
+		                5, 10, 5, 10), 0, 0));
+	}
 
+	private void setAleaOptions()
+	{
 		JPanel pAlea = new JPanel();
 		aleatoire = new JCheckBox("Activer", true);
 		aleatoire.addActionListener(new ActionListener()
@@ -103,23 +113,38 @@ public class Options extends JPanel implements Observable
 				updateObservateur();
 			}
 		});
-
-		this.setLayout(new GridBagLayout());
-		this.add(titre, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0,
-		        GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(
-		                5, 10, 25, 10), 0, 0));
-		this.add(quadrillage, new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0,
+		this.add(pAlea, new GridBagConstraints(0, 4, 2, 1, 0.0, 0.0,
 		        GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
 		                5, 10, 5, 10), 0, 0));
+
+		Border b = BorderFactory.createRaisedBevelBorder();
+		pAlea.setBorder(new TitledBorder(b, "Aléatoire"));
+		pAlea.setLayout(new GridBagLayout());
+		pAlea.add(aleatoire, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+		        GridBagConstraints.WEST, GridBagConstraints.VERTICAL,
+		        new Insets(5, 10, 5, 10), 0, 0));
+		pAlea.add(slideAlea, new GridBagConstraints(0, 2, 2, 1, 0.0, 0.0,
+		        GridBagConstraints.EAST, GridBagConstraints.VERTICAL,
+		        new Insets(5, 10, 5, 10), 0, 0));
+		pAlea.add(textAlea, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+		        GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+		        new Insets(5, 10, 5, 10), 0, 0));
+	}
+
+	private void setNiveauOptions()
+	{
+		JPanel pNiveaux = new JPanel();
+		nivAff = new JCheckBox[nbrNiv];
+		JPanel pNivSelect = new JPanel();
+		nivChoix = new JRadioButton[nbrNiv];
+		ButtonGroup bg = new ButtonGroup();
+
 		this.add(pNiveaux, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
 		        GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
 		        new Insets(5, 10, 5, 10), 0, 0));
 		this.add(pNivSelect, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
 		        GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
 		        new Insets(5, 10, 5, 10), 0, 0));
-		this.add(pAlea, new GridBagConstraints(0, 4, 2, 1, 0.0, 0.0,
-		        GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
-		                5, 10, 5, 10), 0, 0));
 
 		Border b = BorderFactory.createRaisedBevelBorder();
 		this.setBorder(b);
@@ -170,17 +195,6 @@ public class Options extends JPanel implements Observable
 				}
 			});
 		}
-		pAlea.setBorder(new TitledBorder(b, "Aléatoire"));
-		pAlea.setLayout(new GridBagLayout());
-		pAlea.add(aleatoire, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-		        GridBagConstraints.WEST, GridBagConstraints.VERTICAL,
-		        new Insets(5, 10, 5, 10), 0, 0));
-		pAlea.add(slideAlea, new GridBagConstraints(0, 2, 2, 1, 0.0, 0.0,
-		        GridBagConstraints.EAST, GridBagConstraints.VERTICAL,
-		        new Insets(5, 10, 5, 10), 0, 0));
-		pAlea.add(textAlea, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
-		        GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
-		        new Insets(5, 10, 5, 10), 0, 0));
 	}
 
 	// fonction du DP observer
