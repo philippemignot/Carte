@@ -69,12 +69,11 @@ public class Options extends JPanel implements Observable
 				updateObservateur();
 			}
 		});
-		this.setMinimumSize(new Dimension((230 + nbrNiv*30), 250));
+		this.setMinimumSize(new Dimension((230 + nbrNiv * 30), 250));
 		this.setLayout(new GridBagLayout());
 		setNiveauOptions();
 		setAleaOptions();
 
-		
 		this.add(titre, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0,
 		        GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(
 		                5, 10, 25, 10), 0, 0));

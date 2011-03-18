@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -29,6 +30,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 
 public class Editeur
@@ -36,6 +38,7 @@ public class Editeur
 	// Généraux
 	private Insets insetsScreen;
 	private Dimension maxSize;
+	private boolean isFirstDialog = true;
 	// Paramètres
 	private Properties proprietes;
 	private String[] parametersKeys = {"nbrNiveaux", "nbrPixels", "nbrLignes",
@@ -57,6 +60,8 @@ public class Editeur
 
 	// Elements
 	private JFrame fenetre; // La fenetre
+	private JSplitPane jspV;
+	private JSplitPane jspH;
 	private JScrollPane scrollCarte;
 	private JScrollPane scrollOptions;
 	private JScrollPane scrollSelection;
@@ -90,14 +95,8 @@ public class Editeur
 	}
 
 	/**
-	 * @param nbrNiv
-	 *        Nombre de niveaux gérés
-	 * @param nbrPix
-	 *        Largeur d'une case en pixels
-	 * @param nbrLi
-	 *        Hauteur de la carte en nombre de cases
-	 * @param nbrCol
-	 *        Largeur de la carte en nombre de cases
+	 * @param prop
+	 * 			Les propriétés
 	 */
 	public Editeur(Properties prop)
 	{
@@ -139,7 +138,6 @@ public class Editeur
 		fenetre = new JFrame();
 		fenetre.setTitle("Éditeur de carte");
 		fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 
 		// Initialisation du menu
 		initMenu();
@@ -150,51 +148,61 @@ public class Editeur
 
 		// Gestion du clavier
 		initActions();
-		
-		
 
 		// Affichage de la fenêtre
 		fenetre.setContentPane(conteneur);
-		fenetre.setResizable(false);
+		fenetre.setResizable(true);
 
 		fenetre.setMinimumSize(new Dimension(150, 50));
 		menuNew.doClick();
-		
+
 		fenetre.pack();
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension d = tk.getScreenSize();
 		insetsScreen = tk.getScreenInsets(fenetre.getGraphicsConfiguration());
 		Insets insetsAppli = fenetre.getInsets();
-		int width = (int) (d.getWidth() - (insetsScreen.left + insetsAppli.left) - (insetsScreen.right + insetsAppli.right));
-		int height = (int) (d.getHeight() - (insetsScreen.top + insetsScreen.bottom ));//+ insetsAppli.top +insetsAppli.bottom)); A priori on en a pas besoin... A tester sous linux
+		int width =
+		        (int) (d.getWidth() - insetsScreen.left - insetsScreen.right);
+		int height =
+		        (int) (d.getHeight() - (insetsScreen.top + insetsScreen.bottom));
 		maxSize = new Dimension(width, height);
 		fenetre.setMaximumSize(maxSize);
-		
+
 		fenetre.setLocation(insetsScreen.left, insetsScreen.top);
 		fenetre.setVisible(true);
-		setMaxSizeAgain();
-		System.out.println("hauteur et largeur max calculées : " + width + "  " + height + " + insets : " +
-				"" +insetsAppli.top + " " +insetsAppli.bottom);
-		System.out.println("taille fenetre : " + fenetre.getSize().width + "  " + fenetre.getSize().height + " + insets : " +
-				"" + fenetre.getInsets().top + " " + fenetre.getInsets().bottom);
+		setSizeAgain();
+		System.out.println("hauteur et largeur max calculées : " + width + "  "
+		        + height + " + insets : " + "" + insetsAppli.top + " "
+		        + insetsAppli.bottom);
+		
 	}
 
-	private void setMaxSizeAgain()
-    {
-		int width = fenetre.getSize().width;
-		int height = fenetre.getSize().height;
-	    if( width > maxSize.width)
-	    	width = maxSize.width;
-	    if(height > maxSize.height)
-	    	height = maxSize.height;
-	    fenetre.setSize(width, height);
-	    fenetre.validate();
-	    fenetre.repaint();
-    }
+	private void setSizeAgain()
+	{
+		int widthFen = fenetre.getSize().width;
+		int heightFen = fenetre.getSize().height;
+		if (widthFen > maxSize.width)
+			widthFen = maxSize.width;
+		if (heightFen > maxSize.height)
+			heightFen = maxSize.height;
+		fenetre.setSize(widthFen, heightFen);
+		
+//		if (scrollCarte.getSize().width > scrollCarte.getMaximumSize().width)
+//			scrollCarte.setSize(new Dimension(scrollCarte.getMinimumSize().width, scrollCarte.getSize().height));
+		fenetre.validate();
+		fenetre.repaint();
+		System.out.println("taille fenetre : " + fenetre.getSize().width + "  "
+		        + fenetre.getSize().height + " + insets : " + ""
+		        + fenetre.getInsets().top + " " + fenetre.getInsets().bottom);
+		System.out.println("taille options : " + scrollOptions.getSize().width + "  "
+		        + scrollOptions.getSize().height + " min " + scrollOptions.getMinimumSize().width + "  "
+		        + scrollOptions.getMinimumSize().height);
+		
+	}
 
 	private void initMenu()
 	{
-		menuNew.addActionListener(new NewCarteListener());
+		menuNew.addActionListener(new NewCarteListener(isFirstDialog));
 		menuNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
 		        KeyEvent.CTRL_MASK));
 		menuNew.setMnemonic('N');
@@ -227,6 +235,18 @@ public class Editeur
 	 */
 	public class NewCarteListener implements ActionListener
 	{
+		private boolean isFirstDialog = false;
+		
+		public NewCarteListener()
+		{
+			this.isFirstDialog = false;
+		}
+		
+		public NewCarteListener(boolean firstDialog)
+		{
+			this.isFirstDialog = firstDialog;
+		}
+		
 		public void actionPerformed(ActionEvent arg0)
 		{
 			String[] titles =
@@ -249,6 +269,11 @@ public class Editeur
 					cancelled = false;
 			}
 
+			if(cancelled && isFirstDialog)
+			{
+				System.exit(0);
+			}
+			
 			if (!cancelled)
 			{
 				// Si une carte a déjà été créé
@@ -265,6 +290,8 @@ public class Editeur
 
 				createCarte();
 			}
+			
+			
 		}
 	}
 
@@ -345,32 +372,53 @@ public class Editeur
 		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollOptions
 		        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		
 		scrollSelection
 		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollSelection
 		        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
-		conteneur.add(scrollSelection, new GridBagConstraints(0, 0, 2, 1, 1.0, 0.30,
-		        GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(5,
-		                5, 5, 5), 0, 0));
-		conteneur.add(scrollCarte, new GridBagConstraints(0, 1, 1,
-		        GridBagConstraints.REMAINDER, 0.70, 0.66,
-		        GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
-		                5, 5, 5, 5), 0, 0));
-		conteneur.add(scrollOptions, new GridBagConstraints(1, 1,
-		        GridBagConstraints.REMAINDER, GridBagConstraints.REMAINDER,
-		        0.15, 0.66, GridBagConstraints.EAST, GridBagConstraints.BOTH,
-		        new Insets(5, 5, 5, 5), 0, 0));
+		jspV = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollCarte, scrollOptions);
+		jspV.setResizeWeight(0.85);
+		jspV.setOneTouchExpandable(true);
+		
+		jspH = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollSelection, jspV);
+		jspH.setResizeWeight(0.30);
+		jspH.setOneTouchExpandable(true);
+		System.out.println("Split pane créés !");
+		
+		
+		//jspH.setDividerLocation(30);
+		
+		conteneur.setLayout(new BorderLayout());
+		conteneur.add(jspH);
+//		conteneur.add(scrollSelection, new GridBagConstraints(0, 0, 2, 1, 1.0,
+//		        0.30, GridBagConstraints.WEST, GridBagConstraints.BOTH,
+//		        new Insets(5, 5, 5, 5), 0, 0));
+//		conteneur.add(scrollCarte, new GridBagConstraints(0, 1, 1,
+//		        GridBagConstraints.REMAINDER, 0.95, 0.70,
+//		        GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
+//		                5, 5, 5, 5), 0, 0));
+//		conteneur.add(scrollOptions, new GridBagConstraints(1, 1,
+//		        GridBagConstraints.REMAINDER, GridBagConstraints.REMAINDER,
+//		        0.05, 0.70, GridBagConstraints.EAST, GridBagConstraints.BOTH,
+//		        new Insets(5, 5, 5, 5), 0, 0));
 
-		
-		
 		fenetre.pack();
-		//fenetre.validate();
-		if(insetsScreen != null)
+		// fenetre.validate();
+		if (insetsScreen != null)
 			fenetre.setLocation(insetsScreen.left, insetsScreen.top);
-		//else()
-		
+		// else()
+
+		if(!isFirstDialog)
+		{
+			setSizeAgain();
+			System.out.println("Taille recalculée");
+		}
+			
 		fenetre.repaint();
+		if(isFirstDialog)
+			isFirstDialog = false;
 	}
 
 	public void cleanCarte()
@@ -379,9 +427,7 @@ public class Editeur
 		selection.rmvObservateur(carte);
 		options.rmvObservateur(carte);
 
-		conteneur.remove(scrollSelection);
-		conteneur.remove(scrollCarte);
-		conteneur.remove(scrollOptions);
+		conteneur.remove(jspH);
 	}
 
 	/**

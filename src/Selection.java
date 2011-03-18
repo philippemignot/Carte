@@ -34,14 +34,14 @@ public class Selection extends JPanel implements ActionListener, Observable,
 	private int nbrColonnesAff;
 	private int nbrLignesAff = 3; // Nombre de lignes de sprites affichées
 	private ArrayList<Case> caseSelected = new ArrayList<Case>(); // Case
-																  // actuellement
-																  // sélectionnée,
-																  // peut être
-																  // vide
+	                                                              // actuellement
+	                                                              // sélectionnée,
+	                                                              // peut être
+	                                                              // vide
 	private int[] indiceShiftSelection = new int[2]; // coordonnées d'une
-													 // sélection en i,j
+	                                                 // sélection en i,j
 	private boolean premierShiftOk = false; // indique si le prochain clic avec
-											// shift cloturera une sélection
+	                                        // shift cloturera une sélection
 
 	// Liste des observateurs
 	private ArrayList<Observateur> listeObservateur =
@@ -74,7 +74,7 @@ public class Selection extends JPanel implements ActionListener, Observable,
 		hauteurCase = hc;
 		nbrColonnes = nbC;
 		nbrColonnesAff = nbrColonnes + 8; // Le 8 correspond à  peu près à  la
-										  // place prise par le panneau option
+		                                  // place prise par le panneau option
 
 		// Bordure du panneau Selection
 		this.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -104,8 +104,12 @@ public class Selection extends JPanel implements ActionListener, Observable,
 		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		scrollSpr.setBorder(b);
-		int widthMin = scrollSpr.getMinimumSize().width + scrollSpr.getMinimumSize().width + 30;
-		int heightMin = scrollSpr.getMinimumSize().height + scrollSpr.getMinimumSize().height + 30;
+		int widthMin =
+		        scrollSpr.getMinimumSize().width
+		                + scrollSpr.getMinimumSize().width + 30;
+		int heightMin =
+		        scrollSpr.getMinimumSize().height
+		                + scrollSpr.getMinimumSize().height + 30;
 		this.setMinimumSize(new Dimension(widthMin, heightMin));
 
 		// Layout
@@ -148,7 +152,8 @@ public class Selection extends JPanel implements ActionListener, Observable,
 			if (nbrImages % (nbrColonnesAff) != 0)
 				nbrLignesReel++;
 		}
-		System.out.println("Nombre de lignes : " + nbrLignesReel + " et nombre de colonnes " + nbrColonnesAff);
+		System.out.println("Nombre de lignes : " + nbrLignesReel
+		        + " et nombre de colonnes " + nbrColonnesAff);
 		layoutSprites.setRows(nbrLignesReel);
 
 		// on met toutes les images contenues dans le dossier
@@ -182,7 +187,8 @@ public class Selection extends JPanel implements ActionListener, Observable,
 			nbrImagesFactices +=
 			        (nbrLignesAff - nbrLignesReel) * nbrColonnesAff;
 
-		System.out.println(">> Nombre de sprites : " + nbrImages + " + panel factices " + nbrImagesFactices);
+		System.out.println(">> Nombre de sprites : " + nbrImages
+		        + " + panel factices " + nbrImagesFactices);
 		for (int i = 0; i < nbrImagesFactices; i++)
 		{
 			sprites.add(new JPanel());
