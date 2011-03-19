@@ -193,11 +193,7 @@ public class Editeur
 		fenetre.repaint();
 		System.out.println("taille fenetre : " + fenetre.getSize().width + "  "
 		        + fenetre.getSize().height + " + insets : " + ""
-		        + fenetre.getInsets().top + " " + fenetre.getInsets().bottom);
-		System.out.println("taille options : " + scrollOptions.getSize().width + "  "
-		        + scrollOptions.getSize().height + " min " + scrollOptions.getMinimumSize().width + "  "
-		        + scrollOptions.getMinimumSize().height);
-		
+		        + fenetre.getInsets().top + " " + fenetre.getInsets().bottom);		
 	}
 
 	private void initMenu()
@@ -385,35 +381,17 @@ public class Editeur
 		jspH = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollSelection, jspV);
 		jspH.setResizeWeight(0.30);
 		jspH.setOneTouchExpandable(true);
-		System.out.println("Split pane créés !");
-		
-		
-		//jspH.setDividerLocation(30);
 		
 		conteneur.setLayout(new BorderLayout());
 		conteneur.add(jspH);
-//		conteneur.add(scrollSelection, new GridBagConstraints(0, 0, 2, 1, 1.0,
-//		        0.30, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-//		        new Insets(5, 5, 5, 5), 0, 0));
-//		conteneur.add(scrollCarte, new GridBagConstraints(0, 1, 1,
-//		        GridBagConstraints.REMAINDER, 0.95, 0.70,
-//		        GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
-//		                5, 5, 5, 5), 0, 0));
-//		conteneur.add(scrollOptions, new GridBagConstraints(1, 1,
-//		        GridBagConstraints.REMAINDER, GridBagConstraints.REMAINDER,
-//		        0.05, 0.70, GridBagConstraints.EAST, GridBagConstraints.BOTH,
-//		        new Insets(5, 5, 5, 5), 0, 0));
 
 		fenetre.pack();
-		// fenetre.validate();
 		if (insetsScreen != null)
 			fenetre.setLocation(insetsScreen.left, insetsScreen.top);
-		// else()
 
 		if(!isFirstDialog)
 		{
 			setSizeAgain();
-			System.out.println("Taille recalculée");
 		}
 			
 		fenetre.repaint();

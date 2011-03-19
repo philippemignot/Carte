@@ -152,8 +152,6 @@ public class Selection extends JPanel implements ActionListener, Observable,
 			if (nbrImages % (nbrColonnesAff) != 0)
 				nbrLignesReel++;
 		}
-		System.out.println("Nombre de lignes : " + nbrLignesReel
-		        + " et nombre de colonnes " + nbrColonnesAff);
 		layoutSprites.setRows(nbrLignesReel);
 
 		// on met toutes les images contenues dans le dossier
@@ -187,11 +185,20 @@ public class Selection extends JPanel implements ActionListener, Observable,
 			nbrImagesFactices +=
 			        (nbrLignesAff - nbrLignesReel) * nbrColonnesAff;
 
-		System.out.println(">> Nombre de sprites : " + nbrImages
-		        + " + panel factices " + nbrImagesFactices);
 		for (int i = 0; i < nbrImagesFactices; i++)
 		{
-			sprites.add(new JPanel());
+			
+			if(i==0 && nbrImages == 0)
+			{
+				JPanel sizedPanel = new JPanel();
+				sizedPanel.setMinimumSize(new Dimension(largeurCase, hauteurCase));
+				sizedPanel.setPreferredSize(new Dimension(largeurCase, hauteurCase));
+				sprites.add(sizedPanel);
+			}
+			else
+			{
+				sprites.add(new JPanel());
+			}
 		}
 		repaint();
 	}
