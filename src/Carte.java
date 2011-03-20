@@ -13,13 +13,14 @@ import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class Carte extends JPanel implements Observateur, MouseListener
+public class Carte extends JPanel implements Observateur, MouseListener, Serializable
 {
 	private int largeur; // Nombre de cases en largeur
 	private int hauteur; // Nombre de cases en hauteur
@@ -29,7 +30,7 @@ public class Carte extends JPanel implements Observateur, MouseListener
 	private int nivSelected; // Niveaux sélectionné
 	private JPanel pCases; // Panel contenant les cases
 
-	private ArrayList<Image> image; // Image du curseur
+	private ArrayList<Sprite> spritesCurseur; // Image du curseur
 	private CaseNiveaux[][] cases; // La carte est constituée de ces cases
 	private CaseNiveaux[][] casesOld; // Copie de la carte visible pour un
 									  // éventuel retour en arrière
@@ -100,7 +101,6 @@ public class Carte extends JPanel implements Observateur, MouseListener
 				casesOld[i][j] =
 				        new CaseNiveaux(largeurCase, hauteurCase, Color.blue,
 				                Color.black, nbrNiveaux);
-				casesOld[i][j].getImage(nbrNiv);
 			}
 		}
 		copieCases(cases, casesOld);
@@ -128,25 +128,26 @@ public class Carte extends JPanel implements Observateur, MouseListener
 	}
 
 	/**
-	 * @param x
+	 * @param j
 	 *        Abscisse de la case voulue
-	 * @param y
+	 * @param i
 	 *        Ordonnée de la case voulue
 	 * @return La case voulue
 	 */
-	public CaseNiveaux getCase(int x, int y)
+	public CaseNiveaux getCase(int j, int i)
 	{
-		if (x >= 0 && x < largeur && y >= 0 && y < hauteur)
+		if (j >= 0 && j < largeur && i >= 0 && i < hauteur)
 		{
-			return cases[y][x];
+			return cases[i][j];
 		}
 		else
 		{
-			System.err.println("Erreur dans Carte.getCase(int x, int y) : "
+			System.err.println("Erreur dans Carte.getCase(int j, int i) : "
 			        + "index hors des limites.");
 			return null;
 		}
 	}
+	
 
 	/**
 	 * Remet le curseur par défaut : l'utilisateur est à nouveau libre de
@@ -154,18 +155,18 @@ public class Carte extends JPanel implements Observateur, MouseListener
 	 */
 	public void deselectionneCurseur()
 	{
-		this.image.clear();
+		this.spritesCurseur.clear();
 		this.setCursor(Cursor.getDefaultCursor());
 	}
 
 	@Override
-	public void update(ArrayList<Image> img)
+	public void update(ArrayList<Sprite> sprites)
 	{
-		if (!img.isEmpty())
+		if (!sprites.isEmpty())
 		{
-			this.image = img;
+			this.spritesCurseur = sprites;
 			Cursor monCurseur =
-			        tk.createCustomCursor(image.get(0), new Point(15, 15),
+			        tk.createCustomCursor(spritesCurseur.get(0).getImage(), new Point(15, 15),
 			                "sprite");
 			this.setCursor(monCurseur);
 		}
@@ -320,14 +321,19 @@ public class Carte extends JPanel implements Observateur, MouseListener
 							if (arg0.getButton() == MouseEvent.BUTTON1
 							        && this.getCursor() != Cursor
 							                .getDefaultCursor()
-							        && !image.isEmpty())
+							        && !spritesCurseur.isEmpty())
 							{
 								if (!aleatoire)
-									selection.get(i).setImage(image.get(0),
+								{
+									selection.get(i).setSprite(spritesCurseur.get(0),
 									        nivSelected);
+								}
 								else
-									selection.get(i).setImage(getImageAlea(),
+								{
+									selection.get(i).setSprite(getSpriteAlea(),
 									        nivSelected);
+								}
+
 							}
 							// click droit : on efface
 							else if (arg0.getButton() == MouseEvent.BUTTON3)
@@ -343,14 +349,18 @@ public class Carte extends JPanel implements Observateur, MouseListener
 						// click gauche : on place
 						if (arg0.getButton() == MouseEvent.BUTTON1
 						        && this.getCursor() != Cursor
-						                .getDefaultCursor() && !image.isEmpty())
+						                .getDefaultCursor() && !spritesCurseur.isEmpty())
 						{
 							if (!aleatoire)
+							{
 								cases[coordSelection[0]][coordSelection[1]]
-								        .setImage(image.get(0), nivSelected);
+													        .setSprite(spritesCurseur.get(0), nivSelected);
+							}
 							else
+							{
 								cases[coordSelection[0]][coordSelection[1]]
-								        .setImage(getImageAlea(), nivSelected);
+													        .setSprite(getSpriteAlea(), nivSelected);
+							}
 						}
 						// click droit : on efface
 						else if (arg0.getButton() == MouseEvent.BUTTON3)
@@ -442,18 +452,13 @@ public class Carte extends JPanel implements Observateur, MouseListener
 			{
 				for (int k = 1; k <= nbrNiveaux; k++)
 				{
-					if (null != casesACopier[i][j].getImage(k))
-					{
-						casesOuCopier[i][j].setImage(
-						        casesACopier[i][j].getImage(k), k);
-					}
-					else
-					{
-						casesOuCopier[i][j].clear(k);
-					}
+					casesOuCopier[i][j].setSprite(
+					        casesACopier[i][j].getSprite(k), k);
 				}
 			}
 		}
+		
+		revalidate();
 	}
 
 	/**
@@ -530,9 +535,9 @@ public class Carte extends JPanel implements Observateur, MouseListener
 	 * 
 	 * @return img L'image sélectionnée aléatoirement
 	 */
-	public Image getImageAlea()
+	public Sprite getSpriteAlea()
 	{
-		Image img = null;
+		Sprite sprite = null;
 
 		// On détermine si on affiche une image ou non en fonction du
 		// pourcentage de remplissage
@@ -540,11 +545,11 @@ public class Carte extends JPanel implements Observateur, MouseListener
 		boolean remplir = (numRempl < perctAlea) ? true : false;
 
 		// On choisit une image au hasard si on peut
-		int num = (int) (Math.random() * image.size());
-		if (!image.isEmpty() && remplir)
-			img = image.get(num);
+		int num = (int) (Math.random() * spritesCurseur.size());
+		if (!spritesCurseur.isEmpty() && remplir)
+			sprite = spritesCurseur.get(num);
 
-		return img;
+		return sprite;
 	}
 
 	/**
@@ -628,5 +633,11 @@ public class Carte extends JPanel implements Observateur, MouseListener
 			selection.get(i).setHovered(false);
 		}
 		selection.remove(caseNiv);
+	}
+	
+	public CaseNiveaux[][] getCases()
+	{
+		cases[0][0].getSprite(1);
+		return cases;
 	}
 }

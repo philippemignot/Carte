@@ -3,13 +3,14 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.Serializable;
 
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
 
-public abstract class AbstractCase extends JButton implements MouseListener
+public abstract class AbstractCase extends JButton implements MouseListener, Serializable
 {
 
 	protected int 		largeur; // Nombres de pixels de la case en largeur

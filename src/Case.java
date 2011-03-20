@@ -10,7 +10,7 @@ import javax.swing.JButton;
 @SuppressWarnings("serial")
 public class Case extends AbstractCase 
 {
-	private Image image; // Image contenue dans la case, null s'il n'y a pas d'image
+	private Sprite sprite; // Image contenue dans la case, null s'il n'y a pas d'image
 
 	/**
 	 * @param l
@@ -21,6 +21,7 @@ public class Case extends AbstractCase
 	public Case(int l, int h) 
 	{
 		super(l,h);
+		sprite = new Sprite(l,h);
 	}
 
 	/**
@@ -36,6 +37,7 @@ public class Case extends AbstractCase
 	public Case(int l, int h, Color couleurB, Color couleurF) 
 	{
 		super(l, h, couleurB, couleurF);
+		sprite = new Sprite(l,h);
 	}
 
 	@Override
@@ -48,8 +50,8 @@ public class Case extends AbstractCase
 		}
 
 		// Dessine l'image si elle a été définie
-		if (image != null) {
-			g.drawImage(image, 0, 0, largeur, hauteur, this);
+		if (sprite != null) {
+			g.drawImage(sprite.getImage(), 0, 0, largeur, hauteur, this);
 		}
 
 		// Dessine une bordure
@@ -70,16 +72,16 @@ public class Case extends AbstractCase
 	 */
 	public void clear() 
 	{
-		image = null;
+		sprite = null;
 	}
 
 	/**
 	 * @param i
 	 *            Image qui doit être affichée
 	 */
-	public void setImage(Image i) 
+	public void setImage(Image i, String codeImg) 
 	{
-		image = i;
+		sprite.setImage(i, codeImg);
 	}
 
 	/**
@@ -87,6 +89,16 @@ public class Case extends AbstractCase
 	 */
 	public Image getImage() 
 	{
-		return image;
+		return sprite.getImage();
+	}
+	
+	public String getCodeImage()
+	{
+		return sprite.getCode();
+	}
+	
+	public Sprite getSprite()
+	{
+		return sprite;
 	}
 }

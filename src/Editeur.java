@@ -1,13 +1,16 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -18,9 +21,14 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Properties;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -29,6 +37,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
@@ -53,6 +62,8 @@ public class Editeur
 
 	private JMenu menuFichier = new JMenu("Fichier");
 	private JMenuItem menuNew = new JMenuItem("Nouvelle carte");
+	private JMenuItem menuSave = new JMenuItem("Sauvegarder");
+	private JMenuItem menuLoad = new JMenuItem("Charger");
 	private JMenuItem menuQuit = new JMenuItem("Quitter");
 
 	private JMenu menuOutils = new JMenu("Outils");
@@ -96,7 +107,7 @@ public class Editeur
 
 	/**
 	 * @param prop
-	 * 			Les propriétés
+	 *        Les propriétés
 	 */
 	public Editeur(Properties prop)
 	{
@@ -174,7 +185,7 @@ public class Editeur
 		System.out.println("hauteur et largeur max calculées : " + width + "  "
 		        + height + " + insets : " + "" + insetsAppli.top + " "
 		        + insetsAppli.bottom);
-		
+
 	}
 
 	private void setSizeAgain()
@@ -186,14 +197,15 @@ public class Editeur
 		if (heightFen > maxSize.height)
 			heightFen = maxSize.height;
 		fenetre.setSize(widthFen, heightFen);
-		
-//		if (scrollCarte.getSize().width > scrollCarte.getMaximumSize().width)
-//			scrollCarte.setSize(new Dimension(scrollCarte.getMinimumSize().width, scrollCarte.getSize().height));
+
+		// if (scrollCarte.getSize().width > scrollCarte.getMaximumSize().width)
+		// scrollCarte.setSize(new Dimension(scrollCarte.getMinimumSize().width,
+		// scrollCarte.getSize().height));
 		fenetre.validate();
 		fenetre.repaint();
 		System.out.println("taille fenetre : " + fenetre.getSize().width + "  "
 		        + fenetre.getSize().height + " + insets : " + ""
-		        + fenetre.getInsets().top + " " + fenetre.getInsets().bottom);		
+		        + fenetre.getInsets().top + " " + fenetre.getInsets().bottom);
 	}
 
 	private void initMenu()
@@ -203,6 +215,18 @@ public class Editeur
 		        KeyEvent.CTRL_MASK));
 		menuNew.setMnemonic('N');
 		menuFichier.add(menuNew);
+
+		menuSave.addActionListener(new SauvegarderListener());
+		menuSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+		        KeyEvent.CTRL_MASK));
+		menuSave.setMnemonic('S');
+		menuFichier.add(menuSave);
+
+		menuLoad.addActionListener(new ChargerListener());
+		menuLoad.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L,
+		        KeyEvent.CTRL_MASK));
+		menuLoad.setMnemonic('L');
+		menuFichier.add(menuLoad);
 
 		menuQuit.addActionListener(new ActionListener()
 		{
@@ -232,17 +256,17 @@ public class Editeur
 	public class NewCarteListener implements ActionListener
 	{
 		private boolean isFirstDialog = false;
-		
+
 		public NewCarteListener()
 		{
 			this.isFirstDialog = false;
 		}
-		
+
 		public NewCarteListener(boolean firstDialog)
 		{
 			this.isFirstDialog = firstDialog;
 		}
-		
+
 		public void actionPerformed(ActionEvent arg0)
 		{
 			String[] titles =
@@ -265,29 +289,546 @@ public class Editeur
 					cancelled = false;
 			}
 
-			if(cancelled && isFirstDialog)
+			if (cancelled && isFirstDialog)
 			{
 				System.exit(0);
 			}
-			
+
 			if (!cancelled)
 			{
 				// Si une carte a déjà été créé
 				if (carte != null)
 					cleanCarte();
 				if (!results[0].isEmpty())
-					nbrNiveaux = new Integer(results[0]);
-				if (!results[0].isEmpty())
-					nbrPixels = new Integer(results[1]);
-				if (!results[0].isEmpty())
-					nbrLignes = new Integer(results[2]);
-				if (!results[0].isEmpty())
-					nbrColonnes = new Integer(results[3]);
+					nbrNiveaux = stringToInteger(results[0], defaults[0]);
+				if (!results[1].isEmpty())
+					nbrPixels = stringToInteger(results[1], defaults[1]);
+				if (!results[2].isEmpty())
+					nbrLignes = stringToInteger(results[2], defaults[2]);
+				if (!results[3].isEmpty())
+					nbrColonnes = stringToInteger(results[3], defaults[3]);
 
 				createCarte();
 			}
-			
-			
+		}
+	}
+
+	private int stringToInteger(String StringInt, String defaut)
+	{
+		int storeInt;
+		try
+		{
+			storeInt = new Integer(StringInt);
+		}
+		catch (NumberFormatException e)
+		{
+			storeInt = new Integer(defaut);
+		}
+
+		return storeInt;
+	}
+
+	/**
+	 * Ecouteur du menu Sauvegarder
+	 */
+	public class SauvegarderListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent arg0)
+		{
+			String[] titles = {"Nom du fichier"};
+			String[] defaults = {"save"};
+			InputDialog dialogNew =
+			        new InputDialog(null, "Sauvegarde", true, titles, defaults);
+			dialogNew.setTextOkButton("Sauvegarder");
+
+			String[] results = (dialogNew.showDialog());
+			boolean cancelled = true;
+
+			// Test de la réponse : si tout est vide, on ne fait rien
+			for (int j = 0; j < results.length; j++)
+			{
+				if (!results[j].isEmpty())
+					cancelled = false;
+			}
+
+			if (!cancelled)
+			{
+//				PrintWriter pw;
+//				try
+//				{
+//					FileWriter fw =
+//					        new FileWriter(new File(results[0] + ".txt"));
+//					pw = new PrintWriter(fw, true);
+//
+//					pw.print(nbrPixels + " ");
+//					pw.print(nbrLignes + " ");
+//					pw.print(nbrColonnes + " ");
+//					pw.println(nbrNiveaux);
+//
+//					CaseNiveaux[][] cases = carte.getCases();
+//
+//					for (int i = 0; i < nbrLignes; i++)
+//					{
+//						for (int j = 0; j < nbrColonnes; j++)
+//						{
+//							for (int k = 1; k <= nbrNiveaux; k++)
+//							{
+//								// if (cases[i][j].getSprite(k).getCode()
+//								// .matches("[0-9]{5}"))
+//								if (!cases[i][j].getSprite(k).getCode()
+//								        .isEmpty())
+//								{
+//									pw.print(cases[i][j].getSprite(k).getCode());
+//								}
+//								else
+//								{
+//									pw.print("00000");
+//								}
+//
+//								if (k != nbrNiveaux)
+//								{
+//									pw.print(" ");
+//								}
+//								else
+//								{
+//									pw.println("");
+//								}
+//							}
+//						}
+//					}
+//
+//					pw.close();
+//					fw.close();
+//					System.out.println("Carte sauvegardée");
+//				}
+//				catch (IOException e)
+//				{
+//					JOptionPane
+//					        .showMessageDialog(
+//					                null,
+//					                "IO Error ",
+//					                "Un problème est survenu lors de l'écriture dans le fichier !",
+//					                JOptionPane.ERROR_MESSAGE);
+//
+//					System.err.println("IO erreur pendant l'enregistrement : "
+//					        + e.getMessage());
+//				}
+				
+		        ObjectOutputStream oos;
+		        try {
+		        	oos = new ObjectOutputStream(
+		        				new BufferedOutputStream(
+		        						new FileOutputStream(
+		        								new File(results[0] + ".txt"))));
+		        	for (int i = 0; i < nbrLignes; i++)
+		    		{
+		    			for (int j = 0; j < nbrColonnes; j++)
+		    			{
+		    				for(int k = 0 ; k < nbrNiveaux ; k++)
+		    				{
+		    					oos.writeObject(carte.getCases()[i][j].getSprite(k + 1).getCode());
+		    				}
+		    				
+		    			}
+		    		}
+		        	
+		        	oos.close();
+		        	
+		        } catch (FileNotFoundException e) {
+		            e.printStackTrace();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }     	
+
+			}
+		}
+	}
+
+	/**
+	 * Ecouteur du menu Charger
+	 */
+	public class ChargerListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent arg0)
+		{
+			String[] titles = {"Nom du fichier"};
+			String[] defaults = {"save"};
+			InputDialog dialogNew =
+			        new InputDialog(null, "Chargement", true, titles, defaults);
+			dialogNew.setTextOkButton("Charger");
+
+			String[] results = (dialogNew.showDialog());
+			boolean cancelled = true;
+
+			// Test de la réponse : si tout est vide, on ne fait rien
+			for (int j = 0; j < results.length; j++)
+			{
+				if (!results[j].isEmpty())
+					cancelled = false;
+			}
+
+			if (!cancelled)
+			{
+//				try
+//				{
+//					FileReader fw =
+//					        new FileReader(new File(results[0] + ".txt"));
+//
+//					int i;
+//					// On remet tous les caractères lus dans un String
+//					String str = "";
+//					boolean donneesOk = true;
+//
+//					// Lecture des paramètres
+//					while ((i = fw.read()) != 10)
+//					{
+//						if (i != 10 && i != 13)
+//							str += (char) i;
+//					}
+//
+//					System.out.println(str);
+//
+//					String[] param = str.split(" ");
+//
+//					// On vérifie que l'on a bien le bon nombre de paramètres et
+//					// que ce sont des nombres
+//					if (param.length == parametersKeys.length)
+//					{
+//						for (int n = 0; n < parametersKeys.length; n++)
+//						{
+//							System.out.print("[" + param[n] + "]");
+//							if (!param[n].matches("[0-9]*"))
+//							{
+//								donneesOk = false;
+//							}
+//						}
+//						System.out.println("");
+//					}
+//					else
+//					{
+//						donneesOk = false;
+//					}
+//
+//					if (donneesOk)
+//					{
+//						nbrPixels = new Integer(param[0]);
+//						nbrLignes = new Integer(param[1]);
+//						nbrColonnes = new Integer(param[2]);
+//						nbrNiveaux = new Integer(param[3]);
+//
+//						// Lecture des codes images
+//						int nbrCases = nbrLignes * nbrColonnes;
+//						String[] codesCases = new String[nbrCases];
+//						int n = 0;
+//						codesCases[0] = "";
+//						while ((i = fw.read()) != -1)
+//						{
+//
+//							if (i != 10 && i != 13)
+//							{
+//								codesCases[n] += (char) i;
+//							}
+//
+//							if (i == 10 && n < (nbrCases - 1))
+//							{
+//								n++;
+//								codesCases[n] = "";
+//							}
+//						}
+//
+//						// Si il y a eu moins de lignes chargées, on charge
+//						// quand même mais cela donnera peut-être n'importe quoi
+//						// C'est à l'utilisateur de donner un bon fichier
+//						if (n < nbrCases - 1)
+//						{
+//							JOptionPane
+//							        .showMessageDialog(
+//							                null,
+//							                "Nombre de lignes",
+//							                "Il y a moins de données qu'attendues. Il est possible que la carte ne se charge pas correctement.",
+//							                JOptionPane.INFORMATION_MESSAGE);
+//						}
+//
+//						CaseNiveaux[][] casesChargees =
+//						        new CaseNiveaux[nbrLignes][nbrColonnes];
+//						
+//						
+//
+//						
+//
+//						for (int a = 0; a < nbrLignes; a++)
+//						{
+//							for (int b = 0; b < nbrColonnes; b++)
+//							{
+//								// On lit les codes de chaque case
+//								String[] codes =
+//								        codesCases[a * nbrColonnes + b]
+//								                .split(" ");
+//								// Si il y a moins de niveaux, on peut quand
+//								// même charger
+//								if (codes.length <= nbrNiveaux)
+//								{
+//									for (int k = 0; k < codes.length; k++)
+//									{
+//										Sprite spr = new Sprite(nbrPixels, nbrPixels);
+//										if (codes[k].matches("[0-9]{5}")
+//										        && !codes[k].equals("00000"))
+//										{
+//											Image img = chargerImage(codes[k]);
+//											spr.setImage(img, new String(
+//											        codes[k]));
+//											if (img != null)
+//												System.out.println(codes[k]
+//												        + " : Image chargée");
+//											else
+//												System.err
+//												        .println("Image chargée nulle");
+//											System.out.flush();
+//										}
+//										else
+//										{
+//											spr.setImage(null, "");
+//											System.err.println(codes[k]
+//											        + " : code incorrect");
+//											System.out.flush();
+//										}
+//										casesChargees[a][b] =
+//										        new CaseNiveaux(nbrPixels,
+//										                nbrPixels, Color.red,
+//										                Color.white, nbrNiveaux);
+//										casesChargees[a][b].setSprite(spr,
+//										        k + 1);
+//										System.out
+//										        .println("Fin chargement  : ["
+//										                + a
+//										                + "]["
+//										                + b
+//										                + "] niveau "
+//										                + (k + 1)
+//										                + " "
+//										                + casesChargees[a][b]
+//										                        .getSprite(
+//										                                k + 1)
+//										                        .getCode());
+//										System.out.flush();
+//									}
+//								}
+//							}
+//						}
+//						
+//
+//						// On crée la nouvelle carte puis on lui charge les
+//						// données récupérées
+//						for (int x = 0; x < nbrLignes; x++)
+//						{
+//							for (int y = 0; y < nbrColonnes; y++)
+//							{
+//								for (int k = 1; k <= nbrNiveaux; k++)
+//								{
+//									System.out.println("Après chargement  : ["
+//									        + x
+//									        + "]["
+//									        + y
+//									        + "] niveau "
+//									        + k
+//									        + " "
+//									        + casesChargees[x][y].getSprite(k)
+//									                .getCode());
+//								}
+//							}
+//						}
+//						if (carte != null)
+//							cleanCarte();
+//
+//						createCarte();
+//
+//						carte.copieCases(casesChargees, carte.getCases());
+//						// for (int x = 0; x < nbrLignes; x++)
+//						// {
+//						// for (int y = 0; y < nbrColonnes; y++)
+//						// {
+//						// for (int k = 1; k <= nbrNiveaux; k++)
+//						// {
+//						// System.out.println(casesChargees[x][y].getSprite(k).getCode()
+//						// + " -> " +
+//						// carte.getCases()[x][y].getSprite(k).getCode());
+//						// }
+//						// }
+//						// }
+//						// fenetre.repaint();
+//						System.out.println("Carte chargée");
+//					}
+//					else
+//					{
+//						JOptionPane
+//						        .showMessageDialog(
+//						                null,
+//						                "Les paramètres contenus au début du fichier sont invalides.\nFormat attendu : int int int int\nLa carte n'a pas pu être chargée.",
+//						                "Paramètres invalides",
+//						                JOptionPane.ERROR_MESSAGE);
+//
+//						System.err
+//						        .println("Paramètres invalides dans le fichier à charger");
+//					}
+//
+//					fw.close();
+//
+//				}
+//				catch (FileNotFoundException e1)
+//				{
+//					JOptionPane.showMessageDialog(null, "IO Error ",
+//					        "Le fichier spécifié n'existe pas.",
+//					        JOptionPane.ERROR_MESSAGE);
+//
+//					System.err.println("Fichier non trouvé : "
+//					        + e1.getMessage());
+//				}
+//				catch (IOException e)
+//				{
+//					JOptionPane
+//					        .showMessageDialog(
+//					                null,
+//					                "IO Error ",
+//					                "Un problème est survenu lors de la lecture du fichier !",
+//					                JOptionPane.ERROR_MESSAGE);
+//
+//					System.err.println("IO erreur pendant l'enregistrement : "
+//					        + e.getMessage());
+//				}
+				
+				ObjectInputStream ois;
+		        try {
+
+		        	//On récupère maintenant les données !
+		        	ois = new ObjectInputStream(
+		    				new BufferedInputStream(
+		    						new FileInputStream(
+		    								new File(results[0] + ".txt"))));
+		            
+		        	try {
+						System.out.println("Récupération carte :");
+						System.out.println("*************************\n");
+
+						nbrPixels = 32;
+						nbrLignes = 3;
+						nbrColonnes = 3;
+						nbrNiveaux = 4;
+						CaseNiveaux[][] casesChargees =
+				        new CaseNiveaux[nbrLignes][nbrColonnes];
+				
+						
+						String[][][] codesCases = new String[nbrLignes][nbrColonnes][nbrNiveaux];
+						
+						for (int i = 0; i < nbrLignes; i++)
+			    		{
+			    			for (int j = 0; j < nbrColonnes; j++)
+			    			{
+			    				for(int k = 0 ; k < nbrNiveaux ; k++)
+			    				{
+			    					System.out
+							        .println("["
+							                + i
+							                + "]["
+							                + j
+							                + "] niveau "
+							                + (k + 1)
+							                );
+			    					codesCases[i][j][k] = (String)ois.readObject();
+			    				}
+			    				
+			    			}
+			    		}
+		
+						if (carte != null)
+							cleanCarte();
+
+						createCarte();
+						for (int a = 0; a < nbrLignes; a++)
+						{
+							for (int b = 0; b < nbrColonnes; b++)
+							{
+								// On lit les codes de chaque case
+								
+								// Si il y a moins de niveaux, on peut quand
+								// même charger
+								for (int k = 0; k < nbrNiveaux; k++)
+									{
+										Sprite spr = new Sprite(nbrPixels, nbrPixels);
+										if (codesCases[a][b][k].matches("[0-9]{5}")
+										        && !codesCases[a][b][k].equals("00000"))
+										{
+											Image img = chargerImage(codesCases[a][b][k]);
+											spr.setImage(img, new String(
+													codesCases[a][b][k]));
+											if (img != null)
+												System.out.println(codesCases[a][b][k]
+												        + " : Image chargée");
+											else
+												System.err
+												        .println("Image chargée nulle");
+											System.out.flush();
+										}
+										else
+										{
+											spr.setImage(null, "");
+											System.err.println(codesCases[a][b][k]
+											        + " : code incorrect");
+											System.out.flush();
+										}
+										carte.getCases()[a][b].setSprite(spr,
+										        k + 1);
+										System.out
+										        .println("Fin chargement  : ["
+										                + a
+										                + "]["
+										                + b
+										                + "] niveau "
+										                + (k + 1)
+										                + " "
+										                + carte.getCase(a, b)
+										                        .getSprite(
+										                                k + 1)
+										                        .getCode());
+										System.out.flush();
+									}
+								}
+							}
+						
+						
+						for (int x = 0; x < nbrLignes; x++)
+							{
+								for (int y = 0; y < nbrColonnes; y++)
+								{
+									for (int k = 1; k <= nbrNiveaux; k++)
+									{
+										System.out.println("Après chargement  : ["
+										        + x
+										        + "]["
+										        + y
+										        + "] niveau "
+										        + k
+										        + " "
+										        + carte.getCase(x, y).getSprite(k)
+										                .getCode());
+									}
+								}
+							}
+		        		
+		        		
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+					ois.close();
+		        	
+		        } catch (FileNotFoundException e) {
+		            e.printStackTrace();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }     	
+
+			}
 		}
 	}
 
@@ -368,20 +909,22 @@ public class Editeur
 		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollOptions
 		        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		
+
 		scrollSelection
 		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollSelection
 		        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
-		jspV = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollCarte, scrollOptions);
+		jspV =
+		        new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollCarte,
+		                scrollOptions);
 		jspV.setResizeWeight(0.85);
 		jspV.setOneTouchExpandable(true);
-		
+
 		jspH = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollSelection, jspV);
 		jspH.setResizeWeight(0.30);
 		jspH.setOneTouchExpandable(true);
-		
+
 		conteneur.setLayout(new BorderLayout());
 		conteneur.add(jspH);
 
@@ -389,14 +932,60 @@ public class Editeur
 		if (insetsScreen != null)
 			fenetre.setLocation(insetsScreen.left, insetsScreen.top);
 
-		if(!isFirstDialog)
+		if (!isFirstDialog)
 		{
 			setSizeAgain();
 		}
-			
+
 		fenetre.repaint();
-		if(isFirstDialog)
+		if (isFirstDialog)
 			isFirstDialog = false;
+	}
+
+	public Image chargerImage(String code)
+	{
+		Image img = null;
+
+		File racine = new File("images");
+
+		for (String s : racine.list())
+		{
+			File sFile = new File("images/" + s);
+			if (sFile.isDirectory())
+			{
+				String pathImg = "";
+
+				String[] split = s.split("_");
+				// Si le nom de dossier comporte au moins deux parties
+				if (split.length >= 2)
+				{
+					// Si on a exactement 2 nombres
+					if (split[0].matches("[0-9]{2}"))
+					{
+						for (String f : sFile.list())
+						{
+							if (f.startsWith(code))
+							{
+								try
+								{
+									img =
+									        ImageIO.read(new File("images/" + s
+									                + "/" + f));
+								}
+								catch (IOException e)
+								{
+									System.err
+									        .println("IO erreur pendant le chargement de l'image : "
+									                + e.getMessage());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return img;
 	}
 
 	public void cleanCarte()

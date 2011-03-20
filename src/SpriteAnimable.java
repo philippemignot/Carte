@@ -8,7 +8,7 @@ public class SpriteAnimable extends Sprite
 	
 	public SpriteAnimable(Image img, int l, int h, Animation anim) 
 	{
-		super(img, l, h);
+		super(img, "", l, h);
 		this.anim = anim;
 	}
 	

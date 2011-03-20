@@ -33,7 +33,7 @@ public class Selection extends JPanel implements ActionListener, Observable,
 	private int nbrColonnes; // Nombre de colonnes de sprites
 	private int nbrColonnesAff;
 	private int nbrLignesAff = 3; // Nombre de lignes de sprites affichées
-	private ArrayList<Case> caseSelected = new ArrayList<Case>(); // Case
+	private ArrayList<Case> casesSelected = new ArrayList<Case>(); // Case
 	                                                              // actuellement
 	                                                              // sélectionnée,
 	                                                              // peut être
@@ -164,7 +164,7 @@ public class Selection extends JPanel implements ActionListener, Observable,
 				sprites.add(cases.get(i));
 				cases.get(i).addActionListener(this);
 				cases.get(i).addMouseListener(this);
-				cases.get(i).setImage(ImageIO.read(fichiers.get(i)));
+				cases.get(i).setImage(ImageIO.read(fichiers.get(i)), getCodeImage(fichiers.get(i).getName()));
 			}
 			catch (IOException err)
 			{
@@ -203,6 +203,32 @@ public class Selection extends JPanel implements ActionListener, Observable,
 		repaint();
 	}
 
+	/**
+	 * Récupère le code image à partir du nom complet de l'image.
+	 * 
+	 * @param fileName
+	 * 				Le nom de l'image doit être sous la forme NNNNN_nomImage où N est un nombre.
+	 * 				Le nom de l'image est quelconque et peut contenir des _.
+	 * @return codeImg
+	 * 				Le code image correspondant au nom de fichier.
+	 */
+	private String getCodeImage(String fileName)
+    {
+	    String codeImg = "";
+	    
+	    String[] split = fileName.split("_");
+	    // Si le nom de fichier comporte au moins deux parties
+	    if(split.length >= 2)
+	    {
+	    	// Si on a exactement 5 nombres
+	    	if(split[0].matches("[0-9]{5}"))
+	    	{
+	    		codeImg = split[0];
+	    	}
+	    }
+	    return codeImg;
+    }
+
 	private ArrayList<File> getImageFiles(File[] listFiles)
 	{
 		ArrayList<File> imageFiles = new ArrayList<File>();
@@ -228,31 +254,31 @@ public class Selection extends JPanel implements ActionListener, Observable,
 	 */
 	public void selectCase(Case caseSel)
 	{
-		caseSelected.add(caseSel);
+		casesSelected.add(caseSel);
 		caseSel.setBordure(true);
 		caseSel.setCouleurBordure(Color.RED);
 		caseSel.setHovered(false);
 	}
 
-	public ArrayList<Case> getCaseSelected()
+	public ArrayList<Case> getCasesSelected()
 	{
-		return caseSelected;
+		return casesSelected;
 	}
 
 	public void clearSelection()
 	{
-		if (caseSelected.size() > 1)
+		if (casesSelected.size() > 1)
 		{
-			for (Case caseSel : caseSelected)
+			for (Case caseSel : casesSelected)
 			{
 				caseSel.setCouleurBordure(Color.darkGray);
 			}
 		}
-		else if (!caseSelected.isEmpty())
+		else if (!casesSelected.isEmpty())
 		{
-			caseSelected.get(0).setCouleurBordure(Color.darkGray);
+			casesSelected.get(0).setCouleurBordure(Color.darkGray);
 		}
-		caseSelected.clear();
+		casesSelected.clear();
 		repaint();
 	}
 
@@ -291,12 +317,12 @@ public class Selection extends JPanel implements ActionListener, Observable,
 	{
 		for (Observateur obs : listeObservateur)
 		{
-			ArrayList<Image> listImage = new ArrayList<Image>();
-			for (Case caseSel : caseSelected)
+			ArrayList<Sprite> listSprite = new ArrayList<Sprite>();
+			for (Case caseSel : casesSelected)
 			{
-				listImage.add(caseSel.getImage());
+				listSprite.add(caseSel.getSprite());
 			}
-			obs.update(listImage);
+			obs.update(listSprite);
 		}
 	}
 
@@ -405,7 +431,7 @@ public class Selection extends JPanel implements ActionListener, Observable,
 			// Désélection de(s) la case(s) précédente(s)
 			if (!arg0.isControlDown() && !arg0.isShiftDown())
 			{
-				if (!caseSelected.isEmpty())
+				if (!casesSelected.isEmpty())
 					clearSelection();
 				// Sélection de la nouvelle
 				selectCase((Case) source);
@@ -414,9 +440,9 @@ public class Selection extends JPanel implements ActionListener, Observable,
 			}
 			else if (arg0.isControlDown())
 			{
-				if (caseSelected.contains((Case) source))
+				if (casesSelected.contains((Case) source))
 				{
-					caseSelected.remove((Case) source);
+					casesSelected.remove((Case) source);
 					((Case) source).setCouleurBordure(Color.darkGray);
 				}
 				else
@@ -432,7 +458,7 @@ public class Selection extends JPanel implements ActionListener, Observable,
 					indiceShiftSelection[1] = cases.indexOf(((Case) source));
 					if (indiceShiftSelection[0] != indiceShiftSelection[1])
 					{
-						if (!caseSelected.isEmpty())
+						if (!casesSelected.isEmpty())
 							clearSelection();
 						// Sélection de la nouvelle
 						for (int i =
@@ -445,12 +471,12 @@ public class Selection extends JPanel implements ActionListener, Observable,
 				}
 				else
 				{
-					if (!caseSelected.isEmpty())
+					if (!casesSelected.isEmpty())
 						clearSelection();
 					// Sélection de la nouvelle
 					selectCase((Case) source);
 					indiceShiftSelection[0] =
-					        caseSelected.indexOf(((Case) source));
+					        casesSelected.indexOf(((Case) source));
 					premierShiftOk = true;
 				}
 			}

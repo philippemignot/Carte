@@ -1,9 +1,10 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class CaseNiveaux extends AbstractCase 
+public class CaseNiveaux extends AbstractCase
 {
 	private int 		nbrNiveaux; 	// Nombre total de niveaux
 	private Sprite[] 	tabSprite; 			// Images de chaque niveaux
@@ -63,7 +64,15 @@ public class CaseNiveaux extends AbstractCase
 	 */
 	public Image getImage(int niv)
 	{
-		return tabSprite[niv - 1].getImage();
+		if(niv <= nbrNiveaux)
+		{
+			return tabSprite[niv - 1].getImage();
+		}
+		else
+		{
+			System.err.println("Niveau incorrect : " + niv + " dans CaseNiveaux::getImage(int)");
+			return null;
+		}
 	}
 	
 	/**
@@ -72,14 +81,49 @@ public class CaseNiveaux extends AbstractCase
 	 * @param niv
 	 *            Le niveau où rajouter l'image : à partir de 1
 	 */
-	public void setImage(Image img, int niv)
+	public void setImage(Image img, String codeImg, int niv)
 	{
 		if(niv <= nbrNiveaux)
 		{
-			tabSprite[niv - 1 ].setImage(img);
+			tabSprite[niv - 1 ].setImage(img, codeImg);
 		}
 		else
 			System.err.println("Niveau incorrect : " + niv + " dans CaseNiveaux::setImage(Image, int)");
+	}
+	
+	/**
+	 * @param niv
+	 *            Le niveau où récupérer le sprite : à partir de 1
+	 * @return sprite
+	 *            Le sprite de ce niveau
+	 */
+	public Sprite getSprite(int niv)
+	{
+		if(niv <= nbrNiveaux)
+		{
+			return tabSprite[niv - 1];
+		}
+		else
+		{
+			System.err.println("Niveau incorrect : " + niv + " dans CaseNiveaux::getSprite(int)");
+			return null;
+		}
+	}
+	
+	/**
+	 * @param sprite
+	 *            Le sprite à rajouter
+	 * @param niv
+	 *            Le niveau où rajouter le sprite : à partir de 1
+	 */
+	public void setSprite(Sprite sprite, int niv)
+	{
+		if(niv <= nbrNiveaux)
+		{
+			tabSprite[niv - 1 ] = new Sprite(sprite);
+		}
+		else
+			System.err.println("Niveau incorrect : " + niv + " dans CaseNiveaux::setSprite(Sprite, int)");
 	}
 	
 	/**
@@ -89,7 +133,7 @@ public class CaseNiveaux extends AbstractCase
 	public void clear(int niv)
 	{
 		if(niv <= nbrNiveaux)
-			tabSprite[niv - 1 ].setImage(null);
+			tabSprite[niv - 1 ].setImage(null, "");
 		else
 			System.err.println("Niveau incorrect : " + niv + " dans CaseNiveaux::setImage(Image, int)");
 	}
