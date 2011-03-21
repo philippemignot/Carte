@@ -182,10 +182,6 @@ public class Editeur
 		fenetre.setLocation(insetsScreen.left, insetsScreen.top);
 		fenetre.setVisible(true);
 		setSizeAgain();
-		System.out.println("hauteur et largeur max calculées : " + width + "  "
-		        + height + " + insets : " + "" + insetsAppli.top + " "
-		        + insetsAppli.bottom);
-
 	}
 
 	private void setSizeAgain()
@@ -203,9 +199,6 @@ public class Editeur
 		// scrollCarte.getSize().height));
 		fenetre.validate();
 		fenetre.repaint();
-		System.out.println("taille fenetre : " + fenetre.getSize().width + "  "
-		        + fenetre.getSize().height + " + insets : " + ""
-		        + fenetre.getInsets().top + " " + fenetre.getInsets().bottom);
 	}
 
 	private void initMenu()
@@ -420,7 +413,11 @@ public class Editeur
 		        	oos = new ObjectOutputStream(
 		        				new BufferedOutputStream(
 		        						new FileOutputStream(
-		        								new File(results[0] + ".txt"))));
+		        								new File("sauvegardes/" + results[0] + ".txt"))));
+		        	oos.writeObject(new Integer(nbrNiveaux));
+		        	oos.writeObject(new Integer(nbrPixels));
+		        	oos.writeObject(new Integer(nbrLignes));
+		        	oos.writeObject(new Integer(nbrColonnes));
 		        	for (int i = 0; i < nbrLignes; i++)
 		    		{
 		    			for (int j = 0; j < nbrColonnes; j++)
@@ -705,19 +702,14 @@ public class Editeur
 		        	ois = new ObjectInputStream(
 		    				new BufferedInputStream(
 		    						new FileInputStream(
-		    								new File(results[0] + ".txt"))));
+		    								new File("sauvegardes/" + results[0] + ".txt"))));
 		            
-		        	try {
-						System.out.println("Récupération carte :");
-						System.out.println("*************************\n");
-
-						nbrPixels = 32;
-						nbrLignes = 3;
-						nbrColonnes = 3;
-						nbrNiveaux = 4;
-						CaseNiveaux[][] casesChargees =
-				        new CaseNiveaux[nbrLignes][nbrColonnes];
-				
+		        	try 
+		        	{
+		        		nbrNiveaux = (Integer)ois.readObject();
+		        		nbrPixels = (Integer)ois.readObject();
+						nbrLignes = (Integer)ois.readObject();
+						nbrColonnes = (Integer)ois.readObject();						
 						
 						String[][][] codesCases = new String[nbrLignes][nbrColonnes][nbrNiveaux];
 						
@@ -727,14 +719,6 @@ public class Editeur
 			    			{
 			    				for(int k = 0 ; k < nbrNiveaux ; k++)
 			    				{
-			    					System.out
-							        .println("["
-							                + i
-							                + "]["
-							                + j
-							                + "] niveau "
-							                + (k + 1)
-							                );
 			    					codesCases[i][j][k] = (String)ois.readObject();
 			    				}
 			    				
@@ -762,71 +746,68 @@ public class Editeur
 											Image img = chargerImage(codesCases[a][b][k]);
 											spr.setImage(img, new String(
 													codesCases[a][b][k]));
-											if (img != null)
-												System.out.println(codesCases[a][b][k]
-												        + " : Image chargée");
-											else
+											if(img == null)
 												System.err
 												        .println("Image chargée nulle");
-											System.out.flush();
 										}
 										else
 										{
 											spr.setImage(null, "");
-											System.err.println(codesCases[a][b][k]
-											        + " : code incorrect");
-											System.out.flush();
+											
 										}
 										carte.getCases()[a][b].setSprite(spr,
 										        k + 1);
-										System.out
-										        .println("Fin chargement  : ["
-										                + a
-										                + "]["
-										                + b
-										                + "] niveau "
-										                + (k + 1)
-										                + " "
-										                + carte.getCase(a, b)
-										                        .getSprite(
-										                                k + 1)
-										                        .getCode());
-										System.out.flush();
-									}
-								}
-							}
-						
-						
-						for (int x = 0; x < nbrLignes; x++)
-							{
-								for (int y = 0; y < nbrColonnes; y++)
-								{
-									for (int k = 1; k <= nbrNiveaux; k++)
-									{
-										System.out.println("Après chargement  : ["
-										        + x
-										        + "]["
-										        + y
-										        + "] niveau "
-										        + k
-										        + " "
-										        + carte.getCase(x, y).getSprite(k)
-										                .getCode());
 									}
 								}
 							}
 		        		
-		        		
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					}
+					} catch (ClassNotFoundException e) 
+					{
+						JOptionPane
+				        .showMessageDialog(
+				                null,
+				                "Données invalides",
+				                "Un problème est survenu lors de la lecture du fichier !",
+				                JOptionPane.ERROR_MESSAGE);
+
+						System.err.println("Classe non trouvée pendant le chargement : "
+								+ e.getMessage());
+					}catch(ClassCastException cce)
+	        		{
+						JOptionPane
+				        .showMessageDialog(
+				                null,
+				                "Données invalides",
+				                "Un problème est survenu lors de la lecture du fichier !",
+				                JOptionPane.ERROR_MESSAGE);
+
+						System.err.println("Données chargées invalides : "
+								+ cce.getMessage());
+	        		}
 					ois.close();
 		        	
-		        } catch (FileNotFoundException e) {
-		            e.printStackTrace();
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        }     	
+		        }
+				catch (FileNotFoundException e1)
+				{
+					JOptionPane.showMessageDialog(null, "IO Error ",
+					        "Le fichier spécifié n'existe pas.",
+					        JOptionPane.ERROR_MESSAGE);
+
+					System.err.println("Fichier de sauvegarde non trouvé : "
+					        + e1.getMessage());
+				}
+				catch (IOException e)
+				{
+					JOptionPane
+					        .showMessageDialog(
+					                null,
+					                "IO Error",
+					                "Un problème est survenu lors de la lecture du fichier !",
+					                JOptionPane.ERROR_MESSAGE);
+
+					System.err.println("IO erreur pendant le chargement : "
+					        + e.getMessage());
+				}  	
 
 			}
 		}
