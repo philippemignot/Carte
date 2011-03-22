@@ -63,4 +63,14 @@ public class Sprite implements ImageObserver, Serializable
 	{
 		return codeImage;
 	}
+	
+	public int getHauteur()
+	{
+		return this.hauteur;
+	}
+	
+	public int getLargeur()
+	{
+		return this.largeur;
+	}
 }

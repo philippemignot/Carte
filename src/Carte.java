@@ -20,7 +20,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class Carte extends JPanel implements Observateur, MouseListener, Serializable
+public class Carte extends JPanel implements Observateur, MouseListener, Serializable, Observable
 {
 	private int largeur; // Nombre de cases en largeur
 	private int hauteur; // Nombre de cases en hauteur
@@ -29,6 +29,10 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	private int hauteurCase; // Nombre de pixels par case en hauteur
 	private int nivSelected; // Niveaux sélectionné
 	private JPanel pCases; // Panel contenant les cases
+	
+	private ArrayList<Observateur> listeObservateur =
+        new ArrayList<Observateur>(); // liste des observateurs
+	private ArrayList<Sprite> listeSpritesCase = new ArrayList<Sprite>();
 
 	private ArrayList<Sprite> spritesCurseur; // Image du curseur
 	private CaseNiveaux[][] cases; // La carte est constituée de ces cases
@@ -298,6 +302,21 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 																 // sélection
 				{
 					clearSelection();
+				}
+				else if(arg0.getButton() == MouseEvent.BUTTON1
+				        && this.getCursor() == Cursor
+		                .getDefaultCursor())
+				// Si on n'a rien de sélectionné, on peut sélectionner une case pour afficher ses propriétés avec le clic gauche
+				{
+					clearSelection();
+					listeSpritesCase.clear();
+					addToSelection(cases[coordSelection[0]][coordSelection[1]]);
+					for(int k = 1 ; k < nbrNiveaux ; k++)
+					{
+						listeSpritesCase.add(cases[coordSelection[0]][coordSelection[1]].getSprite(k));
+					}
+					
+					updateObservateur();
 				}
 				else
 				// Sinon : ajout/suppression image
@@ -639,5 +658,29 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	{
 		cases[0][0].getSprite(1);
 		return cases;
+	}
+
+	// fonction du DP observer
+	
+	@Override
+	public void addObservateur(Observateur obs)
+	{
+		listeObservateur.add(obs);
+
+	}
+
+	@Override
+	public void rmvObservateur(Observateur obs)
+	{
+		listeObservateur.remove(obs);
+	}
+
+	@Override
+	public void updateObservateur()
+	{
+		for (Observateur obs : listeObservateur)
+		{
+			obs.update(listeSpritesCase);
+		}
 	}
 }

@@ -73,12 +73,15 @@ public class Editeur
 	private JFrame fenetre; // La fenetre
 	private JSplitPane jspV;
 	private JSplitPane jspH;
+	private JSplitPane jspV2;
 	private JScrollPane scrollCarte;
 	private JScrollPane scrollOptions;
 	private JScrollPane scrollSelection;
+	private JScrollPane scrollProprietes;
 	private Selection selection; // Le panneau de sélection des sprites
 	private Carte carte; // La carte contenant les sprites
 	private Options options; // Le panneau contenant les options de la carte
+	private PanCaseProperties caseProp;
 	private JPanel conteneur; // Le conteneur général
 
 	// Actions
@@ -871,15 +874,20 @@ public class Editeur
 		// Création de la partie sélection :
 		// taille colonnes de cases nbrPixels×nbrPixels
 		selection = new Selection(nbrPixels, nbrPixels, nbrColonnes);
+		
+		// Création du panneau propriété : il affiche les propriétés de chaque case
+		caseProp = new PanCaseProperties(nbrNiveaux, nbrPixels, nbrPixels);
 
 		// Ajouts des observateurs
 		selection.addObservateur(carte);
 		options.addObservateur(carte);
+		carte.addObservateur(caseProp);
 
 		// Ajoute une scroll bar
 		scrollCarte = new JScrollPane(carte);
 		scrollOptions = new JScrollPane(options);
 		scrollSelection = new JScrollPane(selection);
+		scrollProprietes = new JScrollPane(caseProp);
 
 		scrollCarte
 		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -894,6 +902,11 @@ public class Editeur
 		scrollSelection
 		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollSelection
+		        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		
+		scrollProprietes
+		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollProprietes
 		        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
 		jspV =
@@ -905,9 +918,15 @@ public class Editeur
 		jspH = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollSelection, jspV);
 		jspH.setResizeWeight(0.30);
 		jspH.setOneTouchExpandable(true);
+		
+		jspV2 =
+	        new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollProprietes,
+	        		jspH);
+		jspV2.setResizeWeight(0.85);
+		jspV2.setOneTouchExpandable(true);
 
 		conteneur.setLayout(new BorderLayout());
-		conteneur.add(jspH);
+		conteneur.add(jspV2);
 
 		fenetre.pack();
 		if (insetsScreen != null)
@@ -934,8 +953,6 @@ public class Editeur
 			File sFile = new File("images/" + s);
 			if (sFile.isDirectory())
 			{
-				String pathImg = "";
-
 				String[] split = s.split("_");
 				// Si le nom de dossier comporte au moins deux parties
 				if (split.length >= 2)
@@ -974,8 +991,9 @@ public class Editeur
 		// Ajouts des observateurs
 		selection.rmvObservateur(carte);
 		options.rmvObservateur(carte);
+		carte.rmvObservateur(caseProp);
 
-		conteneur.remove(jspH);
+		conteneur.remove(jspV2);
 	}
 
 	/**
