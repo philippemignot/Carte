@@ -1,7 +1,5 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
@@ -12,19 +10,16 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -37,7 +32,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
@@ -103,7 +97,8 @@ public class Editeur
 	 * @param args
 	 *        Les paramètres d'entrée de l'application
 	 */
-	public static void main(String[] args)
+	@SuppressWarnings("unused")
+    public static void main(String[] args)
 	{
 		Editeur editeur = new Editeur(lireConfig("parametres.txt"));
 	}
@@ -174,7 +169,6 @@ public class Editeur
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension d = tk.getScreenSize();
 		insetsScreen = tk.getScreenInsets(fenetre.getGraphicsConfiguration());
-		Insets insetsAppli = fenetre.getInsets();
 		int width =
 		        (int) (d.getWidth() - insetsScreen.left - insetsScreen.right);
 		int height =
@@ -271,8 +265,8 @@ public class Editeur
 			String[] defaults =
 			        getParametersFromProperties(proprietes, parametersKeys);
 			InputDialog dialogNew =
-			        new InputDialog(null, "Nouvelle carte", true, titles,
-			                defaults);
+			        new InputDialog(null, "Nouvelle carte", true, titles);
+			dialogNew.setDefaults(defaults);
 			dialogNew.setTextOkButton("Créer");
 
 			String[] results = (dialogNew.showDialog());
@@ -281,7 +275,7 @@ public class Editeur
 			// Test de la réponse : si tout est vide, on ne fait rien
 			for (int j = 0; j < results.length; j++)
 			{
-				if (!results[j].isEmpty())
+				if (!results[j].equals("-1"))
 					cancelled = false;
 			}
 
@@ -335,7 +329,8 @@ public class Editeur
 			String[] titles = {"Nom du fichier"};
 			String[] defaults = {"save"};
 			InputDialog dialogNew =
-			        new InputDialog(null, "Sauvegarde", true, titles, defaults);
+			        new InputDialog(null, "Sauvegarde", true, titles);
+			dialogNew.setDefaults(defaults);
 			dialogNew.setTextOkButton("Sauvegarder");
 
 			String[] results = (dialogNew.showDialog());
@@ -344,7 +339,7 @@ public class Editeur
 			// Test de la réponse : si tout est vide, on ne fait rien
 			for (int j = 0; j < results.length; j++)
 			{
-				if (!results[j].isEmpty())
+				if (!results[j].equals("-1"))
 					cancelled = false;
 			}
 
@@ -453,24 +448,50 @@ public class Editeur
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
-			String[] titles = {"Nom du fichier"};
-			String[] defaults = {"save"};
-			InputDialog dialogNew =
-			        new InputDialog(null, "Chargement", true, titles, defaults);
-			dialogNew.setTextOkButton("Charger");
-
-			String[] results = (dialogNew.showDialog());
-			boolean cancelled = true;
-
-			// Test de la réponse : si tout est vide, on ne fait rien
-			for (int j = 0; j < results.length; j++)
+			String[] titles = {""};
+			try
 			{
-				if (!results[j].isEmpty())
-					cancelled = false;
-			}
+				File racine = new File("sauvegardes");
+				int t = 0;
+				ArrayList<String> fichiersText = new ArrayList<String>();
+				for (String s : racine.list())
+				{
+					if (!new File("sauvegardes/" + s).isDirectory() && s.endsWith("txt"))
+					{
+						fichiersText.add(s);
+						t++;
+					}
+				}
+				int textNumber = fichiersText.size();
+				int[] groupes = new int[textNumber]; 
 
-			if (!cancelled)
-			{
+				if(textNumber > 0)
+				{
+					titles = new String[textNumber];
+					for(int tx = 0 ; tx < textNumber ; tx ++)
+					{
+						titles[tx] = fichiersText.get(tx);
+						groupes[tx] = 1;
+					}
+				}
+				
+				RadioDialog dialogNew =
+				        new RadioDialog(null, "Chargement", true, titles, groupes);
+				dialogNew.setTextIntro("Fichier à charger :");
+				dialogNew.setTextOkButton("Charger");
+	
+				String[] results = (dialogNew.showDialog());
+				boolean cancelled = true;
+	
+				// Test de la réponse : si tout est vide, on ne fait rien
+				for (int j = 0; j < results.length; j++)
+				{
+					if (!results[j].equals("-1"))
+						cancelled = false;
+				}
+	
+				if (!cancelled)
+				{
 //				try
 //				{
 //					FileReader fw =
@@ -698,120 +719,125 @@ public class Editeur
 //					        + e.getMessage());
 //				}
 				
-				ObjectInputStream ois;
-		        try {
-
-		        	//On récupère maintenant les données !
-		        	ois = new ObjectInputStream(
-		    				new BufferedInputStream(
-		    						new FileInputStream(
-		    								new File("sauvegardes/" + results[0] + ".txt"))));
-		            
-		        	try 
-		        	{
-		        		nbrNiveaux = (Integer)ois.readObject();
-		        		nbrPixels = (Integer)ois.readObject();
-						nbrLignes = (Integer)ois.readObject();
-						nbrColonnes = (Integer)ois.readObject();						
-						
-						String[][][] codesCases = new String[nbrLignes][nbrColonnes][nbrNiveaux];
-						
-						for (int i = 0; i < nbrLignes; i++)
-			    		{
-			    			for (int j = 0; j < nbrColonnes; j++)
-			    			{
-			    				for(int k = 0 ; k < nbrNiveaux ; k++)
-			    				{
-			    					codesCases[i][j][k] = (String)ois.readObject();
-			    				}
-			    				
-			    			}
-			    		}
-		
-						if (carte != null)
-							cleanCarte();
-
-						createCarte();
-						for (int a = 0; a < nbrLignes; a++)
-						{
-							for (int b = 0; b < nbrColonnes; b++)
+					ObjectInputStream ois;
+			        try {
+	
+			        	//On récupère maintenant les données !
+			        	ois = new ObjectInputStream(
+			    				new BufferedInputStream(
+			    						new FileInputStream(
+			    								new File("sauvegardes/" + results[0] + ".txt"))));
+			            
+			        	try 
+			        	{
+			        		nbrNiveaux = (Integer)ois.readObject();
+			        		nbrPixels = (Integer)ois.readObject();
+							nbrLignes = (Integer)ois.readObject();
+							nbrColonnes = (Integer)ois.readObject();						
+							
+							String[][][] codesCases = new String[nbrLignes][nbrColonnes][nbrNiveaux];
+							
+							for (int i = 0; i < nbrLignes; i++)
+				    		{
+				    			for (int j = 0; j < nbrColonnes; j++)
+				    			{
+				    				for(int k = 0 ; k < nbrNiveaux ; k++)
+				    				{
+				    					codesCases[i][j][k] = (String)ois.readObject();
+				    				}
+				    				
+				    			}
+				    		}
+			
+							if (carte != null)
+								cleanCarte();
+	
+							createCarte();
+							for (int a = 0; a < nbrLignes; a++)
 							{
-								// On lit les codes de chaque case
-								
-								// Si il y a moins de niveaux, on peut quand
-								// même charger
-								for (int k = 0; k < nbrNiveaux; k++)
-									{
-										Sprite spr = new Sprite(nbrPixels, nbrPixels);
-										if (codesCases[a][b][k].matches("[0-9]{5}")
-										        && !codesCases[a][b][k].equals("00000"))
+								for (int b = 0; b < nbrColonnes; b++)
+								{
+									// On lit les codes de chaque case
+									
+									// Si il y a moins de niveaux, on peut quand
+									// même charger
+									for (int k = 0; k < nbrNiveaux; k++)
 										{
-											Image img = chargerImage(codesCases[a][b][k]);
-											spr.setImage(img, new String(
-													codesCases[a][b][k]));
-											if(img == null)
-												System.err
-												        .println("Image chargée nulle");
+											Sprite spr = new Sprite(nbrPixels, nbrPixels);
+											if (codesCases[a][b][k].matches("[0-9]{5}")
+											        && !codesCases[a][b][k].equals("00000"))
+											{
+												Image img = chargerImage(codesCases[a][b][k]);
+												spr.setImage(img, new String(
+														codesCases[a][b][k]));
+												if(img == null)
+													System.err
+													        .println("Image chargée nulle");
+											}
+											else
+											{
+												spr.setImage(null, "");
+												
+											}
+											carte.getCases()[a][b].setSprite(spr,
+											        k + 1);
 										}
-										else
-										{
-											spr.setImage(null, "");
-											
-										}
-										carte.getCases()[a][b].setSprite(spr,
-										        k + 1);
 									}
 								}
-							}
-		        		
-					} catch (ClassNotFoundException e) 
-					{
-						JOptionPane
-				        .showMessageDialog(
-				                null,
-				                "Données invalides",
-				                "Un problème est survenu lors de la lecture du fichier !",
-				                JOptionPane.ERROR_MESSAGE);
-
-						System.err.println("Classe non trouvée pendant le chargement : "
-								+ e.getMessage());
-					}catch(ClassCastException cce)
-	        		{
-						JOptionPane
-				        .showMessageDialog(
-				                null,
-				                "Données invalides",
-				                "Un problème est survenu lors de la lecture du fichier !",
-				                JOptionPane.ERROR_MESSAGE);
-
-						System.err.println("Données chargées invalides : "
-								+ cce.getMessage());
-	        		}
-					ois.close();
-		        	
-		        }
-				catch (FileNotFoundException e1)
-				{
-					JOptionPane.showMessageDialog(null, "IO Error ",
-					        "Le fichier spécifié n'existe pas.",
-					        JOptionPane.ERROR_MESSAGE);
-
-					System.err.println("Fichier de sauvegarde non trouvé : "
-					        + e1.getMessage());
-				}
-				catch (IOException e)
-				{
-					JOptionPane
+			        		
+						} catch (ClassNotFoundException e) 
+						{
+							JOptionPane
 					        .showMessageDialog(
 					                null,
-					                "IO Error",
+					                "Données invalides",
 					                "Un problème est survenu lors de la lecture du fichier !",
 					                JOptionPane.ERROR_MESSAGE);
-
-					System.err.println("IO erreur pendant le chargement : "
-					        + e.getMessage());
-				}  	
-
+	
+							System.err.println("Classe non trouvée pendant le chargement : "
+									+ e.getMessage());
+						}catch(ClassCastException cce)
+		        		{
+							JOptionPane
+					        .showMessageDialog(
+					                null,
+					                "Données invalides",
+					                "Un problème est survenu lors de la lecture du fichier !",
+					                JOptionPane.ERROR_MESSAGE);
+	
+							System.err.println("Données chargées invalides : "
+									+ cce.getMessage());
+		        		}
+						ois.close();
+			        	
+			        }
+					catch (FileNotFoundException e1)
+					{
+						JOptionPane.showMessageDialog(null, "IO Error ",
+						        "Le fichier spécifié n'existe pas.",
+						        JOptionPane.ERROR_MESSAGE);
+	
+						System.err.println("Fichier de sauvegarde non trouvé : "
+						        + e1.getMessage());
+					}
+					catch (IOException e)
+					{
+						JOptionPane
+						        .showMessageDialog(
+						                null,
+						                "IO Error",
+						                "Un problème est survenu lors de la lecture du fichier !",
+						                JOptionPane.ERROR_MESSAGE);
+	
+						System.err.println("IO erreur pendant le chargement : "
+						        + e.getMessage());
+					}  	
+				}
+			}
+			catch (NullPointerException e)
+			{
+				System.err.println("Erreur dans "
+				        + "Editeur.ChargerListener() : " + e.getMessage());
 			}
 		}
 	}
@@ -832,7 +858,8 @@ public class Editeur
 
 			InputDialog dialogParam =
 			        new InputDialog(null, "Paramètres par défaut", true,
-			                titles, defaults);
+			                titles);
+			dialogParam.setDefaults(defaults);
 			dialogParam.setTextOkButton("Sauvegarder");
 			dialogParam.setTextIntro("Paramètres par défaut : ");
 
@@ -842,7 +869,7 @@ public class Editeur
 			// Test de la réponse : si tout est vide, on ne fait rien
 			for (int j = 0; j < results.length; j++)
 			{
-				if (!results[j].isEmpty())
+				if (!results[j].equals("-1"))
 					cancelled = false;
 			}
 
@@ -882,6 +909,7 @@ public class Editeur
 		selection.addObservateur(carte);
 		options.addObservateur(carte);
 		carte.addObservateur(caseProp);
+		selection.addObservateur(caseProp);
 
 		// Ajoute une scroll bar
 		scrollCarte = new JScrollPane(carte);
@@ -988,10 +1016,11 @@ public class Editeur
 
 	public void cleanCarte()
 	{
-		// Ajouts des observateurs
+		// Suppression des observateurs
 		selection.rmvObservateur(carte);
 		options.rmvObservateur(carte);
 		carte.rmvObservateur(caseProp);
+		selection.rmvObservateur(caseProp);
 
 		conteneur.remove(jspV2);
 	}

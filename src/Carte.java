@@ -173,9 +173,17 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 			        tk.createCustomCursor(spritesCurseur.get(0).getImage(), new Point(15, 15),
 			                "sprite");
 			this.setCursor(monCurseur);
+			if(selection.size() == 1)
+			{
+				clearSelection();
+			}
+			repaint();
+			
 		}
 		else
+		{
 			deselectionneCurseur();
+		}
 	}
 
 	@Override
@@ -311,7 +319,7 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 					clearSelection();
 					listeSpritesCase.clear();
 					addToSelection(cases[coordSelection[0]][coordSelection[1]]);
-					for(int k = 1 ; k < nbrNiveaux ; k++)
+					for(int k = 1 ; k <= nbrNiveaux ; k++)
 					{
 						listeSpritesCase.add(cases[coordSelection[0]][coordSelection[1]].getSprite(k));
 					}
@@ -395,6 +403,12 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 															 // avec glissement
 															 // souris
 			{
+				if(this.getCursor() == Cursor
+		                .getDefaultCursor())
+				{
+					listeSpritesCase.clear();
+					updateObservateur();
+				}
 				if (!arg0.isControlDown())
 				{
 					clearSelection();
@@ -681,6 +695,19 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 		for (Observateur obs : listeObservateur)
 		{
 			obs.update(listeSpritesCase);
+			String[] name = {"Carte"};
+			if(listeSpritesCase.isEmpty())
+			{
+				name[0] = "";
+			}
+
+			obs.update(name);		    
 		}
 	}
+
+	@Override
+    public void update(String[] string)
+    {
+		
+    }
 }

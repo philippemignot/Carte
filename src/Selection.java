@@ -235,14 +235,10 @@ public class Selection extends JPanel implements ActionListener, Observable,
 
 		for (int i = 0; i < listFiles.length; i++)
 		{
-			String[] nomSplit = listFiles[i].getName().split("\\.");
-			if (nomSplit.length == 2)
+			if (listFiles[i].getName().endsWith("png") || listFiles[i].getName().endsWith("bmp")
+					|| listFiles[i].getName().endsWith("jpg"))
 			{
-				if (nomSplit[1].equals("png") || nomSplit[1].equals("bmp")
-				        || nomSplit[1].equals("jpg"))
-				{
-					imageFiles.add(listFiles[i]);
-				}
+				imageFiles.add(listFiles[i]);
 			}
 		}
 		return imageFiles;
@@ -323,6 +319,13 @@ public class Selection extends JPanel implements ActionListener, Observable,
 				listSprite.add(caseSel.getSprite());
 			}
 			obs.update(listSprite);
+			
+			String[] name = {"Sélection"};
+			if(listSprite.isEmpty())
+			{
+				name[0] = "";
+			}
+			obs.update(name);
 		}
 	}
 
