@@ -32,7 +32,10 @@ public class RadioDialog extends AbstractDialog
 		{
 			if(radioButtons[i].isSelected())
 			{
-				returns[0] = radioButtons[i].getText();
+				returns[i] = radioButtons[i].getText();
+			}else
+			{
+				returns[i] = "-1";
 			}
 		}
 	}
@@ -66,7 +69,7 @@ public class RadioDialog extends AbstractDialog
 			}
 			this.add(radioButtons[i], new GridBagConstraints(0, i + 1, 2, 1, 1.0,
 					0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-					new Insets(5, 10, 5, 20), 0, 0));
+					new Insets(3, 3, 3, 3), 0, 0));
 		}
 		if(titles.length > 0)
 		{

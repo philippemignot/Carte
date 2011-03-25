@@ -487,7 +487,10 @@ public class Editeur
 				for (int j = 0; j < results.length; j++)
 				{
 					if (!results[j].equals("-1"))
+					{
 						cancelled = false;
+						results[0] = results[j];
+					}
 				}
 	
 				if (!cancelled)
@@ -726,7 +729,7 @@ public class Editeur
 			        	ois = new ObjectInputStream(
 			    				new BufferedInputStream(
 			    						new FileInputStream(
-			    								new File("sauvegardes/" + results[0] + ".txt"))));
+			    								new File("sauvegardes/" + results[0]))));
 			            
 			        	try 
 			        	{
@@ -838,6 +841,7 @@ public class Editeur
 			{
 				System.err.println("Erreur dans "
 				        + "Editeur.ChargerListener() : " + e.getMessage());
+				e.printStackTrace();
 			}
 		}
 	}
