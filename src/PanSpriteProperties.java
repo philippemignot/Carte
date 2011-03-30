@@ -22,7 +22,7 @@ public class PanSpriteProperties extends JPanel
 		this.sprite = sprite;
 		niveau = niv;
 		this.setLayout(new GridBagLayout());
-		Border b = BorderFactory.createRaisedBevelBorder();
+		Border b = BorderFactory.createLoweredBevelBorder();
 		this.setBorder(b);
 		updateContent();
 	}
@@ -44,6 +44,7 @@ public class PanSpriteProperties extends JPanel
 		labCode = new JLabel(code);
 		niv = new JLabel(String.valueOf(niveau));
 		panImage = new ImagePanel(sprite.getImage(), new Dimension(sprite.getLargeur(), sprite.getHauteur()));
+		panImage.setBorder(BorderFactory.createRaisedBevelBorder());
 		
 		this.removeAll();
 		this.add(labCode, new GridBagConstraints(0, 0, 1, 1, 0.0,
@@ -55,6 +56,5 @@ public class PanSpriteProperties extends JPanel
 		this.add(niv, new GridBagConstraints(0, 1, 1, 1, 0.0,
 		        0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
 		        new Insets(5, 5, 5, 5), 0, 0));
-		System.out.println();
 	}
 }

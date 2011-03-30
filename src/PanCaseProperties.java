@@ -8,6 +8,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.border.Border;
 
 
@@ -23,6 +24,8 @@ public class PanCaseProperties extends JPanel implements Observateur
 	public PanCaseProperties(int nbrNiv, int largeur, int hauteur)
 	{
 		nbrNiveaux = nbrNiv;
+		this.hauteur = hauteur;
+		this.largeur = largeur;
 		Border b = BorderFactory.createRaisedBevelBorder();
 		this.setBorder(b);
 		setLayout(new GridBagLayout());
@@ -36,20 +39,21 @@ public class PanCaseProperties extends JPanel implements Observateur
 		panSpriteProp.clear();
 		removeAll();
 		add(name,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-		        GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
+		        GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(
 		                15, 5, 15, 5), 0, 0));
 	    for(int i = 0 ; i < sprites.size() ; i++)
 	    {
 	    	panSpriteProp.add(new PanSpriteProperties(new Sprite(sprites.get(i)), i+1));
 	    	add(panSpriteProp.get(i),  new GridBagConstraints(0, i+2, 1, 1, 0.0, 0.0,
-			        GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
+			        GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(
 			                5, 5, 5, 5), 0, 0));
 		    panSpriteProp.get(i).revalidate();	    	
 	    }
-	    System.out.println(this.getSize().height);
-	    this.setPreferredSize(new Dimension(largeur + 100, (sprites.size() * (hauteur + 30))));
-	    ((JScrollPane) this.getParent().getParent()).revalidate();
-	    ((JScrollPane) this.getParent().getParent()).repaint();
+	    System.out.println((sprites.size() * (hauteur + 75)));
+	    this.setMinimumSize(new Dimension(largeur + 100, (sprites.size() * (hauteur + 75))));
+	    this.setPreferredSize(new Dimension(largeur + 100, (sprites.size() * (hauteur + 75))));
+//	    ((JPanel) this.getParent().getParent().getParent().getParent()).revalidate();
+	    ((JPanel) this.getParent().getParent().getParent().getParent()).repaint();
 
 	    System.out.println(this.getSize().height);
     }
