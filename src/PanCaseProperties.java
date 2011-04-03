@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,6 +21,7 @@ public class PanCaseProperties extends JPanel implements Observateur
 	private int nbrNiveaux;
 	private int largeur;
 	private int hauteur;
+	private JPanel contentPane;
 	
 	public PanCaseProperties(int nbrNiv, int largeur, int hauteur)
 	{
@@ -28,29 +30,33 @@ public class PanCaseProperties extends JPanel implements Observateur
 		this.largeur = largeur;
 		Border b = BorderFactory.createRaisedBevelBorder();
 		this.setBorder(b);
-		setLayout(new GridBagLayout());
-		this.setMinimumSize(new Dimension(largeur + 100, (nbrNiveaux * (hauteur + 75))));
-		this.setPreferredSize(new Dimension(largeur + 100, (nbrNiveaux * (hauteur + 75))));
+		contentPane = new JPanel();
+		contentPane.setLayout(new GridBagLayout());
+		this.setLayout(new BorderLayout());
+		this.add(contentPane, BorderLayout.NORTH);
+		this.setMinimumSize(new Dimension(largeur + 150, (nbrNiveaux * (hauteur + 100))));
+		this.setPreferredSize(new Dimension(largeur + 150, (nbrNiveaux * (hauteur + 100))));
 	}
 
 	@Override
     public void update(ArrayList<Sprite> sprites)
     {	
 		panSpriteProp.clear();
-		removeAll();
-		add(name,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+		contentPane.removeAll();
+		contentPane.add(name,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
 		        GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(
 		                15, 5, 15, 5), 0, 0));
 	    for(int i = 0 ; i < sprites.size() ; i++)
 	    {
 	    	panSpriteProp.add(new PanSpriteProperties(new Sprite(sprites.get(i)), i+1));
-	    	add(panSpriteProp.get(i),  new GridBagConstraints(0, i+2, 1, 1, 0.0, 0.0,
-			        GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(
-			                5, 5, 5, 5), 0, 0));
+	    	
+	    	contentPane.add(panSpriteProp.get(i),  new GridBagConstraints(0, i+2, 1, 1, 1.0, 0.0,
+			        GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(
+			                5, 10, 5, 10), 0, 0));
 		    panSpriteProp.get(i).revalidate();	    	
 	    }
-	    this.setMinimumSize(new Dimension(largeur + 100, (sprites.size() * (hauteur + 75))));
-	    this.setPreferredSize(new Dimension(largeur + 100, (sprites.size() * (hauteur + 75))));
+	    this.setMinimumSize(new Dimension(largeur + 150, (sprites.size() * (hauteur + 100))));
+	    this.setPreferredSize(new Dimension(largeur + 150, (sprites.size() * (hauteur + 100))));
 //	    ((JPanel) this.getParent().getParent().getParent().getParent()).revalidate();
 	    ((JPanel) this.getParent().getParent().getParent().getParent()).repaint();
     }
