@@ -318,7 +318,6 @@ public class Selection extends JPanel implements ActionListener, Observable,
 			{
 				listSprite.add(caseSel.getSprite());
 			}
-			obs.update(listSprite);
 			
 			String[] name = {"Sélection"};
 			if(listSprite.isEmpty())
@@ -326,6 +325,8 @@ public class Selection extends JPanel implements ActionListener, Observable,
 				name[0] = "";
 			}
 			obs.update(name);
+			
+			obs.update(listSprite);
 		}
 	}
 

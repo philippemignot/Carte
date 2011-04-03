@@ -42,11 +42,9 @@ public class PanSpriteProperties extends JPanel
 		this.setLayout(new BorderLayout());
 		this.add(contentPane, BorderLayout.CENTER);
 		updateContent();
-		
-		initToolbar();
 	}
 	
-	protected void initToolbar()
+	public void addToolbar()
 	{
 		toolbar = new JToolBar();
 		bAvant = new JButton("A");

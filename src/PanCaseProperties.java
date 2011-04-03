@@ -53,6 +53,10 @@ public class PanCaseProperties extends JPanel implements Observateur
 	    	contentPane.add(panSpriteProp.get(i),  new GridBagConstraints(0, i+2, 1, 1, 1.0, 0.0,
 			        GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(
 			                5, 10, 5, 10), 0, 0));
+	    	if(name.getText().toLowerCase().equals("carte"))
+	    	{
+	    		panSpriteProp.get(i).addToolbar();
+	    	}
 		    panSpriteProp.get(i).revalidate();	    	
 	    }
 	    this.setMinimumSize(new Dimension(largeur + 150, (sprites.size() * (hauteur + 100))));

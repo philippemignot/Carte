@@ -1,3 +1,4 @@
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -9,7 +10,9 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -159,7 +162,10 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	 */
 	public void deselectionneCurseur()
 	{
-		this.spritesCurseur.clear();
+		if(spritesCurseur != null)
+		{
+			this.spritesCurseur.clear();			
+		}
 		this.setCursor(Cursor.getDefaultCursor());
 	}
 
@@ -309,7 +315,23 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 																 // toute la
 																 // sélection
 				{
-					clearSelection();
+					if(selection.isEmpty())
+					{
+						try
+                        {
+	                        Robot rb = new Robot();
+	                        rb.keyPress(KeyEvent.VK_ESCAPE);
+	                        rb.keyRelease(KeyEvent.VK_ESCAPE);
+	                        System.out.println("deselectiion");
+                        }
+                        catch (AWTException e)
+                        {
+	                        System.err.println("Erreur dans Carte::MouseReleased : " + e.getMessage());
+                        }
+					}else
+					{
+						clearSelection();
+					}
 				}
 				else if(arg0.getButton() == MouseEvent.BUTTON1
 				        && this.getCursor() == Cursor
@@ -694,7 +716,6 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	{
 		for (Observateur obs : listeObservateur)
 		{
-			obs.update(listeSpritesCase);
 			String[] name = {"Carte"};
 			if(listeSpritesCase.isEmpty())
 			{
@@ -702,6 +723,7 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 			}
 
 			obs.update(name);		    
+			obs.update(listeSpritesCase);
 		}
 	}
 
