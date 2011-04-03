@@ -44,8 +44,8 @@ public class Editeur
 	private boolean isFirstDialog = true;
 	// Paramètres
 	private Properties proprietes;
-	private String[] parametersKeys = {"nbrNiveaux", "nbrPixels", "nbrLignes",
-	        "nbrColonnes"};
+	private String[] parametersKeys =
+	        {"nbrNiveaux", "nbrPixels", "nbrLignes", "nbrColonnes"};
 	private int nbrNiveaux = 4; // nombre total de niveaux
 	private int nbrPixels = 32; // nombre de pixel du coté d'une case (carrée)
 	private int nbrLignes = 12; // nombre de lignes de la carte
@@ -91,7 +91,8 @@ public class Editeur
 	private Chiffre9Action chiffre9Action; // Action de la touche 9
 	private UndoAction undoAction; // Action annuler avec ctrl + Z
 	private AleaAction aleaAction; // Action pour switcher le mode aléatoire
-	                               // avec ctrl + R
+
+	// avec ctrl + R
 
 	/**
 	 * @param args
@@ -130,8 +131,8 @@ public class Editeur
 			}
 			else
 			{
-				proprietes.setProperty(parametersKeys[i],
-				        String.valueOf(param[i]));
+				proprietes.setProperty(parametersKeys[i], String
+				        .valueOf(param[i]));
 			}
 		}
 
@@ -139,7 +140,7 @@ public class Editeur
 
 		nbrNiveaux = new Integer(param[0]); // nombre total de niveaux
 		nbrPixels = new Integer(param[1]); // nombre de pixel du coté d'une case
-		                                   // (carrée)
+		// (carrée)
 		nbrLignes = new Integer(param[2]); // nombre de lignes de la carte
 		nbrColonnes = new Integer(param[3]); // nombre de colonnes de la carte
 
@@ -345,96 +346,103 @@ public class Editeur
 
 			if (!cancelled)
 			{
-//				PrintWriter pw;
-//				try
-//				{
-//					FileWriter fw =
-//					        new FileWriter(new File(results[0] + ".txt"));
-//					pw = new PrintWriter(fw, true);
-//
-//					pw.print(nbrPixels + " ");
-//					pw.print(nbrLignes + " ");
-//					pw.print(nbrColonnes + " ");
-//					pw.println(nbrNiveaux);
-//
-//					CaseNiveaux[][] cases = carte.getCases();
-//
-//					for (int i = 0; i < nbrLignes; i++)
-//					{
-//						for (int j = 0; j < nbrColonnes; j++)
-//						{
-//							for (int k = 1; k <= nbrNiveaux; k++)
-//							{
-//								// if (cases[i][j].getSprite(k).getCode()
-//								// .matches("[0-9]{5}"))
-//								if (!cases[i][j].getSprite(k).getCode()
-//								        .isEmpty())
-//								{
-//									pw.print(cases[i][j].getSprite(k).getCode());
-//								}
-//								else
-//								{
-//									pw.print("00000");
-//								}
-//
-//								if (k != nbrNiveaux)
-//								{
-//									pw.print(" ");
-//								}
-//								else
-//								{
-//									pw.println("");
-//								}
-//							}
-//						}
-//					}
-//
-//					pw.close();
-//					fw.close();
-//					System.out.println("Carte sauvegardée");
-//				}
-//				catch (IOException e)
-//				{
-//					JOptionPane
-//					        .showMessageDialog(
-//					                null,
-//					                "IO Error ",
-//					                "Un problème est survenu lors de l'écriture dans le fichier !",
-//					                JOptionPane.ERROR_MESSAGE);
-//
-//					System.err.println("IO erreur pendant l'enregistrement : "
-//					        + e.getMessage());
-//				}
-				
-		        ObjectOutputStream oos;
-		        try {
-		        	oos = new ObjectOutputStream(
-		        				new BufferedOutputStream(
-		        						new FileOutputStream(
-		        								new File("sauvegardes/" + results[0] + ".txt"))));
-		        	oos.writeObject(new Integer(nbrNiveaux));
-		        	oos.writeObject(new Integer(nbrPixels));
-		        	oos.writeObject(new Integer(nbrLignes));
-		        	oos.writeObject(new Integer(nbrColonnes));
-		        	for (int i = 0; i < nbrLignes; i++)
-		    		{
-		    			for (int j = 0; j < nbrColonnes; j++)
-		    			{
-		    				for(int k = 0 ; k < nbrNiveaux ; k++)
-		    				{
-		    					oos.writeObject(carte.getCases()[i][j].getSprite(k + 1).getCode());
-		    				}
-		    				
-		    			}
-		    		}
-		        	
-		        	oos.close();
-		        	
-		        } catch (FileNotFoundException e) {
-		            e.printStackTrace();
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        }     	
+				// PrintWriter pw;
+				// try
+				// {
+				// FileWriter fw =
+				// new FileWriter(new File(results[0] + ".txt"));
+				// pw = new PrintWriter(fw, true);
+				//
+				// pw.print(nbrPixels + " ");
+				// pw.print(nbrLignes + " ");
+				// pw.print(nbrColonnes + " ");
+				// pw.println(nbrNiveaux);
+				//
+				// CaseNiveaux[][] cases = carte.getCases();
+				//
+				// for (int i = 0; i < nbrLignes; i++)
+				// {
+				// for (int j = 0; j < nbrColonnes; j++)
+				// {
+				// for (int k = 1; k <= nbrNiveaux; k++)
+				// {
+				// // if (cases[i][j].getSprite(k).getCode()
+				// // .matches("[0-9]{5}"))
+				// if (!cases[i][j].getSprite(k).getCode()
+				// .isEmpty())
+				// {
+				// pw.print(cases[i][j].getSprite(k).getCode());
+				// }
+				// else
+				// {
+				// pw.print("00000");
+				// }
+				//
+				// if (k != nbrNiveaux)
+				// {
+				// pw.print(" ");
+				// }
+				// else
+				// {
+				// pw.println("");
+				// }
+				// }
+				// }
+				// }
+				//
+				// pw.close();
+				// fw.close();
+				// System.out.println("Carte sauvegardée");
+				// }
+				// catch (IOException e)
+				// {
+				// JOptionPane
+				// .showMessageDialog(
+				// null,
+				// "IO Error ",
+				// "Un problème est survenu lors de l'écriture dans le fichier !",
+				// JOptionPane.ERROR_MESSAGE);
+				//
+				// System.err.println("IO erreur pendant l'enregistrement : "
+				// + e.getMessage());
+				// }
+
+				ObjectOutputStream oos;
+				try
+				{
+					oos =
+					        new ObjectOutputStream(new BufferedOutputStream(
+					                new FileOutputStream(new File(
+					                        "sauvegardes/" + results[0]
+					                                + ".txt"))));
+					oos.writeObject(new Integer(nbrNiveaux));
+					oos.writeObject(new Integer(nbrPixels));
+					oos.writeObject(new Integer(nbrLignes));
+					oos.writeObject(new Integer(nbrColonnes));
+					for (int i = 0; i < nbrLignes; i++)
+					{
+						for (int j = 0; j < nbrColonnes; j++)
+						{
+							for (int k = 0; k < nbrNiveaux; k++)
+							{
+								oos.writeObject(carte.getCases()[i][j]
+								        .getSprite(k + 1).getCode());
+							}
+
+						}
+					}
+
+					oos.close();
+
+				}
+				catch (FileNotFoundException e)
+				{
+					e.printStackTrace();
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
 
 			}
 		}
@@ -785,18 +793,16 @@ public class Editeur
 											carte.getCases()[a][b].setSprite(spr,
 											        k + 1);
 										}
+
 									}
-								}
-			        		
+								}			        		
 						} catch (ClassNotFoundException e) 
 						{
-							JOptionPane
-					        .showMessageDialog(
+							JOptionPane.showMessageDialog(
 					                null,
 					                "Données invalides",
 					                "Un problème est survenu lors de la lecture du fichier !",
-					                JOptionPane.ERROR_MESSAGE);
-	
+					                JOptionPane.ERROR_MESSAGE);	
 							System.err.println("Classe non trouvée pendant le chargement : "
 									+ e.getMessage());
 						}catch(ClassCastException cce)
@@ -1050,7 +1056,7 @@ public class Editeur
 			try
 			{
 				prop.store(dos, null); // Le second argument permet
-				                       // d'enregistrer des commentaires
+				// d'enregistrer des commentaires
 			}
 			catch (IOException e)
 			{
@@ -1174,59 +1180,57 @@ public class Editeur
 
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 		        .put(KeyStroke.getKeyStroke('1'), "action chiffre 1");
-		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 1", chiffre1Action);
+		fenetre.getRootPane().getActionMap().put("action chiffre 1",
+		        chiffre1Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 		        .put(KeyStroke.getKeyStroke('2'), "action chiffre 2");
-		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 2", chiffre2Action);
+		fenetre.getRootPane().getActionMap().put("action chiffre 2",
+		        chiffre2Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 		        .put(KeyStroke.getKeyStroke('3'), "action chiffre 3");
-		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 3", chiffre3Action);
+		fenetre.getRootPane().getActionMap().put("action chiffre 3",
+		        chiffre3Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 		        .put(KeyStroke.getKeyStroke('4'), "action chiffre 4");
-		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 4", chiffre4Action);
+		fenetre.getRootPane().getActionMap().put("action chiffre 4",
+		        chiffre4Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 		        .put(KeyStroke.getKeyStroke('5'), "action chiffre 5");
-		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 5", chiffre5Action);
+		fenetre.getRootPane().getActionMap().put("action chiffre 5",
+		        chiffre5Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 		        .put(KeyStroke.getKeyStroke('6'), "action chiffre 6");
-		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 6", chiffre6Action);
+		fenetre.getRootPane().getActionMap().put("action chiffre 6",
+		        chiffre6Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 		        .put(KeyStroke.getKeyStroke('7'), "action chiffre 7");
-		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 7", chiffre7Action);
+		fenetre.getRootPane().getActionMap().put("action chiffre 7",
+		        chiffre7Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 		        .put(KeyStroke.getKeyStroke('8'), "action chiffre 8");
-		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 8", chiffre8Action);
+		fenetre.getRootPane().getActionMap().put("action chiffre 8",
+		        chiffre8Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 		        .put(KeyStroke.getKeyStroke('9'), "action chiffre 9");
-		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 9", chiffre9Action);
+		fenetre.getRootPane().getActionMap().put("action chiffre 9",
+		        chiffre9Action);
 
 		// Actions du menu
 		undoAction = new UndoAction();
 
-		fenetre.getRootPane()
-		        .getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke
-		                .getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK),
-		                "action undo");
+		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+		        .put(
+		                KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+		                        InputEvent.CTRL_MASK), "action undo");
 		fenetre.getRootPane().getActionMap().put("action undo", undoAction);
 
 		// Actions du mode aleatoire
 		aleaAction = new AleaAction();
 
-		fenetre.getRootPane()
-		        .getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke
-		                .getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK),
-		                "action alea");
+		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+		        .put(
+		                KeyStroke.getKeyStroke(KeyEvent.VK_R,
+		                        InputEvent.CTRL_MASK), "action alea");
 		fenetre.getRootPane().getActionMap().put("action alea", aleaAction);
 	}
 
