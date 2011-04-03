@@ -120,7 +120,13 @@ public class CaseNiveaux extends AbstractCase
 	{
 		if(niv <= nbrNiveaux)
 		{
-			tabSprite[niv - 1 ] = new Sprite(sprite);
+			if(sprite != null)
+			{
+				tabSprite[niv - 1 ] = new Sprite(sprite);
+			}else
+			{
+				clear(niv);				
+			}
 		}
 		else
 			System.err.println("Niveau incorrect : " + niv + " dans CaseNiveaux::setSprite(Sprite, int)");

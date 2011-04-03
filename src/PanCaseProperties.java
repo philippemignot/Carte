@@ -29,8 +29,8 @@ public class PanCaseProperties extends JPanel implements Observateur
 		Border b = BorderFactory.createRaisedBevelBorder();
 		this.setBorder(b);
 		setLayout(new GridBagLayout());
-		this.setMinimumSize(new Dimension(largeur + 80, (nbrNiveaux * (hauteur + 30))));
-		this.setPreferredSize(new Dimension(largeur + 80, (nbrNiveaux * (hauteur + 30))));
+		this.setMinimumSize(new Dimension(largeur + 100, (nbrNiveaux * (hauteur + 75))));
+		this.setPreferredSize(new Dimension(largeur + 100, (nbrNiveaux * (hauteur + 75))));
 	}
 
 	@Override
@@ -49,13 +49,10 @@ public class PanCaseProperties extends JPanel implements Observateur
 			                5, 5, 5, 5), 0, 0));
 		    panSpriteProp.get(i).revalidate();	    	
 	    }
-	    System.out.println((sprites.size() * (hauteur + 75)));
 	    this.setMinimumSize(new Dimension(largeur + 100, (sprites.size() * (hauteur + 75))));
 	    this.setPreferredSize(new Dimension(largeur + 100, (sprites.size() * (hauteur + 75))));
 //	    ((JPanel) this.getParent().getParent().getParent().getParent()).revalidate();
 	    ((JPanel) this.getParent().getParent().getParent().getParent()).repaint();
-
-	    System.out.println(this.getSize().height);
     }
 
 	@Override

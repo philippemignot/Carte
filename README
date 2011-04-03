@@ -1,0 +1,7 @@
+Pour recréer le dépot :
+- Faire une sauvegarde au préalable du dosser Carte actuel
+- Supprimer le dossier carte ?? (C'est possible de faire un clone sur un dossier existant pour garder les dossiers comme images ?)
+- Aller dans le dossier parent avec la console ou git bash et taper :
+	git clone git@github.com:philippemignot/Carte.git
+- Rajouter le dossier images (récupéré de la sauvegarde)
+- Créer un nouveau dossier sauvegardes ou récupérer un ancien
