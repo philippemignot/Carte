@@ -357,7 +357,7 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 								}
 								else
 								{
-									selection.get(i).setSprite(getSpriteAlea(),
+									selection.get(i).setSprite(getSpriteAlea(true),
 									        nivSelected);
 								}
 
@@ -386,7 +386,7 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 							else
 							{
 								cases[coordSelection[0]][coordSelection[1]]
-													        .setSprite(getSpriteAlea(), nivSelected);
+													        .setSprite(getSpriteAlea(false), nivSelected);
 							}
 						}
 						// click droit : on efface
@@ -568,18 +568,18 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	 * 
 	 * @return img L'image sélectionnée aléatoirement
 	 */
-	public Sprite getSpriteAlea()
+	public Sprite getSpriteAlea(boolean perct)
 	{
 		Sprite sprite = null;
 
 		// On détermine si on affiche une image ou non en fonction du
 		// pourcentage de remplissage
 		int numRempl = (int) (Math.random() * 100);
-		boolean remplir = (numRempl < perctAlea) ? true : false;
+		boolean vide = (numRempl > perctAlea && perct) ? true : false;
 
 		// On choisit une image au hasard si on peut
 		int num = (int) (Math.random() * spritesCurseur.size());
-		if (!spritesCurseur.isEmpty() && remplir)
+		if (!spritesCurseur.isEmpty() && !vide)
 			sprite = spritesCurseur.get(num);
 
 		return sprite;
