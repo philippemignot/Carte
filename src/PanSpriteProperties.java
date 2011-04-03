@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -47,9 +49,14 @@ public class PanSpriteProperties extends JPanel
 	public void addToolbar()
 	{
 		toolbar = new JToolBar();
-		bAvant = new JButton("A");
-		bApres = new JButton("B");
-		bSuppr = new JButton("S");
+		bAvant = new JButton(new ImageIcon("fleche_haut.png"));
+		bAvant.setMargin(new Insets(1, 1, 1, 1));
+		bApres = new JButton(new ImageIcon("fleche_bas.png"));
+		bApres.setMargin(new Insets(1, 1, 1, 1));
+
+		bSuppr = new JButton(new ImageIcon("suppr.png"));
+		bSuppr.setMargin(new Insets(1, 1, 1, 1));
+
 		bCopier = new JButton("C");
 		bColler = new JButton("V");
 		

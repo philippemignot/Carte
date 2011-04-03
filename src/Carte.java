@@ -322,7 +322,6 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	                        Robot rb = new Robot();
 	                        rb.keyPress(KeyEvent.VK_ESCAPE);
 	                        rb.keyRelease(KeyEvent.VK_ESCAPE);
-	                        System.out.println("deselectiion");
                         }
                         catch (AWTException e)
                         {
