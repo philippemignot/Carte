@@ -3,6 +3,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -14,7 +16,7 @@ import javax.swing.border.Border;
 
 
 @SuppressWarnings("serial")
-public class PanCaseProperties extends JPanel implements Observateur
+public class PanCaseProperties extends JPanel implements Observateur, ActionListener
 {
 	private ArrayList<PanSpriteProperties> panSpriteProp = new ArrayList<PanSpriteProperties>();
 	private JLabel name = new JLabel("");
@@ -48,7 +50,7 @@ public class PanCaseProperties extends JPanel implements Observateur
 		                15, 5, 15, 5), 0, 0));
 	    for(int i = 0 ; i < sprites.size() ; i++)
 	    {
-	    	panSpriteProp.add(new PanSpriteProperties(new Sprite(sprites.get(i)), i+1));
+	    	panSpriteProp.add(new PanSpriteProperties(new Sprite(sprites.get(i)), i+1, nbrNiveaux));
 	    	
 	    	contentPane.add(panSpriteProp.get(i),  new GridBagConstraints(0, i+2, 1, 1, 1.0, 0.0,
 			        GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(
@@ -56,11 +58,19 @@ public class PanCaseProperties extends JPanel implements Observateur
 	    	if(name.getText().toLowerCase().equals("carte"))
 	    	{
 	    		panSpriteProp.get(i).addToolbar();
+	    		panSpriteProp.get(i).addToolbarListener(this);
 	    	}
 		    panSpriteProp.get(i).revalidate();	    	
 	    }
-	    this.setMinimumSize(new Dimension(largeur + 150, (sprites.size() * (hauteur + 100))));
-	    this.setPreferredSize(new Dimension(largeur + 150, (sprites.size() * (hauteur + 100))));
+	    if(name.getText().toLowerCase().equals("carte"))
+    	{
+	    	this.setMinimumSize(new Dimension(largeur + 150, (sprites.size() * (hauteur + 100))));
+	    	this.setPreferredSize(new Dimension(largeur + 150, (sprites.size() * (hauteur + 100))));
+    	}else
+    	{
+    		this.setMinimumSize(new Dimension(largeur + 150, (sprites.size() * (hauteur + 60))));
+    		this.setPreferredSize(new Dimension(largeur + 150, (sprites.size() * (hauteur + 60))));
+    	}
 //	    ((JPanel) this.getParent().getParent().getParent().getParent()).revalidate();
 	    ((JPanel) this.getParent().getParent().getParent().getParent()).repaint();
     }
@@ -83,5 +93,32 @@ public class PanCaseProperties extends JPanel implements Observateur
     public void update(String[] string)
     {
 		name.setText(string[0]);	    
+    }
+
+	@Override
+    public void actionPerformed(ActionEvent e)
+    {
+	   if(e.getSource().getClass().getCanonicalName().equals("javax.swing.JButton"))
+	   {
+		   String[] infosSource = e.getActionCommand().split("_");
+		   System.out.println(">>> Bouton : " + e.getActionCommand() + " : " + infosSource[0]);
+		   if(e.getActionCommand().matches("[a-z]+[_][1-9]"))
+		   {
+			   
+			   if(infosSource[0] == "avant")
+			   {
+				   System.out.println("Avant !!");
+			   }
+			   else if(infosSource[0] == "apres")
+			   {
+				   System.out.println("Avant !!");
+			   }
+			   else if(infosSource[0] == "apres")
+			   {
+				   System.out.println("Après !!");
+			   }
+		   }
+		   
+	   }
     }
 }

@@ -25,17 +25,19 @@ public class PanSpriteProperties extends JPanel
 	private ImagePanel panImage;
 	private JLabel niv;
 	private int niveau;
-	private JToolBar toolbar;
+	private int nbrNiveaux;
+	private JToolBar toolbar = new JToolBar();
 	private JButton bAvant;
 	private JButton bApres;
 	private JButton bSuppr;
 	private JButton bCopier;
 	private JButton bColler;
 	
-	public PanSpriteProperties(Sprite sprite, int niv)
+	public PanSpriteProperties(Sprite sprite, int niv, int nbrNiv)
 	{
 		this.sprite = sprite;
 		niveau = niv;
+		nbrNiveaux = nbrNiv;
 		Border b = BorderFactory.createLoweredBevelBorder();
 		this.setBorder(b);
 		contentPane = new JPanel();
@@ -48,14 +50,25 @@ public class PanSpriteProperties extends JPanel
 	
 	public void addToolbar()
 	{
-		toolbar = new JToolBar();
 		bAvant = new JButton(new ImageIcon("fleche_haut.png"));
 		bAvant.setMargin(new Insets(1, 1, 1, 1));
+		bAvant.setActionCommand("avant_"+ String.valueOf(niveau));
+		if(niveau == 1)
+		{
+			bAvant.setEnabled(false);
+		}
+		
 		bApres = new JButton(new ImageIcon("fleche_bas.png"));
 		bApres.setMargin(new Insets(1, 1, 1, 1));
+		bApres.setActionCommand("apres_"+ String.valueOf(niveau));
+		if(niveau == nbrNiveaux)
+		{
+			bApres.setEnabled(false);
+		}
 
 		bSuppr = new JButton(new ImageIcon("suppr.png"));
 		bSuppr.setMargin(new Insets(1, 1, 1, 1));
+		bSuppr.setActionCommand("suppr_"+ String.valueOf(niveau));
 
 		bCopier = new JButton("C");
 		bColler = new JButton("V");
@@ -102,5 +115,21 @@ public class PanSpriteProperties extends JPanel
 		        1.0, GridBagConstraints.EAST
 		        , GridBagConstraints.NONE,
 		        new Insets(5, 15, 0, 0), 2, 0));
+	}
+	
+	public JToolBar getToolbar()
+	{
+		return toolbar;
+	}
+	
+	public void addToolbarListener(ActionListener listener)
+	{
+		for(int i = 0 ; i < toolbar.getComponentCount() ; i ++)
+		{
+			if(toolbar.getComponent(i).getClass().getCanonicalName().equals("javax.swing.JButton"))
+			{
+				((JButton)toolbar.getComponent(i)).addActionListener(listener);
+			}
+		}
 	}
 }
