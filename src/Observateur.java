@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public interface Observateur 
 {
-	public void update(ArrayList<Sprite> sprites);
+	public void update(ArrayList<Sprite> sprites, String source);
 	public void update(boolean[] bool);
 	public void update(int[] integer);
 	public void update(String[] string);

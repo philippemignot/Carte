@@ -170,26 +170,37 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	}
 
 	@Override
-	public void update(ArrayList<Sprite> sprites)
+	public void update(ArrayList<Sprite> sprites, String source)
 	{
-		if (!sprites.isEmpty())
+		// Maybe use switch ans Constants instead but I don't know how to do know and I don't have internet...
+		if(source.equalsIgnoreCase("selection"))
 		{
-			this.spritesCurseur = sprites;
-			Cursor monCurseur =
-			        tk.createCustomCursor(spritesCurseur.get(0).getImage(), new Point(15, 15),
-			                "sprite");
-			this.setCursor(monCurseur);
-			if(selection.size() == 1)
+			if (!sprites.isEmpty())
 			{
-				clearSelection();
+				this.spritesCurseur = sprites;
+				Cursor monCurseur =
+					tk.createCustomCursor(spritesCurseur.get(0).getImage(), new Point(15, 15),
+					"sprite");
+				this.setCursor(monCurseur);
+				if(selection.size() == 1)
+				{
+					clearSelection();
+				}
 			}
-			repaint();
-			
+			else
+			{
+				deselectionneCurseur();
+			}
 		}
-		else
+			else if (source.equalsIgnoreCase("pancaseproperties"))
 		{
-			deselectionneCurseur();
+			for(int i = 0 ; i < sprites.size() ; i ++)
+			{
+				selection.get(0).setSprite(sprites.get(i),i+1 );
+			}
 		}
+		repaint();
+
 	}
 
 	@Override
@@ -715,14 +726,7 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	{
 		for (Observateur obs : listeObservateur)
 		{
-			String[] name = {"Carte"};
-			if(listeSpritesCase.isEmpty())
-			{
-				name[0] = "";
-			}
-
-			obs.update(name);		    
-			obs.update(listeSpritesCase);
+			obs.update(listeSpritesCase, "carte");
 		}
 	}
 

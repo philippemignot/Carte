@@ -25,6 +25,9 @@ public class PanCaseProperties extends JPanel implements Observateur, ActionList
 	private int hauteur;
 	private JPanel contentPane;
 	
+	private ArrayList<Observateur> listeObservateur =
+        new ArrayList<Observateur>(); // liste des observateurs
+	
 	public PanCaseProperties(int nbrNiv, int largeur, int hauteur)
 	{
 		nbrNiveaux = nbrNiv;
@@ -41,8 +44,9 @@ public class PanCaseProperties extends JPanel implements Observateur, ActionList
 	}
 
 	@Override
-    public void update(ArrayList<Sprite> sprites)
+    public void update(ArrayList<Sprite> sprites, String source)
     {	
+		name.setText(source);	    
 		panSpriteProp = new PanSpriteProperties[sprites.size()];
 		contentPane.removeAll();
 		contentPane.add(name,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
@@ -90,7 +94,6 @@ public class PanCaseProperties extends JPanel implements Observateur, ActionList
 	@Override
     public void update(String[] string)
     {
-		name.setText(string[0]);	    
     }
 
 	@Override
@@ -102,7 +105,6 @@ public class PanCaseProperties extends JPanel implements Observateur, ActionList
 		   {
 			   String[] infosSource = e.getActionCommand().split("_");
 			   int pos = new Integer(infosSource[1]);
-			   System.out.println(pos);
 			   if(infosSource[0].equalsIgnoreCase("avant"))
 			   {
 				   modifiesPropPosition(getProp(pos), pos - 1);
@@ -113,8 +115,8 @@ public class PanCaseProperties extends JPanel implements Observateur, ActionList
 			   }
 			   else if(infosSource[0].equalsIgnoreCase("suppr"))
 			   {
-				   System.out.println("Suppression " + getProp(pos).getNiveau() + " !!");
 				   getProp(pos).supprSprite();
+				   updateObservateur();
 			   }
 		   }
 		   
@@ -155,6 +157,7 @@ public class PanCaseProperties extends JPanel implements Observateur, ActionList
 		
 		revalidate();
 		repaint();
+		updateObservateur();
 	}
 
 	private PanSpriteProperties getProp(int pos)
@@ -163,23 +166,29 @@ public class PanCaseProperties extends JPanel implements Observateur, ActionList
     }
 
 	@Override
-    public void addObservateur(Observateur obs)
-    {
-	    // TODO Auto-generated method stub
-	    
-    }
+	public void addObservateur(Observateur obs)
+	{
+		listeObservateur.add(obs);
+
+	}
 
 	@Override
-    public void rmvObservateur(Observateur obs)
-    {
-	    // TODO Auto-generated method stub
-	    
-    }
+	public void rmvObservateur(Observateur obs)
+	{
+		listeObservateur.remove(obs);
+	}
 
 	@Override
-    public void updateObservateur()
-    {
-	    // TODO Auto-generated method stub
-	    
-    }
+	public void updateObservateur()
+	{
+		ArrayList<Sprite> listeSprites = new ArrayList<Sprite>();
+		for(int i = 0 ; i < panSpriteProp.length ; i ++)
+		{
+			listeSprites.add(panSpriteProp[i].getSprite());
+		}
+		for (Observateur obs : listeObservateur)
+		{		    
+			obs.update(listeSprites, "PanCaseProperties");
+		}
+	}
 }

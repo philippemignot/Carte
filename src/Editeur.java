@@ -920,6 +920,7 @@ public class Editeur
 		options.addObservateur(carte);
 		carte.addObservateur(caseProp);
 		selection.addObservateur(caseProp);
+		caseProp.addObservateur(carte);
 
 		// Ajoute une scroll bar
 		scrollCarte = new JScrollPane(carte);
@@ -1031,6 +1032,7 @@ public class Editeur
 		options.rmvObservateur(carte);
 		carte.rmvObservateur(caseProp);
 		selection.rmvObservateur(caseProp);
+		caseProp.rmvObservateur(carte);
 
 		conteneur.remove(jspV2);
 	}
