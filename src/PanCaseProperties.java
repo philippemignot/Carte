@@ -16,9 +16,9 @@ import javax.swing.border.Border;
 
 
 @SuppressWarnings("serial")
-public class PanCaseProperties extends JPanel implements Observateur, ActionListener
+public class PanCaseProperties extends JPanel implements Observateur, ActionListener, Observable
 {
-	private ArrayList<PanSpriteProperties> panSpriteProp = new ArrayList<PanSpriteProperties>();
+	private PanSpriteProperties[] panSpriteProp;
 	private JLabel name = new JLabel("");
 	private int nbrNiveaux;
 	private int largeur;
@@ -43,24 +43,22 @@ public class PanCaseProperties extends JPanel implements Observateur, ActionList
 	@Override
     public void update(ArrayList<Sprite> sprites)
     {	
-		panSpriteProp.clear();
+		panSpriteProp = new PanSpriteProperties[sprites.size()];
 		contentPane.removeAll();
 		contentPane.add(name,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
 		        GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(
 		                15, 5, 15, 5), 0, 0));
 	    for(int i = 0 ; i < sprites.size() ; i++)
 	    {
-	    	panSpriteProp.add(new PanSpriteProperties(new Sprite(sprites.get(i)), i+1, nbrNiveaux));
+	    	panSpriteProp[i] = new PanSpriteProperties(new Sprite(sprites.get(i)), i+1, nbrNiveaux);
 	    	
-	    	contentPane.add(panSpriteProp.get(i),  new GridBagConstraints(0, i+2, 1, 1, 1.0, 0.0,
-			        GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(
-			                5, 10, 5, 10), 0, 0));
+	    	setPropLayoutPosition(panSpriteProp[i], i+2);
 	    	if(name.getText().toLowerCase().equals("carte"))
 	    	{
-	    		panSpriteProp.get(i).addToolbar();
-	    		panSpriteProp.get(i).addToolbarListener(this);
+	    		panSpriteProp[i].addToolbar();
+	    		panSpriteProp[i].addToolbarListener(this);
 	    	}
-		    panSpriteProp.get(i).revalidate();	    	
+		    panSpriteProp[i].revalidate();	    	
 	    }
 	    if(name.getText().toLowerCase().equals("carte"))
     	{
@@ -100,25 +98,88 @@ public class PanCaseProperties extends JPanel implements Observateur, ActionList
     {
 	   if(e.getSource().getClass().getCanonicalName().equals("javax.swing.JButton"))
 	   {
-		   String[] infosSource = e.getActionCommand().split("_");
-		   System.out.println(">>> Bouton : " + e.getActionCommand() + " : " + infosSource[0]);
 		   if(e.getActionCommand().matches("[a-z]+[_][1-9]"))
 		   {
-			   
-			   if(infosSource[0] == "avant")
+			   String[] infosSource = e.getActionCommand().split("_");
+			   int pos = new Integer(infosSource[1]);
+			   System.out.println(pos);
+			   if(infosSource[0].equalsIgnoreCase("avant"))
 			   {
-				   System.out.println("Avant !!");
+				   modifiesPropPosition(getProp(pos), pos - 1);
 			   }
-			   else if(infosSource[0] == "apres")
+			   else if(infosSource[0].equalsIgnoreCase("apres"))
 			   {
-				   System.out.println("Avant !!");
+				   modifiesPropPosition(getProp(pos), pos + 1);
 			   }
-			   else if(infosSource[0] == "apres")
+			   else if(infosSource[0].equalsIgnoreCase("suppr"))
 			   {
-				   System.out.println("Après !!");
+				   System.out.println("Suppression " + getProp(pos).getNiveau() + " !!");
+				   getProp(pos).supprSprite();
 			   }
 		   }
 		   
 	   }
+    }
+	
+	private void setPropLayoutPosition(PanSpriteProperties psp, int pos)
+	{
+		contentPane.add(psp,  new GridBagConstraints(0, pos, 1, 1, 1.0, 0.0,
+		        GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(
+		                5, 10, 5, 10), 0, 0));
+	}
+
+	private void rmPropLayoutPosition(PanSpriteProperties psp, int pos)
+	{
+		contentPane.remove(psp);
+	}
+	
+	private void modifiesPropPosition(PanSpriteProperties psp, int pos)
+	{
+		int posActuel = psp.getNiveau();
+		PanSpriteProperties psp2 = getProp(pos); // Le composant duquel on prend la place
+		
+		// On modifie le layout
+		rmPropLayoutPosition(psp, posActuel);
+		rmPropLayoutPosition(psp2, pos);
+		
+		setPropLayoutPosition(psp, pos + 1); // 1 est le label de titre
+		setPropLayoutPosition(psp2, posActuel + 1);
+		
+		// On met à jour la liste des panneaux de propriété
+		panSpriteProp[posActuel - 1] = psp2;
+		panSpriteProp[pos - 1] = psp;
+		
+		// On met à jour les infos de niveau du panneau
+		psp.setNiveau(pos);
+		psp2.setNiveau(posActuel);
+		
+		revalidate();
+		repaint();
+	}
+
+	private PanSpriteProperties getProp(int pos)
+    {
+		return panSpriteProp[pos - 1]; // commence à 0
+    }
+
+	@Override
+    public void addObservateur(Observateur obs)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+
+	@Override
+    public void rmvObservateur(Observateur obs)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+
+	@Override
+    public void updateObservateur()
+    {
+	    // TODO Auto-generated method stub
+	    
     }
 }

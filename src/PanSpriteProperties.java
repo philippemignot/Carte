@@ -26,6 +26,8 @@ public class PanSpriteProperties extends JPanel
 	private JLabel niv;
 	private int niveau;
 	private int nbrNiveaux;
+	private int largeur;
+	private int hauteur;
 	private JToolBar toolbar = new JToolBar();
 	private JButton bAvant;
 	private JButton bApres;
@@ -38,6 +40,8 @@ public class PanSpriteProperties extends JPanel
 		this.sprite = sprite;
 		niveau = niv;
 		nbrNiveaux = nbrNiv;
+		hauteur = sprite.getHauteur();
+		largeur = sprite.getLargeur();
 		Border b = BorderFactory.createLoweredBevelBorder();
 		this.setBorder(b);
 		contentPane = new JPanel();
@@ -131,5 +135,45 @@ public class PanSpriteProperties extends JPanel
 				((JButton)toolbar.getComponent(i)).addActionListener(listener);
 			}
 		}
+	}
+	
+	public int getNiveau()
+	{
+		return niveau;
+	}
+	
+	public void setNiveau(int niv)
+	{
+		this.niveau = niv;
+		this.niv.setText(String.valueOf(niv));	
+		
+		bAvant.setActionCommand("avant_"+ String.valueOf(niveau));
+		bApres.setActionCommand("apres_"+ String.valueOf(niveau));
+		bSuppr.setActionCommand("suppr_"+ String.valueOf(niveau));
+		
+		if(niv == 1)
+		{
+			bAvant.setEnabled(false);
+		}else
+		{
+			bAvant.setEnabled(true);
+		}
+
+		if(niv == nbrNiveaux)
+		{
+			bApres.setEnabled(false);
+		}else
+		{
+			bApres.setEnabled(true);
+		}
+	}
+	
+	public void supprSprite()
+	{
+		sprite = new Sprite(largeur, hauteur);
+		updateContent();
+		
+		revalidate();
+		repaint();
 	}
 }
