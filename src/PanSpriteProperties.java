@@ -16,25 +16,36 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.border.Border;
 
-
 public class PanSpriteProperties extends JPanel
 {
-	private JPanel contentPane;
-	private Sprite sprite;
-	private JLabel labCode;
-	private ImagePanel panImage;
-	private JLabel niv;
-	private int niveau;
-	private int nbrNiveaux;
-	private int largeur;
-	private int hauteur;
-	private JToolBar toolbar = new JToolBar();
-	private JButton bAvant;
-	private JButton bApres;
-	private JButton bSuppr;
-	private JButton bCopier;
-	private JButton bColler;
-	
+	private JPanel contentPane; // Le conteneur
+	private Sprite sprite; // Le sprite à afficher
+	private JLabel labCode; // Le label du code image
+	private ImagePanel panImage; // Le panneau contenant l'image
+	private JLabel niv; // Le label contenant le niveau du panneau
+	private int niveau; // Le niveau du panneau
+	private int nbrNiveaux; // Le nombre de niveaux max
+	private int largeur; // La largeur d'un sprite
+	private int hauteur; // La hauteur d'un sprite
+	private JToolBar toolbar = new JToolBar(); // La toolbar si besoin
+	// QUESTION : est-ce qu'on fait pas un élément toolbar plutot que de tout
+	// mettre ici ?
+	private JButton bAvant; // Le bouton avant de la toolbar
+	private JButton bApres; // Le bouton après de la toolbar
+	private JButton bSuppr; // Le bouton suppr de la toolbar
+	private JButton bCopier; // Le bouton copier de la toolbar
+	private JButton bColler; // Le bouton coller de la toolbar
+
+	/**
+	 * Construit un panneau de propriétés avec les éléments nécessaires
+	 * 
+	 * @param nbrNiv
+	 *        Le nombre de niveaux max
+	 * @param largeur
+	 *        La largeur d'un sprite
+	 * @param hauteur
+	 *        La hauteur d'un sprite
+	 */
 	public PanSpriteProperties(Sprite sprite, int niv, int nbrNiv)
 	{
 		this.sprite = sprite;
@@ -42,6 +53,7 @@ public class PanSpriteProperties extends JPanel
 		nbrNiveaux = nbrNiv;
 		hauteur = sprite.getHauteur();
 		largeur = sprite.getLargeur();
+		
 		Border b = BorderFactory.createLoweredBevelBorder();
 		this.setBorder(b);
 		contentPane = new JPanel();
@@ -51,128 +63,178 @@ public class PanSpriteProperties extends JPanel
 		this.add(contentPane, BorderLayout.CENTER);
 		updateContent();
 	}
-	
+
+	/**
+	 * Ajoute une toolbar si besoin
+	 */
 	public void addToolbar()
 	{
 		bAvant = new JButton(new ImageIcon("fleche_haut.png"));
 		bAvant.setMargin(new Insets(1, 1, 1, 1));
-		bAvant.setActionCommand("avant_"+ String.valueOf(niveau));
-		if(niveau == 1)
+		bAvant.setActionCommand("avant_" + String.valueOf(niveau));
+		if (niveau == 1)
 		{
 			bAvant.setEnabled(false);
 		}
-		
+
 		bApres = new JButton(new ImageIcon("fleche_bas.png"));
 		bApres.setMargin(new Insets(1, 1, 1, 1));
-		bApres.setActionCommand("apres_"+ String.valueOf(niveau));
-		if(niveau == nbrNiveaux)
+		bApres.setActionCommand("apres_" + String.valueOf(niveau));
+		if (niveau == nbrNiveaux)
 		{
 			bApres.setEnabled(false);
 		}
 
 		bSuppr = new JButton(new ImageIcon("suppr.png"));
 		bSuppr.setMargin(new Insets(1, 1, 1, 1));
-		bSuppr.setActionCommand("suppr_"+ String.valueOf(niveau));
+		bSuppr.setActionCommand("suppr_" + String.valueOf(niveau));
 
 		bCopier = new JButton("C");
 		bColler = new JButton("V");
-		
-		
+
 		toolbar.add(bAvant);
 		toolbar.add(bApres);
 		toolbar.add(bSuppr);
 		toolbar.addSeparator();
 		toolbar.add(bCopier);
 		toolbar.add(bColler);
-		
+
 		this.add(toolbar, BorderLayout.SOUTH);
 	}
-	
+
+	/**
+	 * Renvoie le sprite de ce panneau
+	 * 
+	 * @return
+	 * 		Le sprite de ce panneau
+	 */
 	public Sprite getSprite()
 	{
 		return sprite;
 	}
 
+	/**
+	 * Modifie le sprite de ce panneau
+	 * 
+	 * @param sprite2
+	 * 				Le sprite à mettre
+	 */
 	public void setSprite(Sprite sprite2)
-    {
+	{
 		sprite = new Sprite(sprite2);
 		updateContent();
-    }
-	
+	}
+
+	/**
+	 * Met à jour le contenu du panneau de propriétés
+	 */
 	public void updateContent()
 	{
-		String code = (sprite.getCode().matches("[0-9]{5}") && !sprite.getCode().isEmpty()) ? sprite.getCode() : "00000";
+		String code =
+		        (sprite.getCode().matches("[0-9]{5}") && !sprite.getCode()
+		                .isEmpty()) ? sprite.getCode() : "00000";
 		labCode = new JLabel(code);
-		niv = new JLabel(" " +String.valueOf(niveau));
+		niv = new JLabel(" " + String.valueOf(niveau));
 		niv.setBorder(BorderFactory.createLoweredBevelBorder());
-		panImage = new ImagePanel(sprite.getImage(), new Dimension(sprite.getLargeur(), sprite.getHauteur()));
+		panImage =
+		        new ImagePanel(sprite.getImage(), new Dimension(
+		                sprite.getLargeur(), sprite.getHauteur()));
 		panImage.setBorder(BorderFactory.createRaisedBevelBorder());
-		
+
 		contentPane.removeAll();
-		contentPane.add(labCode, new GridBagConstraints(0, 0, 1, 1, 1.0,
-		        0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+		contentPane.add(labCode, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0,
+		        GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 		        new Insets(5, 10, 5, 5), 5, 0));
-		contentPane.add(panImage, new GridBagConstraints(1, 0, 1, 1, 0.0,
-		        0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-		        new Insets(5, 5, 5, 10), 0, 0));
-		contentPane.add(niv, new GridBagConstraints(0, 1, 2, 1, 1.0,
-		        1.0, GridBagConstraints.EAST
-		        , GridBagConstraints.NONE,
-		        new Insets(5, 15, 0, 0), 2, 0));
+		contentPane.add(panImage, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+		        GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
+		                5, 5, 5, 10), 0, 0));
+		contentPane.add(niv, new GridBagConstraints(0, 1, 2, 1, 1.0, 1.0,
+		        GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5,
+		                15, 0, 0), 2, 0));
 	}
-	
+
+	/**
+	 * Renvoie la toolbar de ce panneau
+	 * 
+	 * @return
+	 * 		La toolbar
+	 */
 	public JToolBar getToolbar()
 	{
 		return toolbar;
 	}
-	
+
+	/**
+	 * Permet d'ajouter un listener à la toolbar
+	 * 
+	 * @param listener
+	 * 				Le listener à rajouter
+	 */
 	public void addToolbarListener(ActionListener listener)
 	{
-		for(int i = 0 ; i < toolbar.getComponentCount() ; i ++)
+		for (int i = 0; i < toolbar.getComponentCount(); i++)
 		{
-			if(toolbar.getComponent(i).getClass().getCanonicalName().equals("javax.swing.JButton"))
+			if (toolbar.getComponent(i).getClass().getCanonicalName()
+			        .equals("javax.swing.JButton"))
 			{
-				((JButton)toolbar.getComponent(i)).addActionListener(listener);
+				((JButton) toolbar.getComponent(i)).addActionListener(listener);
 			}
 		}
 	}
-	
+
+	/**
+	 * Retourne le niveau de ce panneau
+	 * 
+	 * @return
+	 * 		Le niveau du panneau
+	 */
 	public int getNiveau()
 	{
 		return niveau;
 	}
-	
+
+	/**
+	 * Modifie le niveau de ce panneau
+	 * 
+	 * @param niv
+	 * 			Le nouveau niveau
+	 */
 	public void setNiveau(int niv)
 	{
 		this.niveau = niv;
-		this.niv.setText(String.valueOf(niv));	
-		
-		bAvant.setActionCommand("avant_"+ String.valueOf(niveau));
-		bApres.setActionCommand("apres_"+ String.valueOf(niveau));
-		bSuppr.setActionCommand("suppr_"+ String.valueOf(niveau));
-		
-		if(niv == 1)
+		this.niv.setText(String.valueOf(niv));
+
+		bAvant.setActionCommand("avant_" + String.valueOf(niveau));
+		bApres.setActionCommand("apres_" + String.valueOf(niveau));
+		bSuppr.setActionCommand("suppr_" + String.valueOf(niveau));
+
+		if (niv == 1)
 		{
 			bAvant.setEnabled(false);
-		}else
+		}
+		else
 		{
 			bAvant.setEnabled(true);
 		}
 
-		if(niv == nbrNiveaux)
+		if (niv == nbrNiveaux)
 		{
 			bApres.setEnabled(false);
-		}else
+		}
+		else
 		{
 			bApres.setEnabled(true);
 		}
 	}
-	
+
+	/**
+	 * Met un sprite vide à la place du sprite présent
+	 */
 	public void supprSprite()
 	{
 		sprite = new Sprite(largeur, hauteur);
 		updateContent();
-		
+
 		revalidate();
 		repaint();
 	}

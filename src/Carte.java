@@ -35,7 +35,8 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	
 	private ArrayList<Observateur> listeObservateur =
         new ArrayList<Observateur>(); // liste des observateurs
-	private ArrayList<Sprite> listeSpritesCase = new ArrayList<Sprite>();
+	// ArrayList à envoyer aux observateurs le nécessitant
+	private ArrayList<Sprite> listeSpritesCase = new ArrayList<Sprite>(); 
 
 	private ArrayList<Sprite> spritesCurseur; // Image du curseur
 	private CaseNiveaux[][] cases; // La carte est constituée de ces cases
@@ -48,12 +49,8 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 											   // i,j
 	private boolean modeSelection = false; // indique si on est en train de
 										   // faire une selection
-	private ArrayList<CaseNiveaux> selection = new ArrayList<CaseNiveaux>(); // Contient
-																			 // les
-																			 // cases
-																			 // de
-																			 // la
-																			 // sélection
+	// Contient les cases de la sélection
+	private ArrayList<CaseNiveaux> selection = new ArrayList<CaseNiveaux>();
 
 	private boolean aleatoire = true; // indique si le mode aléatoire de pose
 									  // est activé
@@ -100,6 +97,8 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 				cases[i][j].addMouseListener(this);
 			}
 		}
+		
+		// Initialisation du tableau de copie des cases
 		casesOld = new CaseNiveaux[h][l];
 		for (int i = 0; i < h; i++)
 		{
