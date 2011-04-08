@@ -39,11 +39,13 @@ import javax.swing.KeyStroke;
 public class Editeur
 {
 	// Généraux
-	private Insets insetsScreen;
-	private Dimension maxSize;
-	private boolean isFirstDialog = true;
+	private Insets insetsScreen; // Insets de l'écran
+	private Dimension maxSize;	// Dimension maximale possible
+	private boolean isFirstDialog = true; // Indique si il s'agit de la fenêtre d'ouverture
+	
 	// Paramètres
-	private Properties proprietes;
+	private Properties parametres; // Les paramètres nécessaires à la création d'une carte
+		// Clés des paramètres
 	private String[] parametersKeys =
 	        {"nbrNiveaux", "nbrPixels", "nbrLignes", "nbrColonnes"};
 	private int nbrNiveaux = 4; // nombre total de niveaux
@@ -95,6 +97,8 @@ public class Editeur
 	// avec ctrl + R
 
 	/**
+	 * Main
+	 * 
 	 * @param args
 	 *        Les paramètres d'entrée de l'application
 	 */
@@ -105,12 +109,14 @@ public class Editeur
 	}
 
 	/**
+	 * Crée une nouvelle application éditeur
+	 * 
 	 * @param prop
 	 *        Les propriétés
 	 */
 	public Editeur(Properties prop)
 	{
-		proprietes = prop;
+		parametres = prop;
 		int[] param = new int[4]; // Les paramètres envoyés à l'éditeur
 
 		verifPropietes(prop);
@@ -124,14 +130,14 @@ public class Editeur
 
 		for (int i = 0; i < parametersKeys.length; i++)
 		{
-			String current = proprietes.getProperty(parametersKeys[i]);
+			String current = parametres.getProperty(parametersKeys[i]);
 			if (current != null)
 			{
 				param[i] = new Integer(current);
 			}
 			else
 			{
-				proprietes.setProperty(parametersKeys[i], String
+				parametres.setProperty(parametersKeys[i], String
 				        .valueOf(param[i]));
 			}
 		}
@@ -182,6 +188,9 @@ public class Editeur
 		setSizeAgain();
 	}
 
+	/**
+	 * Recalcule les taille pour ne pas que l'éditeur soit plus grand que l'espace disponible sur l'écran
+	 */
 	private void setSizeAgain()
 	{
 		int widthFen = fenetre.getSize().width;
@@ -199,6 +208,9 @@ public class Editeur
 		fenetre.repaint();
 	}
 
+	/**
+	 * Initialise le menu
+	 */
 	private void initMenu()
 	{
 		menuNew.addActionListener(new NewCarteListener(isFirstDialog));
@@ -246,25 +258,35 @@ public class Editeur
 	 */
 	public class NewCarteListener implements ActionListener
 	{
-		private boolean isFirstDialog = false;
+		private boolean isFirstDialog = false; // Indique si l'on est sur l'écran de démarrage
 
+		/**
+		 * Crée un nouvea listener
+		 */
 		public NewCarteListener()
 		{
 			this.isFirstDialog = false;
 		}
 
+		/**
+		 * Crée un nouveau listener en spécifiant s'il s'agit de la fenêtre de démarrage
+		 * 
+		 * @param firstDialog
+		 * 			Spécifie si il s'agit de la fenêtre de démarrage
+		 */
 		public NewCarteListener(boolean firstDialog)
 		{
 			this.isFirstDialog = firstDialog;
 		}
-
+		
+		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
 			String[] titles =
 			        {"Nombre de niveaux", "Taille d'un sprite (en px)",
 			                "Nombre de lignes", "Nombre de colonne"};
 			String[] defaults =
-			        getParametersFromProperties(proprietes, parametersKeys);
+			        getParametersFromProperties(parametres, parametersKeys);
 			InputDialog dialogNew =
 			        new InputDialog(null, "Nouvelle carte", true, titles);
 			dialogNew.setDefaults(defaults);
@@ -304,6 +326,16 @@ public class Editeur
 		}
 	}
 
+	/**
+	 * Convertie un String en entier
+	 * 
+	 * @param StringInt
+	 * 		Le String contenant un entier
+	 * @param defaut
+	 * 		La valeur par défaut à renvoyer si echec
+	 * @return
+	 * 		L'entier sous la forme entier
+	 */
 	private int stringToInteger(String StringInt, String defaut)
 	{
 		int storeInt;
@@ -857,6 +889,7 @@ public class Editeur
 	 */
 	public class SetParameterListener implements ActionListener
 	{
+		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
 			String[] titles =
@@ -864,7 +897,7 @@ public class Editeur
 			                "Nombre de lignes", "Nombre de colonne"};
 
 			String[] defaults =
-			        getParametersFromProperties(proprietes, parametersKeys);
+			        getParametersFromProperties(parametres, parametersKeys);
 
 			InputDialog dialogParam =
 			        new InputDialog(null, "Paramètres par défaut", true,
@@ -887,15 +920,18 @@ public class Editeur
 			{
 				for (int i = 0; i < parametersKeys.length; i++)
 				{
-					proprietes.setProperty(parametersKeys[i], results[i]);
+					parametres.setProperty(parametersKeys[i], results[i]);
 				}
 
-				saveConfig("parametres.txt", proprietes);
+				saveConfig("parametres.txt", parametres);
 			}
-			verifPropietes(proprietes);
+			verifPropietes(parametres);
 		}
 	}
 
+	/**
+	 * Crée une nouvelle carte
+	 */
 	public void createCarte()
 	{
 		// Création de la carte :
@@ -981,6 +1017,14 @@ public class Editeur
 			isFirstDialog = false;
 	}
 
+	/**
+	 * Récupère une image à partir de son code image
+	 * 
+	 * @param code
+	 * 			Le code image de l'image à récupérer
+	 * @return
+	 * 			L'image correspondant au code image
+	 */
 	public Image chargerImage(String code)
 	{
 		Image img = null;
@@ -1025,6 +1069,9 @@ public class Editeur
 		return img;
 	}
 
+	/**
+	 * Efface proprement une carte
+	 */
 	public void cleanCarte()
 	{
 		// Suppression des observateurs
@@ -1139,6 +1186,12 @@ public class Editeur
 		return results;
 	}
 
+	/**
+	 * Ecris dans le fichier de log le contenu d'un objet Properties
+	 * 
+	 * @param prop
+	 * 			L'objet properties à vérifier
+	 */
 	public void verifPropietes(Properties prop)
 	{
 		PrintStream ps;
@@ -1155,7 +1208,7 @@ public class Editeur
 		}
 	}
 
-	/*
+	/**
 	 * Initialise et lie les différentes actions aux touches
 	 */
 	public void initActions()

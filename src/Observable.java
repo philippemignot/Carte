@@ -4,10 +4,24 @@
  */
 public interface Observable 
 {
-		// Rajoute un observateur
+		/**
+		 * Rajoute un observateur
+		 * 
+		 * @param obs
+		 * 			L'observateur à rajouter
+		 */
 		public void addObservateur(Observateur obs);
-		// Supprime un observateur
+		
+		/**
+		 * Supprime un observateur
+		 * 
+		 * @param obs
+		 * 			L'observateur à enlever de la liste
+		 */
 		public void rmvObservateur(Observateur obs);
-		// Met à jours les infos pour les observateurs
+		
+		/**
+		 *  Met à jours les informations pour les observateurs
+		 */
 		public void updateObservateur();
 }

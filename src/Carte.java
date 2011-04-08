@@ -1,13 +1,11 @@
 import java.awt.AWTException;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Robot;
@@ -15,7 +13,6 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -491,6 +488,7 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 		repaint();
 	}
 
+	@Override
 	public void update(int[] infoInt)
 	{
 		nivSelected = infoInt[0];

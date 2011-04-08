@@ -6,19 +6,15 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
-import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
@@ -40,9 +36,15 @@ public class Options extends JPanel implements Observable
 	private int nbrNiv; // nombre total de niveaux, commence à 1
 	private JRadioButton[] nivChoix; // permet de changer le niveau sélectionné,
 	                                 // commence à 0 pour niv 1
-	private JSlider slideAlea;
-	private JLabel textAlea;
+	private JSlider slideAlea;	// slider de la fonction alea
+	private JLabel textAlea;	// Texte correpondant au niveau du slider
 
+	/**
+	 * Crée un nouveau panneau d'options
+	 * 
+	 * @param nbrNiveau
+	 * 			Le nombre de niveau max
+	 */
 	public Options(int nbrNiveau)
 	{
 
@@ -82,6 +84,9 @@ public class Options extends JPanel implements Observable
 		                5, 10, 5, 10), 0, 0));
 	}
 
+	/**
+	 * Crée et ajoute les options d'aléatoire
+	 */
 	private void setAleaOptions()
 	{
 		JPanel pAlea = new JPanel();
@@ -130,6 +135,9 @@ public class Options extends JPanel implements Observable
 		        new Insets(5, 10, 5, 10), 0, 0));
 	}
 
+	/**
+	 * Crée et ajoute les différentes options concernant les niveaux
+	 */
 	private void setNiveauOptions()
 	{
 		JPanel pNiveaux = new JPanel();
@@ -220,6 +228,12 @@ public class Options extends JPanel implements Observable
 		}
 	}
 
+	/**
+	 * Sélectionne un nouveau niveau
+	 * 
+	 * @param niv
+	 * 			Le niveau à sélectionner
+	 */
 	public void selectNiveau(int niv)
 	{
 		if (niv <= nbrNiv)
@@ -230,16 +244,28 @@ public class Options extends JPanel implements Observable
 		}
 	}
 
+	/**
+	 * Renvoie la checkbox gérant l'aléatoire
+	 * 
+	 * @return	
+	 * 		La checkbox gérant l'aléatoire
+	 */
 	public JCheckBox getAleatoire()
 	{
 		return aleatoire;
 	}
 
+	/**
+	 * Inverse l'activation de l'aléatoire
+	 */
 	public void changeAleatoire()
 	{
 		aleatoire.doClick();
 	}
 
+	/**
+	 * Inverse la possibilité de modifier le pourcentage d'aléatoire
+	 */
 	public void togglePerctAlea()
 	{
 		if (!aleatoire.isSelected())

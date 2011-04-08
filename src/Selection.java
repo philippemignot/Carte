@@ -1,11 +1,8 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,10 +25,10 @@ import javax.swing.border.TitledBorder;
 public class Selection extends JPanel implements ActionListener, Observable,
         MouseListener
 {
-	private int largeurCase;
-	private int hauteurCase; // Nombres de pixels par case
+	private int largeurCase; // Largeur d'une case
+	private int hauteurCase; // hauteur d'une case
 	private int nbrColonnes; // Nombre de colonnes de sprites
-	private int nbrColonnesAff;
+	private int nbrColonnesAff; // Nombre de colonnes à afficher
 	private int nbrLignesAff = 3; // Nombre de lignes de sprites affichées
 	private ArrayList<Case> casesSelected = new ArrayList<Case>(); // Case
 	                                                              // actuellement
@@ -123,8 +120,10 @@ public class Selection extends JPanel implements ActionListener, Observable,
 	}
 
 	/**
+	 * Affiche les sprites correspondant aux images contenues dans un dossier
+	 * 
 	 * @param dossier
-	 *        Dossier contenant des sprites
+	 *        Dossier contenant des images
 	 */
 	public void afficherSprites(File dossier)
 	{
@@ -229,6 +228,14 @@ public class Selection extends JPanel implements ActionListener, Observable,
 	    return codeImg;
     }
 
+	/**
+	 * Ne récupère que les images .png, .bmp et .jpg contenues dans une liste de fichiers
+	 * 
+	 * @param listFiles
+	 * 			Une liste de fichiers à filtrer
+	 * @return
+	 * 			La liste des fichiers correspondant à des images .png, .bmp et .jpg
+	 */
 	private ArrayList<File> getImageFiles(File[] listFiles)
 	{
 		ArrayList<File> imageFiles = new ArrayList<File>();
@@ -256,11 +263,20 @@ public class Selection extends JPanel implements ActionListener, Observable,
 		caseSel.setHovered(false);
 	}
 
+	/**
+	 * Renvoie la liste des cases sélectionnées
+	 * 
+	 * @return
+	 * 		La liste des cases sélectionnées
+	 */
 	public ArrayList<Case> getCasesSelected()
 	{
 		return casesSelected;
 	}
 
+	/**
+	 * Efface la sélection
+	 */
 	public void clearSelection()
 	{
 		if (casesSelected.size() > 1)
@@ -324,7 +340,10 @@ public class Selection extends JPanel implements ActionListener, Observable,
 	}
 
 	/**
-	 * @return Le panel contenant les catégories
+	 * Crée et renvoie le panneau de catégories
+	 * 
+	 * @return 
+	 * 			Le panel contenant les catégories
 	 */
 	public JPanel createCategoriesPanel()
 	{
@@ -358,7 +377,10 @@ public class Selection extends JPanel implements ActionListener, Observable,
 	}
 
 	/**
-	 * @return Le panel contenant les sprites
+	 * Crée et renvoie le panneau de sprites
+	 * 
+	 * @return 
+	 * 			Le panel contenant les sprites
 	 */
 	public JPanel createSpritesPanel()
 	{
