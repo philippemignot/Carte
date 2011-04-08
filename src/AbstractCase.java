@@ -25,6 +25,8 @@ public abstract class AbstractCase extends JButton implements MouseListener, Ser
 	protected Color couleurBordure 	= Color.RED; 	// Bordure de la case
 	
 	/**
+	 * Crée une nouvelle case avec des couleurs par défaut
+	 * 
 	 * @param l
 	 *            La largeur de la case en pixels
 	 * @param h
@@ -43,6 +45,8 @@ public abstract class AbstractCase extends JButton implements MouseListener, Ser
 	}
 	
 	/**
+	 * Crée une nouvelle case en spécifiant ses couleurs
+	 * 
 	 * @param l
 	 *            La largeur de la case en pixels
 	 * @param h
@@ -68,6 +72,8 @@ public abstract class AbstractCase extends JButton implements MouseListener, Ser
 	}
 	
 	/**
+	 * Modifie l'affichage de la bordure
+	 * 
 	 * @param bordure
 	 *            Affiche ou désaffiche la bordure
 	 */
@@ -77,6 +83,8 @@ public abstract class AbstractCase extends JButton implements MouseListener, Ser
 	}
 
 	/**
+	 * Permet de savoir si la bordure de la case est affichée
+	 * 
 	 * @return true si la bordure est affichée, false sinon
 	 */
 	public boolean getBordure() 
@@ -85,6 +93,8 @@ public abstract class AbstractCase extends JButton implements MouseListener, Ser
 	}
 
 	/**
+	 * Modifie la couleur de fond de la case
+	 * 
 	 * @param couleur
 	 *            La couleur de fond à afficher
 	 */
@@ -94,6 +104,8 @@ public abstract class AbstractCase extends JButton implements MouseListener, Ser
 	}
 
 	/**
+	 * Modifie la couleur de la bordure de la case
+	 * 
 	 * @param couleur
 	 *            La couleur de la bordure à afficher
 	 */
@@ -103,6 +115,8 @@ public abstract class AbstractCase extends JButton implements MouseListener, Ser
 	}
 	
 	/**
+	 * Encadre la case pour signifier qu'elle est survolée
+	 * 
 	 * @param hovered si la case est survolée
 	 */
 	public void setHovered(boolean hovered)
@@ -111,6 +125,8 @@ public abstract class AbstractCase extends JButton implements MouseListener, Ser
 	}
 	
 	/**
+	 * Permet de savoir si une case est visuellement encadrée parce qu'elle est survolée
+	 * 
 	 * @return true si isHovered is set to true
 	 */
 	public boolean isHovered()
@@ -119,6 +135,8 @@ public abstract class AbstractCase extends JButton implements MouseListener, Ser
 	}
 	
 	/**
+	 * Permet de rendre visible la sélection d'une case
+	 * 
 	 * @param selected si la case est sélectionnée
 	 */
 	public void choose(boolean selected)
@@ -127,6 +145,8 @@ public abstract class AbstractCase extends JButton implements MouseListener, Ser
 	}
 	
 	/**
+	 * Permet de savoir si une case est sélectionnée visuellement
+	 * 
 	 * @return true si isChosen is set to true
 	 */
 	public boolean isChosen()

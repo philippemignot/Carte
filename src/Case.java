@@ -13,6 +13,8 @@ public class Case extends AbstractCase
 	private Sprite sprite; // Image contenue dans la case, null s'il n'y a pas d'image
 
 	/**
+	 * Crée une nouvelle case avec des couleurs par défaut
+	 * 
 	 * @param l
 	 *            La largeur de la case en pixels
 	 * @param h
@@ -25,6 +27,8 @@ public class Case extends AbstractCase
 	}
 
 	/**
+	 * Crée une nouvelle case en spécifiant ses couleurs
+	 * 
 	 * @param l
 	 *            La largeur de la case en pixels
 	 * @param h
@@ -76,6 +80,8 @@ public class Case extends AbstractCase
 	}
 
 	/**
+	 * Place une nouvelle image
+	 * 
 	 * @param i
 	 *            Image qui doit être affichée
 	 */
@@ -85,6 +91,8 @@ public class Case extends AbstractCase
 	}
 
 	/**
+	 * Renvoie l'image affichée
+	 * 
 	 * @return L'image affichée
 	 */
 	public Image getImage() 

@@ -9,8 +9,20 @@ import javax.swing.JRadioButton;
 @SuppressWarnings("serial")
 public class RadioDialog extends AbstractDialog
 {
-	private JRadioButton[] radioButtons;
+	private JRadioButton[] radioButtons; // Les différents radio boutons
 
+	/**
+	 * Crée une fenêtre de dialogue avec les titres demandés, les champs vides
+	 * 
+	 * @param parent
+	 * 				La fenerte parente
+	 * @param title
+	 * 				Le titre de la fenêtre
+	 * @param modal
+	 * 				La modalité de la fenêtre : true - bloque l'application tant qu'elle n'est pas fermée
+	 * @param titres
+	 * 				Les titres de chaque radio bouton. Autant de radio boutons sont créés qu'il y a de titres.
+	 */
 	public RadioDialog(JFrame parent, String title, boolean modal,
 			String[] titres)
 	{
@@ -18,6 +30,21 @@ public class RadioDialog extends AbstractDialog
 		setElements();
 	}
 
+	/**
+	 * Crée une fenêtre de dialogue avec les titres demandés. Permet de regrouper les radio boutons par sujet.
+	 * Pas encore bien pris en compte.
+	 * 
+	 * @param parent
+	 * 				La fenêtre parente
+	 * @param title
+	 * 				Le titre de la fenêtre
+	 * @param modal
+	 * 				La modalité de la fenêtre : true - bloque l'application tant qu'elle n'est pas fermée
+	 * @param titres
+	 * 				Les titres de chaque radio boutons. Autant de radio boutons sont créés qu'il y a de titres.
+	 * @param groupes
+	 * 				Détermine de quel groupe font partie chaque TextField
+	 */
 	public RadioDialog(JFrame parent, String title, boolean modal,
 	        String[] titres, int[] groupes)
 	{

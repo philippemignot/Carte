@@ -17,13 +17,25 @@ import javax.swing.KeyStroke;
 @SuppressWarnings("serial")
 public abstract class AbstractDialog extends JDialog
 {
-		protected String[] titles;
-		protected int[] groupes = new int[0];
-		protected String[] returns;
-		protected JButton okButton = new JButton("Ok");
-		protected JButton cancelButton = new JButton("Annuler");
-		protected JLabel textIntro = new JLabel("Veuillez entrer les paramètres :");
+		protected String[] titles; // Les titre des éléments
+		protected int[] groupes = new int[0]; // Les différents groupes
+		protected String[] returns; // Les valeurs à retourner
+		protected JButton okButton = new JButton("Ok"); // Le bouton de validation
+		protected JButton cancelButton = new JButton("Annuler"); // Le bouton d'annulation
+		protected JLabel textIntro = new JLabel("Veuillez entrer les paramètres :"); // Le texte d'introduction
 
+		/**
+		 * Crée une fenêtre de dialogue avec les titres demandés, les champs vides
+		 * 
+		 * @param parent
+		 * 				La fenêtre parente
+		 * @param title
+		 * 				Le titre de la fenêtre
+		 * @param modal
+		 * 				La modalité de la fenêtre : true - bloque l'application tant qu'elle n'est pas fermée
+		 * @param titres
+		 * 				Les titres de chaque éléments. Autant d'éléments sont créés qu'il y a de titres.
+		 */
 		public AbstractDialog(JFrame parent, String title, boolean modal,
 		        String[] titres)
 		{
@@ -33,6 +45,21 @@ public abstract class AbstractDialog extends JDialog
 			initSize();
 		}
 		
+		/**
+		 * Crée une fenêtre de dialogue avec les titres demandés. Permet de regrouper les éléments par sujet.
+		 * Pas encore bien pris en compte.
+		 * 
+		 * @param parent
+		 * 				La fenêtre parente
+		 * @param title
+		 * 				Le titre de la fenêtre
+		 * @param modal
+		 * 				La modalité de la fenêtre : true - bloque l'application tant qu'elle n'est pas fermée
+		 * @param titres
+		 * 				Les titres de chaque éléments. Autant de éléments sont créés qu'il y a de titres.
+		 * @param groupes
+		 * 				Détermine de quel groupe font partie chaque TextField
+		 */
 		public AbstractDialog(JFrame parent, String title, boolean modal,
 		        String[] titres, int[] groupes)
 		{
@@ -43,6 +70,9 @@ public abstract class AbstractDialog extends JDialog
 			initSize();
 		}
 
+		/**
+		 * Initialise ce qui a rapport à la taille et la position de la fenêtre
+		 */
 		protected void initSize()
 		{
 			this.setLocationRelativeTo(null);
@@ -51,8 +81,17 @@ public abstract class AbstractDialog extends JDialog
 			this.pack();
 		}
 
+		/**
+		 * Permet de placer les éléments dans la fenêtre
+		 */
 		protected abstract void setElements();
 
+		/**
+		 * Initialise les titres des éléments
+		 * 
+		 * @param titres
+		 * 			Les différents titres à placer
+		 */
 		protected void init(String[] titres)
 		{
 			this.setLayout(new GridBagLayout());
@@ -63,6 +102,9 @@ public abstract class AbstractDialog extends JDialog
 			returns = new String[titles.length];
 		}
 
+		/**
+		 * Crée les boutons et leurs actions
+		 */
 		protected void setButtons()
 		{
 			this.getRootPane()
@@ -126,8 +168,17 @@ public abstract class AbstractDialog extends JDialog
 			        new Insets(15, 20, 15, 5), 0, 0));
 		}
 
+		/**
+		 * Récupère les données pour les renvoyer en fonctions des éléments affichés.
+		 */
 		public abstract void getData();
 
+		/**
+		 * Affiche la fenêtre
+		 * 
+		 * @return
+		 * 		Les valeurs renvoyées par la fenêtre
+		 */
 		public String[] showDialog()
 		{
 			this.setVisible(true);
@@ -161,10 +212,15 @@ public abstract class AbstractDialog extends JDialog
 			pack();
 		}
 		
+		/**
+		 * Mets en place les groupes. Pas encore bien géré.
+		 * @param groupes
+		 */
 		public void setGroupes(int[] groupes)
 		{
 			this.groupes = groupes;
 		}
+		
 		/**
 		 * Modifie le texte du bouton d'annulation. Ce bouton renvoie des champs
 		 * vides.
@@ -178,6 +234,12 @@ public abstract class AbstractDialog extends JDialog
 			pack();
 		}
 
+		/**
+		 * Renvoie le nombre total de groupe
+		 * 
+		 * @return
+		 * 		Le nombre total de groupe
+		 */
 		protected int getGroupesNumber()
 		{
 			int nbrGrp = 0;
