@@ -69,7 +69,7 @@ public class Sprite implements ImageObserver, Serializable
 	{
 		if (image != null) 
 		{
-			g.drawImage(image, 0, 0, largeur, hauteur, this);
+			g.drawImage(image, 0, 0, image.getWidth(this), image.getHeight(this), this);
 		}		
 	}
 

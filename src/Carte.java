@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Robot;
@@ -13,6 +14,7 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -174,8 +176,10 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 			if (!sprites.isEmpty())
 			{
 				this.spritesCurseur = sprites;
+				Image img = spritesCurseur.get(0).getImage();
+				img.getScaledInstance(img.getWidth(this), img.getHeight(this), Image.SCALE_FAST);
 				Cursor monCurseur =
-					tk.createCustomCursor(spritesCurseur.get(0).getImage(), new Point(15, 15),
+					tk.createCustomCursor(img, new Point(15, 15),
 					"sprite");
 				this.setCursor(monCurseur);
 				if(selection.size() == 1)

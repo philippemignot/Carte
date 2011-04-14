@@ -1,11 +1,6 @@
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import javax.swing.JButton;
 
 @SuppressWarnings("serial")
 public class Case extends AbstractCase 
@@ -55,7 +50,7 @@ public class Case extends AbstractCase
 
 		// Dessine l'image si elle a été définie
 		if (sprite != null) {
-			g.drawImage(sprite.getImage(), 0, 0, largeur, hauteur, this);
+			g.drawImage(sprite.getImage(), 0, 0, sprite.getImage().getWidth(this), sprite.getImage().getHeight(this), this);
 		}
 
 		// Dessine une bordure

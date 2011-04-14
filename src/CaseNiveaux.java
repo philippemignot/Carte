@@ -1,7 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class CaseNiveaux extends AbstractCase
