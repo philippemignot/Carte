@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
@@ -15,6 +16,10 @@ public class ImagePanel extends JPanel implements MouseListener
 	private Dimension dimImage; // La dimension de l'image
 	private int imgStatActive = 0;
 	private int imgAnimX = 0; // 0 : statique ; 2 et + : animation
+	private boolean	animation;
+	private int[]	typeAnim; // red : type d'animation; 0 = cyclique continue; 1 = statique; 2 = depl haut; 3 = depl droite; 4 = depl bas; 5 = depl gauche
+	private int[]	nbrAnim;  // green : nombre d'images composant l'animation
+	private int[]	suiteAnim;// blue : image statique à afficher ensuite
 	
 	/**
 	 * Crée un nouveau panneau d'image à partir d'une image avec les dimensions voulues.
@@ -31,8 +36,39 @@ public class ImagePanel extends JPanel implements MouseListener
 		this.setMinimumSize(dim);
 		this.setPreferredSize(dim);
 		this.addMouseListener(this);
+		
+		int nbLignes = getMaxAnimImg();
+		animation = (nbLignes > 0 ) ? true : false;
+		if(animation)
+		{
+			typeAnim =  new int[nbLignes];
+			nbrAnim =  new int[nbLignes];
+			suiteAnim =  new int[nbLignes];
+			readInfosAnim();
+		}
 	}
 	
+	private void readInfosAnim()
+    {
+		BufferedImage bufImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+		if(bufImage.getGraphics().drawImage(img, 0, 0, null))
+		{
+			
+			if(img.getWidth(null) > 32)
+			{
+				for(int i = 0 ; i < getMaxStatImg() ; i++)
+				{
+							int pixel = bufImage.getRGB(32, 32*i);
+							typeAnim[i] = ((pixel >> 16) & 0xff) / 10;
+							nbrAnim[i] = ((pixel >> 8) & 0xff) / 5;
+							suiteAnim[i] = (pixel & 0xff) / 5;
+							System.out.println(">>> " + i*32 + " : " + typeAnim[i] + " " + nbrAnim[i] + " " + suiteAnim[i]);
+							
+				}
+			}
+		}
+    }
+
 	/**
 	 * Mets une nouvelle image dans le panneau
 	 * 
@@ -106,13 +142,13 @@ public class ImagePanel extends JPanel implements MouseListener
 	@Override
     public void mouseReleased(MouseEvent e)
     {
-	    if(e.getButton() == MouseEvent.BUTTON1)
+	    if(e.getButton() == MouseEvent.BUTTON1 && animation)
 	    {
     		new Thread(new Runnable() 
     		{  
     			public void run() 
     			{ 
-    				for(int i = 0 ; i < getMaxAnimImg() ; i++)
+    				for(int i = 0 ; i < nbrAnim[imgStatActive] ; i++)
     				{
 	    				imgAnimX = i + 2;
 	    				
@@ -128,18 +164,22 @@ public class ImagePanel extends JPanel implements MouseListener
     				}
     				imgAnimX = 0;
     				
-    				if(imgStatActive < getMaxStatImg() - 1)
-    				{
-    					imgStatActive++;
-    				}else
-    				{
-    					imgStatActive = 0;
-    				}
+    				imgStatActive = suiteAnim[imgStatActive];
     				ImagePanel.this.repaint();
     			}
     			
-    		}).start();  
-	    }  
+    		}).start(); 
+	    }else if(e.getButton() == MouseEvent.BUTTON3)  
+	    {
+	    	if(imgStatActive < getMaxStatImg() - 1)
+			{
+				imgStatActive++;
+			}else
+			{
+				imgStatActive = 0;
+			}
+			repaint();
+	    }
     }
 
 	/**

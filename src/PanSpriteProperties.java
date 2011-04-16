@@ -137,7 +137,7 @@ public class PanSpriteProperties extends JPanel
 		panImage =
 		        new ImagePanel(sprite.getImage(), new Dimension(
 		                sprite.getLargeur(), sprite.getHauteur()));
-		panImage.setBorder(BorderFactory.createRaisedBevelBorder());
+		//panImage.setBorder(BorderFactory.createRaisedBevelBorder());
 
 		contentPane.removeAll();
 		contentPane.add(labCode, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0,
