@@ -12,14 +12,17 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class ImagePanel extends JPanel implements MouseListener
 {
-	private Image img; // L'image du panneau
+	private Image img; // L'image globale
+	private BufferedImage imgDraw; // L'image à dessiner
 	private Dimension dimImage; // La dimension de l'image
 	private int imgStatActive = 0;
 	private int imgAnimX = 0; // 0 : statique ; 2 et + : animation
-	private boolean	animation;
+	private boolean	animation = false;
 	private int[]	typeAnim; // red : type d'animation; 0 = cyclique continue; 1 = statique; 2 = depl haut; 3 = depl droite; 4 = depl bas; 5 = depl gauche
 	private int[]	nbrAnim;  // green : nombre d'images composant l'animation
 	private int[]	suiteAnim;// blue : image statique à afficher ensuite
+	private int		translateX = 0;
+	private int		translateY = 0;
 	
 	/**
 	 * Crée un nouveau panneau d'image à partir d'une image avec les dimensions voulues.
@@ -36,15 +39,20 @@ public class ImagePanel extends JPanel implements MouseListener
 		this.setMinimumSize(dim);
 		this.setPreferredSize(dim);
 		this.addMouseListener(this);
-		
-		int nbLignes = getMaxAnimImg();
-		animation = (nbLignes > 0 ) ? true : false;
-		if(animation)
+		if(img != null)
 		{
-			typeAnim =  new int[nbLignes];
-			nbrAnim =  new int[nbLignes];
-			suiteAnim =  new int[nbLignes];
-			readInfosAnim();
+			imgDraw = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_ARGB);
+			imgDraw.getGraphics().clearRect(0, 0, dimImage.width, dimImage.height);
+			imgDraw.getGraphics().drawImage(img, 0, 0, img.getWidth(null), img.getHeight(null), null);
+			int nbLignes = getMaxAnimImg();
+			animation = (nbLignes > 0 ) ? true : false;
+			if(animation)
+			{
+				typeAnim =  new int[nbLignes];
+				nbrAnim =  new int[nbLignes];
+				suiteAnim =  new int[nbLignes];
+				readInfosAnim();
+			}
 		}
 	}
 	
@@ -119,9 +127,30 @@ public class ImagePanel extends JPanel implements MouseListener
 		g.setColor(Color.BLACK);
 
 		g.fillRect(0, 0, dimImage.width, dimImage.height);
+		g.translate(translateX, translateY);
 		if(img != null)
 		{
-			g.drawImage(img, -imgAnimX*32, -imgStatActive*32, img.getWidth(this), img.getHeight(this), this);
+			
+			g.drawImage(imgDraw, 0, 0, dimImage.width, dimImage.height, this);
+			
+			if(translateX > 0)
+			{
+				g.translate(-32, 0);
+				g.drawImage(imgDraw, 0, 0, dimImage.width, dimImage.height, this);
+			}
+			else if(translateY > 0)
+			{
+				g.translate(0, -32);
+				g.drawImage(imgDraw, 0, 0, dimImage.width, dimImage.height, this);
+			}
+			else if(translateX < 0)
+			{
+				g.translate(32, 0);
+				g.drawImage(imgDraw, 0, 0, dimImage.width, dimImage.height, this);			}
+			else if(translateY < 0)
+			{
+				g.translate(0, 32);
+				g.drawImage(imgDraw, 0, 0, dimImage.width, dimImage.height, this);			}
 		}
 	}
 
@@ -148,10 +177,29 @@ public class ImagePanel extends JPanel implements MouseListener
     		{  
     			public void run() 
     			{ 
+    				translateX = 0;
+    				translateY = 0;
+    				
     				for(int i = 0 ; i < nbrAnim[imgStatActive] ; i++)
     				{
 	    				imgAnimX = i + 2;
 	    				
+	    				
+	    				switch(typeAnim[imgStatActive])
+	    				{
+	    					case 2:
+	    						translateY -= dimImage.height / nbrAnim[imgStatActive];
+	    					break;
+	    					case 3:
+	    						translateX += dimImage.width / nbrAnim[imgStatActive];
+	    						break;
+	    					case 4:
+	    						translateY += dimImage.height / nbrAnim[imgStatActive];
+	    						break;
+	    					case 5:
+	    						translateX -= dimImage.width / nbrAnim[imgStatActive];
+	    						break;
+	    				}
 	    				
 	    				try
 	    				{
@@ -160,13 +208,17 @@ public class ImagePanel extends JPanel implements MouseListener
 	    				{
 	    					System.err.println("erreur");
 	    				}
-	    				ImagePanel.this.repaint();
+	    				refreshImg();
     				}
     				imgAnimX = 0;
     				
     				imgStatActive = suiteAnim[imgStatActive];
-    				ImagePanel.this.repaint();
+    				translateX = 0;
+    				translateY = 0;
+    				refreshImg();
     			}
+
+				
     			
     		}).start(); 
 	    }else if(e.getButton() == MouseEvent.BUTTON3)  
@@ -178,8 +230,15 @@ public class ImagePanel extends JPanel implements MouseListener
 			{
 				imgStatActive = 0;
 			}
-			repaint();
+	    	refreshImg();
 	    }
+    }
+	
+	private void refreshImg()
+    {
+		imgDraw.getGraphics().clearRect(0, 0, dimImage.width, dimImage.height);
+		imgDraw.getGraphics().drawImage(img, -imgAnimX*32, -imgStatActive*32, img.getWidth(null), img.getHeight(null), null);
+		this.repaint();
     }
 
 	/**

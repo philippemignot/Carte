@@ -177,10 +177,19 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 			{
 				this.spritesCurseur = sprites;
 				Image img = spritesCurseur.get(0).getImage();
-				img.getScaledInstance(img.getWidth(this), img.getHeight(this), Image.SCALE_FAST);
-				Cursor monCurseur =
-					tk.createCustomCursor(img, new Point(15, 15),
+				Cursor monCurseur;
+				BufferedImage bufImage = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+				if(bufImage.getGraphics().drawImage(img, 0, 0, null))
+				{
+					monCurseur =
+					tk.createCustomCursor(bufImage, new Point(15, 15),
 					"sprite");
+				}else
+				{
+					monCurseur =
+						tk.createCustomCursor(img, new Point(15, 15),
+						"sprite");
+				}
 				this.setCursor(monCurseur);
 				if(selection.size() == 1)
 				{
