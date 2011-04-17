@@ -18,11 +18,13 @@ public class ImagePanel extends JPanel implements MouseListener
 	private int imgStatActive = 0;
 	private int imgAnimX = 0; // 0 : statique ; 2 et + : animation
 	private boolean	animation = false;
-	private int[]	typeAnim; // red : type d'animation; 0 = cyclique continue; 1 = statique; 2 = depl haut; 3 = depl droite; 4 = depl bas; 5 = depl gauche
-	private int[]	nbrAnim;  // green : nombre d'images composant l'animation
-	private int[]	suiteAnim;// blue : image statique à afficher ensuite
-	private int		translateX = 0;
-	private int		translateY = 0;
+	private int[]	typeAnim; // 32 : red / 10 : type d'animation :
+							  // 0 = cyclique continue; 1 = statique; 2 = depl haut; 3 = depl droite; 4 = depl bas; 5 = depl gauche
+	private int[]	nbrAnim;  // 32 : green / 5 : nombre d'images composant l'animation
+	private int[]	suiteAnim;// 32 : blue / 5 : image statique à afficher ensuite
+	private int[]	intervalleTpsAnim; // 33 : red + green + blue : Intervalle de temps entre chaque image de l'animation ; 
+	private int		translateX = 0; // Translation des coordonnées du graphique en abscisse
+	private int		translateY = 0; // Translation des coordonnées du graphique en ordonnées
 	
 	/**
 	 * Crée un nouveau panneau d'image à partir d'une image avec les dimensions voulues.
@@ -51,6 +53,7 @@ public class ImagePanel extends JPanel implements MouseListener
 				typeAnim =  new int[nbLignes];
 				nbrAnim =  new int[nbLignes];
 				suiteAnim =  new int[nbLignes];
+				intervalleTpsAnim =  new int[nbLignes];
 				readInfosAnim();
 			}
 		}
@@ -70,7 +73,15 @@ public class ImagePanel extends JPanel implements MouseListener
 							typeAnim[i] = ((pixel >> 16) & 0xff) / 10;
 							nbrAnim[i] = ((pixel >> 8) & 0xff) / 5;
 							suiteAnim[i] = (pixel & 0xff) / 5;
-							System.out.println(">>> " + i*32 + " : " + typeAnim[i] + " " + nbrAnim[i] + " " + suiteAnim[i]);
+							int pixel2 = bufImage.getRGB(33, 32*i);
+							intervalleTpsAnim[i] = ((pixel2 >> 16) & 0xff);
+							intervalleTpsAnim[i] += ((pixel2 >> 8) & 0xff);
+							intervalleTpsAnim[i] += (pixel2 & 0xff);
+							if(intervalleTpsAnim[i] == 0)
+							{
+								intervalleTpsAnim[i] = 100;
+							}
+							System.out.println(">>> " + i*32 + " : " + typeAnim[i] + " " + nbrAnim[i] + " " + suiteAnim[i] + " " + intervalleTpsAnim[i]);
 							
 				}
 			}
@@ -203,7 +214,7 @@ public class ImagePanel extends JPanel implements MouseListener
 	    				
 	    				try
 	    				{
-	    					Thread.sleep(100);
+	    					Thread.sleep(intervalleTpsAnim[imgStatActive]);
 	    				}catch(InterruptedException e2)
 	    				{
 	    					System.err.println("erreur");
@@ -221,7 +232,7 @@ public class ImagePanel extends JPanel implements MouseListener
 				
     			
     		}).start(); 
-	    }else if(e.getButton() == MouseEvent.BUTTON3)  
+	    }else if(e.getButton() == MouseEvent.BUTTON3 && animation)  
 	    {
 	    	if(imgStatActive < getMaxStatImg() - 1)
 			{
