@@ -31,6 +31,7 @@ public class ImagePanel extends JPanel implements Observable
 		this.dimImage = dim;
 		this.setMinimumSize(dim);
 		this.setPreferredSize(dim);
+		this.setOpaque(false);
 	}
 
 	/**

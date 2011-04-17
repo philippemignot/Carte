@@ -294,6 +294,7 @@ public class PanSpriteProperties extends JPanel implements Observateur, MouseLis
 	@Override
     public void update()
     {
+		panImage.setImage(sprite.getDrawImage());
 	    panImage.repaint();
     }
 	

@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -18,6 +19,7 @@ public class Sprite implements Serializable, Observable
 	
 	// Pour dessiner
 	private BufferedImage imgDraw; // L'image à dessiner
+	private Graphics2D g2D; // Le graphics de imgDraw
 	private int imgStatActive = 0;
 	private int imgAnimX = 0; // 0 : statique ; 2 et + : animation
 	private boolean	animation = false;
@@ -94,8 +96,8 @@ public class Sprite implements Serializable, Observable
 		if(image != null)
 		{
 			imgDraw = new BufferedImage(largeur, hauteur, BufferedImage.TYPE_INT_ARGB);
-			imgDraw.
-			getGraphics().drawImage(image, 0, 0, image.getWidth(null), image.getHeight(null), null);
+			g2D = imgDraw.createGraphics();
+			g2D.drawImage(image, 0, 0, image.getWidth(null), image.getHeight(null), null);
 
 			// Si on a plusieurs lignes, alors on set les infos d'animation
 			int nbLignes = getMaxStatImg();
@@ -284,10 +286,10 @@ public class Sprite implements Serializable, Observable
 	 */
 	private void refreshImg()
     {
-		imgDraw.getGraphics().clearRect(0, 0, largeur, hauteur);
-		System.out.println("refresh");
-//		imgDraw = new BufferedImage(largeur, hauteur, BufferedImage.TYPE_INT_ARGB);
-		imgDraw.getGraphics().drawImage(image, -imgAnimX*32, -imgStatActive*32, image.getWidth(null), image.getHeight(null), null);
+//		g2D.clearRect(0, 0, largeur, hauteur);
+		imgDraw = new BufferedImage(largeur, hauteur, BufferedImage.TYPE_INT_ARGB);
+		g2D = imgDraw.createGraphics();
+		g2D.drawImage(image, -imgAnimX*32, -imgStatActive*32, image.getWidth(null), image.getHeight(null), null);
 		updateObservateur();
     }
 
