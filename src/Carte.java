@@ -743,6 +743,17 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	@Override
     public void update(String[] string)
     {
-		
+		if(string[0].equalsIgnoreCase("repaint"))
+		{
+			System.out.println(string[0]);
+			repaint();
+		}
+    }
+
+	@Override
+    public void update()
+    {
+	    // TODO Auto-generated method stub
+	    
     }
 }

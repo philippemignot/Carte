@@ -34,6 +34,11 @@ public interface Observateur
 	
 	/**
 	 * Mets à jour les observateurs
+	 */
+	public void update();
+	
+	/**
+	 * Mets à jour les observateurs
 	 * 
 	 * @param string
 	 * 			Le liste de String à mettre à jour

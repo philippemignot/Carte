@@ -3,12 +3,13 @@ import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 
 
 @SuppressWarnings("serial")
-public abstract class AbstractCase extends JButton implements MouseListener, Serializable
+public abstract class AbstractCase extends JButton implements MouseListener, Serializable, Observateur
 {
 
 	protected int 		largeur; // Nombres de pixels de la case en largeur
@@ -183,5 +184,39 @@ public abstract class AbstractCase extends JButton implements MouseListener, Ser
 	{
 
 	}
+	
+	@Override
+    public void update(ArrayList<Sprite> sprites, String source)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+
+	@Override
+    public void update(boolean[] bool)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+
+	@Override
+    public void update(int[] integer)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+
+	@Override
+    public void update(String[] string)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+	
+	@Override
+    public void update()
+    {
+	    this.repaint();	    
+    }
 
 }

@@ -163,7 +163,7 @@ public class Selection extends JPanel implements ActionListener, Observable,
 				sprites.add(cases.get(i));
 				cases.get(i).addActionListener(this);
 				cases.get(i).addMouseListener(this);
-				cases.get(i).setImage(ImageIO.read(fichiers.get(i)), getCodeImage(fichiers.get(i).getName()));
+				cases.get(i).setImage(ImageIO.read(fichiers.get(i)), getCodeImage(fichiers.get(i).getName()), 0);
 			}
 			catch (IOException err)
 			{

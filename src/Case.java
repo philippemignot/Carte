@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class Case extends AbstractCase 
@@ -80,9 +81,9 @@ public class Case extends AbstractCase
 	 * @param i
 	 *            Image qui doit être affichée
 	 */
-	public void setImage(Image i, String codeImg) 
+	public void setImage(Image i, String codeImg, int defImg) 
 	{
-		sprite.setImage(i, codeImg);
+		sprite.setImage(i, codeImg, defImg);
 	}
 
 	/**
@@ -104,4 +105,6 @@ public class Case extends AbstractCase
 	{
 		return sprite;
 	}
+
+	
 }

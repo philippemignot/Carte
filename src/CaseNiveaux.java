@@ -26,6 +26,7 @@ public class CaseNiveaux extends AbstractCase
 		for(int k = 0 ; k < nbrNiveaux ; k++)
 		{
 			tabSprite[k] = new Sprite(largeur, hauteur);
+			tabSprite[k].addObservateur(this);
 			visible[k] = true;
 		}
 	}
@@ -51,6 +52,7 @@ public class CaseNiveaux extends AbstractCase
 		for(int k = 0 ; k < nbrNiveaux ; k++)
 		{
 			tabSprite[k] = new Sprite(largeur, hauteur);
+			tabSprite[k].addObservateur(this);
 			visible[k] = true;
 		}
 	}
@@ -80,11 +82,11 @@ public class CaseNiveaux extends AbstractCase
 	 * @param niv
 	 *            Le niveau où rajouter l'image : à partir de 1
 	 */
-	public void setImage(Image img, String codeImg, int niv)
+	public void setImage(Image img, String codeImg, int niv, int defImg)
 	{
 		if(niv <= nbrNiveaux)
 		{
-			tabSprite[niv - 1 ].setImage(img, codeImg);
+			tabSprite[niv - 1 ].setImage(img, codeImg, defImg);
 		}
 		else
 			System.err.println("Niveau incorrect : " + niv + " dans CaseNiveaux::setImage(Image, int)");
@@ -121,7 +123,9 @@ public class CaseNiveaux extends AbstractCase
 		{
 			if(sprite != null)
 			{
+				tabSprite[niv - 1 ].rmvObservateur(this);
 				tabSprite[niv - 1 ] = new Sprite(sprite);
+				tabSprite[niv - 1 ].addObservateur(this);
 			}else
 			{
 				clear(niv);				
@@ -138,9 +142,14 @@ public class CaseNiveaux extends AbstractCase
 	public void clear(int niv)
 	{
 		if(niv <= nbrNiveaux)
-			tabSprite[niv - 1 ].setImage(null, "");
+		{
+			tabSprite[niv - 1 ].rmvObservateur(this);
+			tabSprite[niv - 1 ].setImage(null, "", 0);
+		}
 		else
+		{
 			System.err.println("Niveau incorrect : " + niv + " dans CaseNiveaux::setImage(Image, int)");
+		}
 	}
 	
 	/**

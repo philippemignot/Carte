@@ -27,6 +27,7 @@ public class PanCaseProperties extends JPanel implements Observateur,
 
 	private ArrayList<Observateur> listeObservateur =
 	        new ArrayList<Observateur>(); // liste des observateurs
+	private String[] command = new String[1];
 
 	/**
 	 * Construit un conteneur et gestionnaire de panneau de propriété avec les
@@ -59,6 +60,7 @@ public class PanCaseProperties extends JPanel implements Observateur,
 		        (nbrNiveaux * (hauteur + 100))));
 		this.setPreferredSize(new Dimension(largeur + 150,
 		        (nbrNiveaux * (hauteur + 100))));
+		command[0] = "";
 	}
 
 	@Override
@@ -76,9 +78,17 @@ public class PanCaseProperties extends JPanel implements Observateur,
 		panSpriteProp = new PanSpriteProperties[sprites.size()];
 		for (int i = 0; i < sprites.size(); i++)
 		{
-			panSpriteProp[i] =
-			        new PanSpriteProperties(new Sprite(sprites.get(i)), i + 1,
-			                nbrNiveaux);
+			if(name.getText().toLowerCase().equals("selection"))
+			{
+				panSpriteProp[i] =
+					new PanSpriteProperties(new Sprite(sprites.get(i)), i + 1,
+							nbrNiveaux);				
+			}else if(name.getText().toLowerCase().equals("carte"))
+			{
+				panSpriteProp[i] =
+					new PanSpriteProperties(sprites.get(i), i + 1,
+							nbrNiveaux);				
+			}
 
 			setPropLayoutPosition(panSpriteProp[i], i + 2); // +1 pour le titre;
 															// +1 car i commence
@@ -88,6 +98,7 @@ public class PanCaseProperties extends JPanel implements Observateur,
 				panSpriteProp[i].addToolbar();
 				panSpriteProp[i].addToolbarListener(this);
 			}
+			panSpriteProp[i].getImagePanel().addObservateur(panSpriteProp[i]);
 			panSpriteProp[i].revalidate();
 		}
 		if (name.getText().toLowerCase().equals("carte"))
@@ -119,8 +130,6 @@ public class PanCaseProperties extends JPanel implements Observateur,
 	@Override
 	public void update(int[] integer)
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -131,12 +140,14 @@ public class PanCaseProperties extends JPanel implements Observateur,
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
+		
 		// On récupère les différentes actions sur la toolbar
 		if (e.getSource().getClass().getCanonicalName()
 		        .equals("javax.swing.JButton"))
 		{
-			if (e.getActionCommand().matches("[a-z]+[_][1-9]"))
+			if (e.getActionCommand().matches("[a-z]+[_][1-9]+"))
 			{
+				System.out.println(e.getActionCommand());
 				String[] infosSource = e.getActionCommand().split("_");
 				int pos = new Integer(infosSource[1]);
 				if (infosSource[0].equalsIgnoreCase("avant"))
@@ -254,7 +265,15 @@ public class PanCaseProperties extends JPanel implements Observateur,
 		}
 		for (Observateur obs : listeObservateur)
 		{
-			obs.update(listeSprites, "PanCaseProperties");
+			obs.update(listeSprites, "PanCaseProperties");	
 		}
 	}
+
+	@Override
+    public void update()
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+
 }

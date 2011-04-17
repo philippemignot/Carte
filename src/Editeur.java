@@ -812,14 +812,14 @@ public class Editeur
 											{
 												Image img = chargerImage(codesCases[a][b][k]);
 												spr.setImage(img, new String(
-														codesCases[a][b][k]));
+														codesCases[a][b][k]), 0);
 												if(img == null)
 													System.err
 													        .println("Image chargée nulle");
 											}
 											else
 											{
-												spr.setImage(null, "");
+												spr.setImage(null, "", 0);
 												
 											}
 											carte.getCases()[a][b].setSprite(spr,

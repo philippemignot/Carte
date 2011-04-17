@@ -3,7 +3,11 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -14,7 +18,7 @@ import javax.swing.JToolBar;
 import javax.swing.border.Border;
 
 @SuppressWarnings("serial")
-public class PanSpriteProperties extends JPanel
+public class PanSpriteProperties extends JPanel implements Observateur, MouseListener
 {
 	private JPanel contentPane; // Le conteneur
 	private Sprite sprite; // Le sprite à afficher
@@ -33,6 +37,12 @@ public class PanSpriteProperties extends JPanel
 	private JButton bSuppr; // Le bouton suppr de la toolbar
 	private JButton bCopier; // Le bouton copier de la toolbar
 	private JButton bColler; // Le bouton coller de la toolbar
+	
+	// Liste des observateurs
+	private ArrayList<Observateur> listeObservateur =
+	        new ArrayList<Observateur>();
+	private int[] update = new int[1];
+
 
 	/**
 	 * Construit un panneau de propriétés avec les éléments nécessaires
@@ -119,7 +129,7 @@ public class PanSpriteProperties extends JPanel
 	 */
 	public void setSprite(Sprite sprite2)
 	{
-		sprite = new Sprite(sprite2);
+		sprite = sprite2;
 		updateContent();
 	}
 
@@ -133,10 +143,14 @@ public class PanSpriteProperties extends JPanel
 		                .isEmpty()) ? sprite.getCode() : "00000";
 		labCode = new JLabel(code);
 		niv = new JLabel(" " + String.valueOf(niveau));
+		update[0] = niveau;
 		niv.setBorder(BorderFactory.createLoweredBevelBorder());
+		
 		panImage =
-		        new ImagePanel(sprite.getImage(), new Dimension(
+		        new ImagePanel(sprite.getDrawImage(), new Dimension(
 		                sprite.getLargeur(), sprite.getHauteur()));
+		panImage.addMouseListener(this);
+		sprite.addObservateur(this);
 		//panImage.setBorder(BorderFactory.createRaisedBevelBorder());
 
 		contentPane.removeAll();
@@ -160,6 +174,17 @@ public class PanSpriteProperties extends JPanel
 	public JToolBar getToolbar()
 	{
 		return toolbar;
+	}
+
+	/**
+	 * Renvoie le panneau image de ce panneau
+	 * 
+	 * @return
+	 * 		Le panneau image
+	 */
+	public ImagePanel getImagePanel()
+	{
+		return panImage;
 	}
 
 	/**
@@ -200,6 +225,7 @@ public class PanSpriteProperties extends JPanel
 	public void setNiveau(int niv)
 	{
 		this.niveau = niv;
+		update[0] = niveau;
 		this.niv.setText(String.valueOf(niv));
 
 		bAvant.setActionCommand("avant_" + String.valueOf(niveau));
@@ -236,4 +262,81 @@ public class PanSpriteProperties extends JPanel
 		revalidate();
 		repaint();
 	}
+
+	@Override
+    public void update(ArrayList<Sprite> sprites, String source)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+
+	@Override
+    public void update(boolean[] bool)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+
+	@Override
+    public void update(int[] integer)
+    {
+		// Update de l'image active depuis le panneau image
+	    sprite.setDefautImage(integer[0]);
+	}
+
+	@Override
+    public void update(String[] string)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+	
+	@Override
+    public void update()
+    {
+	    panImage.repaint();
+    }
+	
+	@Override
+    public void mouseClicked(MouseEvent e)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+
+	@Override
+    public void mousePressed(MouseEvent e)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+
+	@Override
+    public void mouseReleased(MouseEvent e)
+	{		
+		if(e.getSource().getClass().getCanonicalName().equalsIgnoreCase("ImagePanel"))
+		{
+			if(e.getButton() == MouseEvent.BUTTON1)
+			{
+				sprite.startAnimation();
+			}else if(e.getButton() == MouseEvent.BUTTON3)
+			{
+				sprite.changerDefImg();
+			}
+		}
+    }
+
+	@Override
+    public void mouseEntered(MouseEvent e)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+
+	@Override
+    public void mouseExited(MouseEvent e)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
 }
