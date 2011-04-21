@@ -124,7 +124,7 @@ public class CaseNiveaux extends AbstractCase
 			if(sprite != null)
 			{
 				tabSprite[niv - 1 ].rmvObservateur(this);
-				tabSprite[niv - 1 ] = sprite;
+				tabSprite[niv - 1 ] = new Sprite(sprite);
 				tabSprite[niv - 1 ].addObservateur(this);
 			}else
 			{
