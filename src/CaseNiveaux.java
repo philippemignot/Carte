@@ -124,7 +124,7 @@ public class CaseNiveaux extends AbstractCase
 			if(sprite != null)
 			{
 				tabSprite[niv - 1 ].rmvObservateur(this);
-				tabSprite[niv - 1 ] = new Sprite(sprite);
+				tabSprite[niv - 1 ] = sprite;
 				tabSprite[niv - 1 ].addObservateur(this);
 			}else
 			{
@@ -182,19 +182,23 @@ public class CaseNiveaux extends AbstractCase
 			g.fillRect(0, 0, largeur, hauteur);
 		}
 		
+		boolean isAnimated = false;
 		// Dessine l'image si elle a été définie
 		for(int i = 0 ; i < nbrNiveaux ; i++)
 		{
 			if(visible[i]) 
 			{
 				tabSprite[i].draw(g);
+				if(tabSprite[i].isAnimated())
+				{
+					isAnimated = true;
+				}
 			}
 		}
 		
-
 		// Dessine une bordure
 		
-		if (bordureOn || isHovered || isChosen) 
+		if ((bordureOn || isHovered || isChosen) && !isAnimated) 
 		{
 			g.setColor(couleurBordure);
 			

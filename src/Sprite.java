@@ -34,6 +34,7 @@ public class Sprite implements Serializable, Observable
 	// Liste des observateurs
 	private ArrayList<Observateur> listeObservateur =
 	        new ArrayList<Observateur>();
+	private boolean isAnimated = false;
 
 	
 	/**
@@ -187,8 +188,6 @@ public class Sprite implements Serializable, Observable
 	/**
 	 * Lance l'animation correspondant à l'image statique demandée
 	 * 
-	 * @param imgStat
-	 * 			Le numéro de l'image statique dont on veut jouer l'animation
 	 */
 	public void startAnimation()
 	{
@@ -198,6 +197,7 @@ public class Sprite implements Serializable, Observable
 			{  
 				public void run() 
 				{ 
+					isAnimated = true;
 					translateX = 0;
 					translateY = 0;
 					
@@ -236,11 +236,13 @@ public class Sprite implements Serializable, Observable
 					imgStatActive = suiteAnim[imgStatActive];
 					translateX = 0;
 					translateY = 0;
+					isAnimated = false;
 					refreshImg();
 				}
 				
 			}).start(); 
 		}
+		
 	}
 	
 	/**
@@ -414,6 +416,17 @@ public class Sprite implements Serializable, Observable
 			obs.update();
 		}
 	}
+
+	/**
+	 * Indique si le sprite est en train de s'animer.
+	 * 
+	 * @return
+	 * 		true - le sprite est en train de s'animer
+	 */
+	public boolean isAnimated()
+    {
+		return isAnimated;
+    }
 	
 	
 }
