@@ -154,19 +154,6 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	}
 	
 
-	/**
-	 * Remet le curseur par défaut : l'utilisateur est à nouveau libre de
-	 * sélectionner un sprite ou une case
-	 */
-	public void deselectionneCurseur()
-	{
-		if(spritesCurseur != null)
-		{
-			this.spritesCurseur.clear();			
-		}
-		this.setCursor(Cursor.getDefaultCursor());
-	}
-
 	@Override
 	public void mouseClicked(MouseEvent arg0)
 	{
@@ -433,19 +420,6 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 		// printCarte(cases);
 	}
 
-	private void selectionnerCase()
-    {
-		clearSelection();
-		listeSpritesCase.clear();
-		addToSelection(cases[coordSelection[0]][coordSelection[1]]);
-		for(int k = 1 ; k <= nbrNiveaux ; k++)
-		{
-			listeSpritesCase.add(cases[coordSelection[0]][coordSelection[1]].getSprite(k));
-		}
-		
-		updateObservateur();
-    }
-
 	/**
 	 * Copie un tableau de case de même hauteur et largeur (attributs de Carte)
 	 * dans un autre
@@ -652,6 +626,31 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 		cases[0][0].getSprite(1);
 		return cases;
 	}
+
+	/**
+     * Remet le curseur par défaut : l'utilisateur est à nouveau libre de
+     * sélectionner un sprite ou une case
+     */
+    public void deselectionneCurseur()
+    {
+    	if(spritesCurseur != null)
+    	{
+    		this.spritesCurseur.clear();			
+    	}
+    	this.setCursor(Cursor.getDefaultCursor());
+    }
+
+	private void selectionnerCase()
+    {
+    	clearSelection();
+    	listeSpritesCase.clear();
+    	addToSelection(cases[coordSelection[0]][coordSelection[1]]);
+    	for(int k = 1 ; k <= nbrNiveaux ; k++)
+    	{
+    		listeSpritesCase.add(cases[coordSelection[0]][coordSelection[1]].getSprite(k));
+    	}
+    	updateObservateur();
+    }
 
 	// fonction du DP observer
 	

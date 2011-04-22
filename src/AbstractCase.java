@@ -141,6 +141,7 @@ public abstract class AbstractCase extends JButton implements MouseListener, Ser
 	public void choose(boolean selected)
 	{
 		isChosen = selected;
+		repaint();
 	}
 	
 	/**
