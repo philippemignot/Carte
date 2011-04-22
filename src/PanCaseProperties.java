@@ -27,7 +27,6 @@ public class PanCaseProperties extends JPanel implements Observateur,
 
 	private ArrayList<Observateur> listeObservateur =
 	        new ArrayList<Observateur>(); // liste des observateurs
-	private String[] command = new String[1];
 
 	/**
 	 * Construit un conteneur et gestionnaire de panneau de propriété avec les
@@ -60,7 +59,6 @@ public class PanCaseProperties extends JPanel implements Observateur,
 		        (nbrNiveaux * (hauteur + 100))));
 		this.setPreferredSize(new Dimension(largeur + 150,
 		        (nbrNiveaux * (hauteur + 100))));
-		command[0] = "";
 	}
 
 	@Override

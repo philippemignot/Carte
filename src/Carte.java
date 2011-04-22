@@ -168,51 +168,6 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	}
 
 	@Override
-	public void update(ArrayList<Sprite> sprites, String source)
-	{
-		// Maybe use switch ans Constants instead but I don't know how to do know and I don't have internet...
-		if(source.equalsIgnoreCase("selection"))
-		{
-			if (!sprites.isEmpty())
-			{
-				this.spritesCurseur = sprites;
-				Image img = spritesCurseur.get(0).getImage();
-				Cursor monCurseur;
-				BufferedImage bufImage = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
-				if(bufImage.getGraphics().drawImage(img, 0, 0, null))
-				{
-					monCurseur =
-					tk.createCustomCursor(bufImage, new Point(15, 15),
-					"sprite");
-				}else
-				{
-					monCurseur =
-						tk.createCustomCursor(img, new Point(15, 15),
-						"sprite");
-				}
-				this.setCursor(monCurseur);
-				if(selection.size() == 1)
-				{
-					clearSelection();
-				}
-			}
-			else
-			{
-				deselectionneCurseur();
-			}
-		}
-			else if (source.equalsIgnoreCase("pancaseproperties"))
-		{
-			for(int i = 0 ; i < sprites.size() ; i ++)
-			{
-				selection.get(0).setSprite(sprites.get(i),i+1 );
-			}
-		}
-		repaint();
-
-	}
-
-	@Override
 	public void mouseClicked(MouseEvent arg0)
 	{
 
@@ -357,15 +312,8 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 		                .getDefaultCursor())
 				// Si on n'a rien de sélectionné, on peut sélectionner une case pour afficher ses propriétés avec le clic gauche
 				{
-					clearSelection();
-					listeSpritesCase.clear();
-					addToSelection(cases[coordSelection[0]][coordSelection[1]]);
-					for(int k = 1 ; k <= nbrNiveaux ; k++)
-					{
-						listeSpritesCase.add(cases[coordSelection[0]][coordSelection[1]].getSprite(k));
-					}
 					
-					updateObservateur();
+					selectionnerCase();
 				}
 				else
 				// Sinon : ajout/suppression image
@@ -485,29 +433,18 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 		// printCarte(cases);
 	}
 
-	@Override
-	public void update(boolean[] bool)
-	{
-		for (int i = 0; i < hauteur; i++)
+	private void selectionnerCase()
+    {
+		clearSelection();
+		listeSpritesCase.clear();
+		addToSelection(cases[coordSelection[0]][coordSelection[1]]);
+		for(int k = 1 ; k <= nbrNiveaux ; k++)
 		{
-			for (int j = 0; j < largeur; j++)
-			{
-				cases[i][j].setBordure(bool[0]);
-				for (int k = 1; k <= nbrNiveaux; k++)
-					cases[i][j].setNivVisible(k, bool[k]);
-			}
+			listeSpritesCase.add(cases[coordSelection[0]][coordSelection[1]].getSprite(k));
 		}
-		aleatoire = bool[nbrNiveaux + 1];
-		repaint();
-	}
-
-	@Override
-	public void update(int[] infoInt)
-	{
-		nivSelected = infoInt[0];
-		perctAlea = infoInt[1];
-		repaint();
-	}
+		
+		updateObservateur();
+    }
 
 	/**
 	 * Copie un tableau de case de même hauteur et largeur (attributs de Carte)
@@ -741,6 +678,52 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	}
 
 	@Override
+    public void update(ArrayList<Sprite> sprites, String source)
+    {
+    	// Maybe use switch ans Constants instead but I don't know how to do know and I don't have internet...
+    	if(source.equalsIgnoreCase("selection"))
+    	{
+    		if (!sprites.isEmpty())
+    		{
+    			this.spritesCurseur = sprites;
+    			Image img = spritesCurseur.get(0).getImage();
+    			Cursor monCurseur;
+    			BufferedImage bufImage = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+    			if(bufImage.getGraphics().drawImage(img, 0, 0, null))
+    			{
+    				monCurseur =
+    				tk.createCustomCursor(bufImage, new Point(15, 15),
+    				"sprite");
+    			}else
+    			{
+    				monCurseur =
+    					tk.createCustomCursor(img, new Point(15, 15),
+    					"sprite");
+    			}
+    			this.setCursor(monCurseur);
+    			if(selection.size() == 1)
+    			{
+    				clearSelection();
+    			}
+    		}
+    		else
+    		{
+    			deselectionneCurseur();
+    		}
+    	}
+    		else if (source.equalsIgnoreCase("pancaseproperties"))
+    	{
+    		for(int i = 0 ; i < sprites.size() ; i ++)
+    		{
+    			selection.get(0).setSprite(sprites.get(i),i+1 );
+    		}
+    		selectionnerCase();
+    	}
+    	repaint();
+    
+    }
+
+	@Override
     public void update(String[] string)
     {
 		if(string[0].equalsIgnoreCase("repaint"))
@@ -748,6 +731,30 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 			System.out.println(string[0]);
 			repaint();
 		}
+    }
+
+	@Override
+    public void update(int[] infoInt)
+    {
+    	nivSelected = infoInt[0];
+    	perctAlea = infoInt[1];
+    	repaint();
+    }
+
+	@Override
+    public void update(boolean[] bool)
+    {
+    	for (int i = 0; i < hauteur; i++)
+    	{
+    		for (int j = 0; j < largeur; j++)
+    		{
+    			cases[i][j].setBordure(bool[0]);
+    			for (int k = 1; k <= nbrNiveaux; k++)
+    				cases[i][j].setNivVisible(k, bool[k]);
+    		}
+    	}
+    	aleatoire = bool[nbrNiveaux + 1];
+    	repaint();
     }
 
 	@Override
