@@ -40,6 +40,7 @@ import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 
 import com.carte.sprites.Sprite;
+import com.carte.utils.CarteFileChooser;
 import com.carte.utils.CrtEdFileFilter;
 import com.carte.utils.InputDialog;
 
@@ -87,7 +88,7 @@ public class Editeur
 	private Options options; // Le panneau contenant les options de la carte
 	private PanCaseProperties caseProp;
 	private JPanel conteneur; // Le conteneur général
-	JFileChooser fileChooser = new JFileChooser("sauvegardes/");
+	CarteFileChooser fileChooser = new CarteFileChooser("sauvegardes/");
 	CrtEdFileFilter filtreCrt = new CrtEdFileFilter(".carte", "Fichier Editeur de carte");
 	CrtEdFileFilter filtreArn = new CrtEdFileFilter(".arene", "Fichier Carte Arene");
 	
@@ -177,6 +178,8 @@ public class Editeur
 		// Gestion du clavier
 		initActions();
 		fileChooser.addChoosableFileFilter(filtreCrt);
+//		fileChooser.addChoosableFileFilter(filtreArn);
+//		filtreArn.getDescription();
 
 		// Affichage de la fenêtre
 		fenetre.setContentPane(conteneur);
@@ -564,7 +567,8 @@ public class Editeur
 					if(fileChooser.getFileFilter().accept(fichier))
 					{
 
-
+//						fileChooser.approveSelection();
+						
 						//				try
 						//				{
 						//					FileReader fw =
