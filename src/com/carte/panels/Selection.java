@@ -1,3 +1,4 @@
+package com.carte.panels;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -20,6 +21,12 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+
+import com.carte.sprites.Case;
+import com.carte.sprites.Sprite;
+import com.carte.utils.Observable;
+import com.carte.utils.Observateur;
+
 
 @SuppressWarnings("serial")
 public class Selection extends JPanel implements ActionListener, Observable,

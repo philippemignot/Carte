@@ -1,3 +1,4 @@
+package com.carte.panels;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -11,6 +12,12 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+
+import com.carte.sprites.PanSpriteProperties;
+import com.carte.sprites.Sprite;
+import com.carte.utils.Observable;
+import com.carte.utils.Observateur;
+
 
 @SuppressWarnings("serial")
 public class PanCaseProperties extends JPanel implements Observateur,

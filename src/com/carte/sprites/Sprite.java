@@ -1,3 +1,4 @@
+package com.carte.sprites;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -6,6 +7,11 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import com.carte.utils.Observable;
+import com.carte.utils.Observateur;
+
+
 
 
 @SuppressWarnings("serial")

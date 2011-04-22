@@ -1,3 +1,4 @@
+package com.carte.sprites;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
@@ -6,6 +7,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+
+import com.carte.utils.Observateur;
+
 
 
 @SuppressWarnings("serial")

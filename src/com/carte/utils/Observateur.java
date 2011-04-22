@@ -1,4 +1,8 @@
+package com.carte.utils;
+
 import java.util.ArrayList;
+
+import com.carte.sprites.Sprite;
 
 /* Interface from the Design Pattern Observer
  * L'observateur reçoit les nouvelles données

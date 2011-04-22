@@ -1,3 +1,4 @@
+package com.carte.sprites;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -16,6 +17,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.border.Border;
+
+import com.carte.utils.ImagePanel;
+import com.carte.utils.Observateur;
+
 
 @SuppressWarnings("serial")
 public class PanSpriteProperties extends JPanel implements Observateur, MouseListener

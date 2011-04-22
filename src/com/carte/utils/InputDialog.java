@@ -1,9 +1,12 @@
+package com.carte.utils;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
 
 @SuppressWarnings({"serial"})
 public class InputDialog extends AbstractDialog

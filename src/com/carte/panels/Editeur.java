@@ -1,3 +1,5 @@
+package com.carte.panels;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -36,6 +38,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
+
+import com.carte.sprites.Sprite;
+import com.carte.utils.CrtEdFileFilter;
+import com.carte.utils.InputDialog;
+
 
 public class Editeur
 {

@@ -1,6 +1,8 @@
+package com.carte.sprites;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+
 
 @SuppressWarnings("serial")
 public class CaseNiveaux extends AbstractCase

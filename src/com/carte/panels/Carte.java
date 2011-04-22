@@ -1,3 +1,4 @@
+package com.carte.panels;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -20,6 +21,12 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+
+import com.carte.sprites.CaseNiveaux;
+import com.carte.sprites.Sprite;
+import com.carte.utils.Observable;
+import com.carte.utils.Observateur;
+
 
 @SuppressWarnings("serial")
 public class Carte extends JPanel implements Observateur, MouseListener, Serializable, Observable

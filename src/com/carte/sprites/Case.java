@@ -1,7 +1,9 @@
+package com.carte.sprites;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
+
 
 @SuppressWarnings("serial")
 public class Case extends AbstractCase 

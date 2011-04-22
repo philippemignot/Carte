@@ -1,3 +1,6 @@
+package com.carte.utils;
+
+
 /** Interface du Design Pattern Observer
  * L'observable informe ses observateurs que les données ont été mise à jour
  * et les lui envoie.

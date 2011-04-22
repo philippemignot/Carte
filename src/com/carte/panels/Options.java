@@ -1,3 +1,4 @@
+package com.carte.panels;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -19,6 +20,10 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import com.carte.utils.Observable;
+import com.carte.utils.Observateur;
+
 
 @SuppressWarnings("serial")
 public class Options extends JPanel implements Observable
