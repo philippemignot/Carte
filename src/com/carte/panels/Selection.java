@@ -452,7 +452,8 @@ public class Selection extends JPanel implements ActionListener, Observable,
 	{
 		Object source = arg0.getSource();
 		String classe = source.getClass().getName();
-		if (classe.equals("Case"))
+		
+		if (classe.equalsIgnoreCase("com.carte.sprites.Case"))
 		{
 			// Désélection de(s) la case(s) précédente(s)
 			if (!arg0.isControlDown() && !arg0.isShiftDown())
