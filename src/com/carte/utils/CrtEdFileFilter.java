@@ -22,6 +22,11 @@ private String extension = ".crt", description = "Fichier Editeur de Carte";
 	public String getDescription(){
 		return this.extension + " - " + this.description;
 	}	
+	
+	public String getExtension()
+	{
+		return this.extension;
+	}
 
 
 }

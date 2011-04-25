@@ -152,7 +152,6 @@ public class PanCaseProperties extends JPanel implements Observateur,
 		{
 			if (e.getActionCommand().matches("[a-z]+[_][1-9]+"))
 			{
-				System.out.println(e.getActionCommand());
 				String[] infosSource = e.getActionCommand().split("_");
 				int pos = new Integer(infosSource[1]);
 				if (infosSource[0].equalsIgnoreCase("avant"))

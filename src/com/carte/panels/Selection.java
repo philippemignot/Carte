@@ -451,7 +451,7 @@ public class Selection extends JPanel implements ActionListener, Observable,
 	public void mouseReleased(MouseEvent arg0)
 	{
 		Object source = arg0.getSource();
-		String classe = source.getClass().getName();
+		String classe = source.getClass().getCanonicalName();
 		
 		if (classe.equalsIgnoreCase("com.carte.sprites.Case"))
 		{
