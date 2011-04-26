@@ -305,10 +305,9 @@ public class Selection extends JPanel implements ActionListener, Observable,
 	public void actionPerformed(ActionEvent e)
 	{
 		Object source = e.getSource();
-		String classe = source.getClass().getName();
 
 		// Gestion du clic sur un bouton radio : changer les sprites affichés
-		if (classe.equals("javax.swing.JRadioButton"))
+		if (source.getClass().equals(JRadioButton.class))
 		{
 			File dossier =
 			        new File("images/" + ((JRadioButton) source).getText());
@@ -451,9 +450,8 @@ public class Selection extends JPanel implements ActionListener, Observable,
 	public void mouseReleased(MouseEvent arg0)
 	{
 		Object source = arg0.getSource();
-		String classe = source.getClass().getCanonicalName();
 		
-		if (classe.equalsIgnoreCase("com.carte.sprites.Case"))
+		if (source.getClass().equals(Case.class))
 		{
 			// Désélection de(s) la case(s) précédente(s)
 			if (!arg0.isControlDown() && !arg0.isShiftDown())

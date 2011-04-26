@@ -90,7 +90,7 @@ public class Editeur
 	private JPanel conteneur; // Le conteneur général
 	CarteFileChooser fileChooser = new CarteFileChooser("sauvegardes/");
 	CrtEdFileFilter filtreCrt = new CrtEdFileFilter(".carte", "Fichier Editeur de carte");
-	CrtEdFileFilter filtreArn = new CrtEdFileFilter(".arene", "Fichier Carte Arene");
+	CrtEdFileFilter filtreCrtTxt = new CrtEdFileFilter(".carte.txt", "Fichier Carte explicite");
 	
 
 	// Actions
@@ -179,8 +179,7 @@ public class Editeur
 		initActions();
 		fileChooser.removeChoosableFileFilter(fileChooser.getAcceptAllFileFilter());
 		fileChooser.addChoosableFileFilter(filtreCrt);
-//		fileChooser.addChoosableFileFilter(filtreArn);
-//		filtreArn.getDescription();
+		fileChooser.addChoosableFileFilter(filtreCrtTxt);
 
 		// Affichage de la fenêtre
 		fenetre.setContentPane(conteneur);

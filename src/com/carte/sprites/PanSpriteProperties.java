@@ -319,8 +319,8 @@ public class PanSpriteProperties extends JPanel implements Observateur, MouseLis
 
 	@Override
     public void mouseReleased(MouseEvent e)
-	{		
-		if(e.getSource().getClass().getCanonicalName().endsWith("ImagePanel"))
+	{	
+		if(e.getSource().getClass().equals(ImagePanel.class))
 		{
 			if(e.getButton() == MouseEvent.BUTTON1)
 			{

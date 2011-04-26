@@ -7,7 +7,7 @@ import javax.swing.filechooser.FileFilter;
 public class CrtEdFileFilter extends FileFilter
 {
 
-private String extension = ".crt", description = "Fichier Editeur de Carte";
+private String extension = ".carte", description = "Fichier Editeur de Carte";
 	
 	public CrtEdFileFilter(String ext, String descrip)
 	{
