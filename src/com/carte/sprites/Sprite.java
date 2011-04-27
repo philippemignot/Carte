@@ -37,6 +37,7 @@ public class Sprite implements Serializable, Observable
 	private int		translateX = 0; // Translation des coordonnées du graphique en abscisse
 	private int		translateY = 0; // Translation des coordonnées du graphique en ordonnées
 	private int typeAnimationAff = 0; // Type d'animation : 2 => Fixe (pas de déplacement ; 1 => Boucle (déplacement répété pour simuler 2 cases) ; 0 => Normal (joue l'animation prévue)
+	
 	// Liste des observateurs
 	private ArrayList<Observateur> listeObservateur =
 	        new ArrayList<Observateur>();

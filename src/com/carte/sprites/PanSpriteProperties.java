@@ -103,7 +103,9 @@ public class PanSpriteProperties extends JPanel implements Observateur, MouseLis
 		bSuppr.setActionCommand("suppr_" + String.valueOf(niveau));
 
 		bCopier = new JButton("C");
+		bCopier.setEnabled(false);
 		bColler = new JButton("V");
+		bColler.setEnabled(false);
 
 		toolbar.add(bAvant);
 		toolbar.add(bApres);
@@ -324,7 +326,7 @@ public class PanSpriteProperties extends JPanel implements Observateur, MouseLis
 		{
 			if(e.getButton() == MouseEvent.BUTTON1)
 			{
-				sprite.startAnimation(0);
+				sprite.startAnimation(1);
 			}else if(e.getButton() == MouseEvent.BUTTON3)
 			{
 				sprite.changerDefImg();

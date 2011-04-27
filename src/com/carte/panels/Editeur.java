@@ -178,8 +178,8 @@ public class Editeur
 		// Gestion du clavier
 		initActions();
 		fileChooser.removeChoosableFileFilter(fileChooser.getAcceptAllFileFilter());
-		fileChooser.addChoosableFileFilter(filtreCrt);
 		fileChooser.addChoosableFileFilter(filtreCrtTxt);
+		fileChooser.addChoosableFileFilter(filtreCrt);
 
 		// Affichage de la fenêtre
 		fenetre.setContentPane(conteneur);
