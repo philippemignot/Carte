@@ -324,7 +324,7 @@ public class PanSpriteProperties extends JPanel implements Observateur, MouseLis
 		{
 			if(e.getButton() == MouseEvent.BUTTON1)
 			{
-				sprite.startAnimation();
+				sprite.startAnimation(0);
 			}else if(e.getButton() == MouseEvent.BUTTON3)
 			{
 				sprite.changerDefImg();

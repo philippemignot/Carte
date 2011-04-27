@@ -36,7 +36,7 @@ public class Sprite implements Serializable, Observable
 	private int[]	intervalleTpsAnim; // 33 : red + green + blue : Intervalle de temps entre chaque image de l'animation ; 
 	private int		translateX = 0; // Translation des coordonnées du graphique en abscisse
 	private int		translateY = 0; // Translation des coordonnées du graphique en ordonnées
-	
+	private int typeAnimationAff = 0; // Type d'animation : 2 => Fixe (pas de déplacement ; 1 => Boucle (déplacement répété pour simuler 2 cases) ; 0 => Normal (joue l'animation prévue)
 	// Liste des observateurs
 	private ArrayList<Observateur> listeObservateur =
 	        new ArrayList<Observateur>();
@@ -163,40 +163,58 @@ public class Sprite implements Serializable, Observable
 	 */
 	public void draw(Graphics g) 
 	{
-		g.translate(translateX, translateY);
+		if(typeAnimationAff < 2)
+		{
+			g.translate(translateX, translateY);
+		}
 		if(image != null)
 		{	
 			g.drawImage(imgDraw, 0, 0, largeur, hauteur, null);
 			
-			if(translateX > 0)
+			if(typeAnimationAff == 1)
 			{
-				g.translate(-32, 0);
-				g.drawImage(imgDraw, 0, 0, largeur, hauteur, null);
+				if(translateX > 0)
+				{
+					deplImg(-32, 0, g);
+				}
+				else if(translateY > 0)
+				{
+					deplImg(0, -32, g);
+				}
+				else if(translateX < 0)
+				{
+					deplImg(32, 0, g);
+				}
+				else if(translateY < 0)
+				{
+					deplImg(0,32, g);
+				}				
 			}
-			else if(translateY > 0)
-			{
-				g.translate(0, -32);
-				g.drawImage(imgDraw, 0, 0, largeur, hauteur, null);
-			}
-			else if(translateX < 0)
-			{
-				g.translate(32, 0);
-				g.drawImage(imgDraw, 0, 0, largeur, hauteur, null);			
-			}
-			else if(translateY < 0)
-			{
-				g.translate(0, 32);
-				g.drawImage(imgDraw, 0, 0, largeur, hauteur, null);			
-			}
-		}		
+		}
+		if(typeAnimationAff < 2)
+		{
+			g.translate(-translateX, -translateY);
+		}
 	}
+	
+	private void deplImg(int x, int y, Graphics g)
+    {
+		g.translate(x, y);
+		g.drawImage(imgDraw, 0, 0, largeur, hauteur, null);
+		g.translate(-x, -y);
+    }
 
 	/**
 	 * Lance l'animation correspondant à l'image statique demandée
 	 * 
+	 * @param 
+	 * 		Le type d'animation : fixe, boucle et normal
+	 * 
 	 */
-	public void startAnimation()
+	public void startAnimation(int typeAnimAff)
 	{
+		
+		typeAnimationAff = (typeAnimAff < 3 && typeAnimAff >= 0) ? typeAnimAff : 0;
 		if(animation)
 		{
 			new Thread(new Runnable() 
@@ -211,7 +229,7 @@ public class Sprite implements Serializable, Observable
 					{
 						imgAnimX = i + 2;
 						
-						// Pour un effet de déplacement
+						// Pour un effet de déplacement en boucle
 						switch(typeAnim[imgStatActive])
 						{
 							case 2:
