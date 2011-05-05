@@ -27,6 +27,8 @@ import java.util.Properties;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -42,7 +44,9 @@ import javax.swing.KeyStroke;
 import com.carte.sprites.Sprite;
 import com.carte.utils.CarteFileChooser;
 import com.carte.utils.CrtEdFileFilter;
-import com.carte.utils.InputDialog;
+import com.carte.utils.dialog.ElementDialog;
+import com.carte.utils.dialog.InputDialog;
+import com.carte.utils.dialog.PersoDialog;
 
 
 public class Editeur
@@ -65,7 +69,7 @@ public class Editeur
 	// Menu
 	private JMenuBar menuBar = new JMenuBar();
 
-	private JMenu menuFichier = new JMenu("Fichier");
+	private JMenu menuFichier = new JMenu("Carte");
 	private JMenuItem menuNew = new JMenuItem("Nouvelle carte");
 	private JMenuItem menuSave = new JMenuItem("Sauvegarder");
 	private JMenuItem menuLoad = new JMenuItem("Charger");
@@ -73,6 +77,7 @@ public class Editeur
 
 	private JMenu menuOutils = new JMenu("Outils");
 	private JMenuItem menuDefaultParam = new JMenuItem("Paramètres par défaut");
+	private JMenuItem menuOptions = new JMenuItem("Options");
 
 	// Elements
 	private JFrame fenetre; // La fenetre
@@ -256,11 +261,16 @@ public class Editeur
 		});
 		menuQuit.setMnemonic('Q');
 		menuFichier.add(menuQuit);
-		menuFichier.setMnemonic('F');
+		menuFichier.setMnemonic('C');
 
+		menuOptions.addActionListener(new SetOptionsListener());
+		menuOptions.setMnemonic('O');
+		menuOutils.add(menuOptions);
+		
 		menuDefaultParam.addActionListener(new SetParameterListener());
 		menuDefaultParam.setMnemonic('P');
 		menuOutils.add(menuDefaultParam);
+		
 		menuOutils.setMnemonic('O');
 
 		menuBar.add(menuFichier);
@@ -927,7 +937,7 @@ public class Editeur
 	}
 
 	/**
-	 * Ecouteur du menu Nouvelle Carte
+	 * Ecouteur du menu Default parameters
 	 */
 	public class SetParameterListener implements ActionListener
 	{
@@ -968,6 +978,48 @@ public class Editeur
 				saveConfig("parametres.txt", parametres);
 			}
 			verifPropietes(parametres);
+		}
+	}
+	
+	/**
+	 * Ecouteur du menu Options
+	 */
+	public class SetOptionsListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent arg0)
+		{
+			// Création des éléments
+			JCheckBox nivPersoActive = new JCheckBox("Niveau fixe pour les personnages");
+			
+			String[] niveaux = new String[nbrNiveaux];
+			for(int i = 1 ; i <= nbrNiveaux ; i++)
+			{
+				niveaux[i - 1] = "Niveau " + i;
+			}
+			JComboBox nivPerso = new JComboBox(niveaux);
+			
+			PersoDialog dialogOptions = new PersoDialog(null, "Options", true, 2, 4);
+			dialogOptions.addElement(new ElementDialog<JCheckBox>(nivPersoActive));
+			dialogOptions.addElement(new ElementDialog<JComboBox>(nivPerso));
+			
+			dialogOptions.setTextOkButton("Sauvegarder");
+//			dialogOptions.setTextIntro("Paramètres par défaut : ");
+			String[] returns = dialogOptions.showDialog();
+			
+			// Test de la réponse : la première valeur est nulle, c'est que l'on a annulé.
+			boolean cancelled = (returns[0] == "0") ? true : false;
+			
+			if (!cancelled)
+			{
+				if(nivPersoActive.isSelected())
+				{
+					System.out.println("Oui : " + ((String) nivPerso.getSelectedItem()));
+				}else
+				{
+					System.out.println("Non");
+				}
+			}
 		}
 	}
 

@@ -1,4 +1,4 @@
-package com.carte.utils;
+package com.carte.utils.dialog;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -6,6 +6,7 @@ import java.awt.Insets;
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JRadioButton;
+
 
 
 
