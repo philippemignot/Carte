@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
@@ -318,22 +317,15 @@ public class Editeur
 			dialogNew.setDefaults(defaults);
 			dialogNew.setTextOkButton("Créer");
 
-			String[] results = (dialogNew.showDialog());
-			boolean cancelled = true;
+			String[] results = new String[titles.length];
+			boolean validated = dialogNew.showDialog(results);
 
-			// Test de la réponse : si tout est vide, on ne fait rien
-			for (int j = 0; j < results.length; j++)
-			{
-				if (!results[j].equals("-1"))
-					cancelled = false;
-			}
-
-			if (cancelled && isFirstDialog)
+			if (!validated && isFirstDialog)
 			{
 				System.exit(0);
 			}
 
-			if (!cancelled)
+			if (validated)
 			{
 				// Si une carte a déjà été créé
 				if (carte != null)
@@ -958,17 +950,10 @@ public class Editeur
 			dialogParam.setTextOkButton("Sauvegarder");
 			dialogParam.setTextIntro("Paramètres par défaut : ");
 
-			String[] results = (dialogParam.showDialog());
-			boolean cancelled = true;
+			String[] results = new String[titles.length];
+			boolean validated = dialogParam.showDialog(results);
 
-			// Test de la réponse : si tout est vide, on ne fait rien
-			for (int j = 0; j < results.length; j++)
-			{
-				if (!results[j].equals("-1"))
-					cancelled = false;
-			}
-
-			if (!cancelled)
+			if (validated)
 			{
 				for (int i = 0; i < parametersKeys.length; i++)
 				{
@@ -1004,13 +989,11 @@ public class Editeur
 			dialogOptions.addElement(new ElementDialog<JComboBox>(nivPerso));
 			
 			dialogOptions.setTextOkButton("Sauvegarder");
+			dialogOptions.setTextCancelButton("Annuler");
 //			dialogOptions.setTextIntro("Paramètres par défaut : ");
-			String[] returns = dialogOptions.showDialog();
-			
-			// Test de la réponse : la première valeur est nulle, c'est que l'on a annulé.
-			boolean cancelled = (returns[0] == "0") ? true : false;
-			
-			if (!cancelled)
+			boolean validated = dialogOptions.showDialog();
+						
+			if (validated)
 			{
 				if(nivPersoActive.isSelected())
 				{

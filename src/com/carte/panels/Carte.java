@@ -679,7 +679,7 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	{
 		for (Observateur obs : listeObservateur)
 		{
-			obs.update(listeSpritesCase, "carte");
+			obs.update(listeSpritesCase, "Carte");
 		}
 	}
 

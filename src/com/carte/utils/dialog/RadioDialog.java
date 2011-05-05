@@ -11,7 +11,7 @@ import javax.swing.JRadioButton;
 
 
 @SuppressWarnings("serial")
-public class RadioDialog extends AbstractDialog
+public class RadioDialog extends AbstractEasyDialog
 {
 	private JRadioButton[] radioButtons; // Les différents radio boutons
 
@@ -33,9 +33,9 @@ public class RadioDialog extends AbstractDialog
 		super(parent, title, modal, titres);
 		setElements();
 	}
-
+	
 	/**
-	 * Crée une fenêtre de dialogue avec les titres demandés. Permet de regrouper les radio boutons par sujet.
+	 * Crée une fenêtre de dialogue avec les titres demandÃ©s. Permet de regrouper les radio boutons par sujet.
 	 * Pas encore bien pris en compte.
 	 * 
 	 * @param parent
@@ -50,13 +50,13 @@ public class RadioDialog extends AbstractDialog
 	 * 				Détermine de quel groupe font partie chaque TextField
 	 */
 	public RadioDialog(JFrame parent, String title, boolean modal,
-	        String[] titres, int[] groupes)
+			String[] titres, int[] groupes)
 	{
-		super(parent, title, modal, titres, groupes);
+		super(parent, title, modal, titres);
 		setElements();
 	}
 	
-	@Override
+		@Override
 	public void getData()
 	{
 		for (int i = 0; i < titles.length; i++)
@@ -98,7 +98,7 @@ public class RadioDialog extends AbstractDialog
 				bg[0] = new ButtonGroup();
 				bg[0].add(radioButtons[i]);
 			}
-			this.add(radioButtons[i], new GridBagConstraints(0, i + 1, 2, 1, 1.0,
+			elementsPanel.add(radioButtons[i], new GridBagConstraints(0, i + 1, 2, 1, 1.0,
 					0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
 					new Insets(3, 3, 3, 3), 0, 0));
 		}
@@ -107,4 +107,33 @@ public class RadioDialog extends AbstractDialog
 			radioButtons[0].setSelected(true);
 		}
     }
+	
+	/**
+	 * Renvoie le nombre total de groupe
+	 * 
+	 * @return
+	 * 		Le nombre total de groupe
+	 */
+	private int getGroupesNumber()
+	{
+		int nbrGrp = 0;
+		for(int i = 0 ; i < groupes.length ; i++)
+		{
+			if(groupes[i] > nbrGrp)
+			{
+				nbrGrp = groupes[i];
+			}
+		}
+
+		return nbrGrp;
+	}
+	
+	/**
+	 * Mets en place les groupes. Pas encore bien gÃ©rÃ©.
+	 * @param groupes
+	 */
+	public void setGroupes(int[] groupes)
+	{
+		this.groupes = groupes;
+	}
 }

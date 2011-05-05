@@ -7,6 +7,7 @@ import javax.swing.JComponent;
 public class ElementDialog<T>
 {
 	private T valeur = null;
+	//@Todo : implémenter les titres : permet de ajouter un titre devant un élément. A implémenter dans PanelElement.
 	private String titre = null;
 	private static String[] acceptedTypes = {"JRadioButton", "JCheckBox", "JTextField", "JComboBox", "JTree"};
 	private Hashtable<JComponent, String> condActive;
