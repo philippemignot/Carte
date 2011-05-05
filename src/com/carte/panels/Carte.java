@@ -299,6 +299,12 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 					}else
 					{
 						clearSelection();
+						if(this.getCursor() == Cursor
+				                .getDefaultCursor())
+						{
+							listeSpritesCase.clear();
+							updateObservateur();
+						}
 					}
 				}
 				else if(arg0.getButton() == MouseEvent.BUTTON1
