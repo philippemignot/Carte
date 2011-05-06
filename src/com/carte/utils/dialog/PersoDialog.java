@@ -57,7 +57,7 @@ public class PersoDialog extends AbstractDialog
 	{
 		textIntro = texte;
 		Border b = BorderFactory.createLoweredBevelBorder();
-		elementsPanel.setBorder(new TitledBorder(b, "Aléatoire"));
+		elementsPanel.setBorder(new TitledBorder(b, textIntro));
 		pack();
 	}
 
@@ -130,6 +130,7 @@ public class PersoDialog extends AbstractDialog
 	public void addCondActive(ElementDialog<?> el, ElementDialog<?> elCond, String cond)
 	{
 		el.addCondActive((JComponent) elCond.getValeur(), cond);
+		
 	}
 	
 	/**

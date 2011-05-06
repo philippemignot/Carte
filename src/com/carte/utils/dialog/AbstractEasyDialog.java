@@ -70,7 +70,7 @@ public abstract class AbstractEasyDialog extends AbstractDialog
 	{
 		textIntro = texte;
 		Border b = BorderFactory.createRaisedBevelBorder();
-		elementsPanel.setBorder(new TitledBorder(b, "Aléatoire"));
+		elementsPanel.setBorder(new TitledBorder(b, textIntro));
 		pack();
 	}
 	

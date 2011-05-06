@@ -314,7 +314,7 @@ public class Editeur
 			        getParametersFromProperties(parametres, parametersKeys);
 			InputDialog dialogNew =
 			        new InputDialog(null, "Nouvelle carte", true, titles);
-			dialogNew.setTextIntro("Veuillez entrer les paramètres de la nouvelle carte :");
+			dialogNew.setTextIntro("Paramètres de la nouvelle carte");
 			dialogNew.setDefaults(defaults);
 			dialogNew.setTextOkButton("Créer");
 
@@ -949,7 +949,7 @@ public class Editeur
 			                titles);
 			dialogParam.setDefaults(defaults);
 			dialogParam.setTextOkButton("Sauvegarder");
-			dialogParam.setTextIntro("Paramètres par défaut : ");
+			dialogParam.setTextIntro("Paramètres par défaut");
 
 			String[] results = new String[titles.length];
 			boolean validated = dialogParam.showDialog(results);
@@ -977,6 +977,7 @@ public class Editeur
 		{
 			// Création des éléments
 			JCheckBox nivPersoActive = new JCheckBox("Niveau fixe pour les personnages");
+			ElementDialog<JCheckBox> elNivPersoActive = new ElementDialog<JCheckBox>(nivPersoActive);
 			
 			String[] niveaux = new String[nbrNiveaux];
 			for(int i = 1 ; i <= nbrNiveaux ; i++)
@@ -984,14 +985,17 @@ public class Editeur
 				niveaux[i - 1] = "Niveau " + i;
 			}
 			JComboBox nivPerso = new JComboBox(niveaux);
+			ElementDialog<JComboBox> elNivPerso = new ElementDialog<JComboBox>(nivPerso);
 			
 			PersoDialog dialogOptions = new PersoDialog(null, "Options", true, 2, 4);
-			dialogOptions.addElement(new ElementDialog<JCheckBox>(nivPersoActive));
-			dialogOptions.addElement(new ElementDialog<JComboBox>(nivPerso));
+			dialogOptions.addElement(elNivPersoActive);
+			dialogOptions.addElement(elNivPerso);
 			
 			dialogOptions.setTextOkButton("Sauvegarder");
 			dialogOptions.setTextCancelButton("Annuler");
-			dialogOptions.setTextIntro("Options de l'éditeur de carte :");
+			dialogOptions.setTextIntro("Options de l'éditeur de carte");
+			
+			dialogOptions.addCondActive(elNivPerso, elNivPersoActive, "1");
 			boolean validated = dialogOptions.showDialog();
 						
 			if (validated)
