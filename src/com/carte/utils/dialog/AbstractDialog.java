@@ -2,6 +2,7 @@ package com.carte.utils.dialog;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -11,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
@@ -27,7 +27,7 @@ public abstract class AbstractDialog extends JDialog
 	protected boolean validated = true; // Si la boite de dialogue a été validée
 	protected JButton okButton; // Le bouton de validation
 	protected JButton cancelButton; // Le bouton d'annulation
-	protected JLabel textIntro = new JLabel("Veuillez entrer les paramètres :"); // Le texte d'introduction
+	protected String textIntro = ""; // Le texte d'introduction - titre du panneau contenant les éléments
 
 	/**
 	 * Créer une nouvelle boîte de dialog personnalisée.
@@ -100,13 +100,14 @@ public abstract class AbstractDialog extends JDialog
 		setOkButtonListener();
 		setCancelButtonListener();
 
-		buttonsPanel = new JPanel();
+		buttonsPanel = new JPanel(new GridBagLayout());
+		
 		buttonsPanel.add(okButton, new GridBagConstraints(0, 0, 1, 1,
-				1.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
-				new Insets(15, 5, 20, 20), 0, 0));
+				1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+				new Insets(10, 10, 10, 10), 0, 0));
 		buttonsPanel.add(cancelButton, new GridBagConstraints(1, 0, 1,
-				1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-				new Insets(15, 20, 20, 5), 0, 0));
+				1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+				new Insets(10, 10, 10, 10), 0, 0));
 		contentPane.add(buttonsPanel, BorderLayout.SOUTH);
 	}
 
@@ -128,17 +129,12 @@ public abstract class AbstractDialog extends JDialog
 	}
 
 	/**
-	 * Modifie le texte d'introduction. Ce texte est affiché avant les
-	 * textFields.
+	 * Modifie le texte d'introduction.
 	 * 
 	 * @param texte
 	 *        Le nouveau texte d'introduction
 	 */
-	public void setTextIntro(String texte)
-	{
-		textIntro.setText(texte);
-		pack();
-	}
+	public abstract void setTextIntro(String texte);
 
 	/**
 	 * Modifie le texte du bouton de validation. Ce bouton renvoie les valeurs

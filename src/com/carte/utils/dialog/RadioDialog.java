@@ -14,9 +14,10 @@ import javax.swing.JRadioButton;
 public class RadioDialog extends AbstractEasyDialog
 {
 	private JRadioButton[] radioButtons; // Les différents radio boutons
+	private boolean[] defaults;
 
 	/**
-	 * Crée une fenêtre de dialogue avec les titres demandés, les champs vides
+	 * Créé une fenêtre de dialogue contenant des radio boutons avec les titres demandés, les champs vides.
 	 * 
 	 * @param parent
 	 * 				La fenerte parente
@@ -43,11 +44,11 @@ public class RadioDialog extends AbstractEasyDialog
 	 * @param title
 	 * 				Le titre de la fenêtre
 	 * @param modal
-	 * 				La modalité de la fenêtre : true - bloque l'application tant qu'elle n'est pas fermée
+	 * 				La modalité de la fenêtre : true - bloque l'application tant qu'elle n'est pas fermée.
 	 * @param titres
 	 * 				Les titres de chaque radio boutons. Autant de radio boutons sont créés qu'il y a de titres.
 	 * @param groupes
-	 * 				Détermine de quel groupe font partie chaque TextField
+	 * 				Détermine de quel groupe font partie chaque radio bouton.
 	 */
 	public RadioDialog(JFrame parent, String title, boolean modal,
 			String[] titres, int[] groupes)
@@ -135,5 +136,20 @@ public class RadioDialog extends AbstractEasyDialog
 	public void setGroupes(int[] groupes)
 	{
 		this.groupes = groupes;
+	}
+	
+	/**
+	 * Rajoute des valeurs par défaut pour les radio boutons.
+	 * 
+	 * @param def
+	 * 			Les valeurs par défaut
+	 */
+	public void setDefaults(boolean[] def)
+	{
+		this.defaults = def;
+		for (int i = 0; i < Math.min(titles.length, defaults.length); i++)
+		{
+			radioButtons[i].setSelected(defaults[i]);
+		}
 	}
 }

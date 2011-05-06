@@ -38,7 +38,7 @@ public class InputDialog extends AbstractEasyDialog
 	 * Rajoute des valeurs par défaut pour les TextFields
 	 * 
 	 * @param def
-	 * 			es valeurs par défaut
+	 * 			Les valeurs par défaut
 	 */
 	public void setDefaults(String[] def)
 	{

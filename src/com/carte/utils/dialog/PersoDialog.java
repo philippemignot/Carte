@@ -2,8 +2,14 @@ package com.carte.utils.dialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 @SuppressWarnings("serial")
 public class PersoDialog extends AbstractDialog
@@ -23,16 +29,36 @@ public class PersoDialog extends AbstractDialog
 	 * @param modal
 	 * 			La modalité de la fenêtre.
 	 * @param sizeX
-	 * 			Le nombre d'élément maximal en horizontal.
+	 * 			Le nombre d'élément * leur largeur spécifiée maximal maximal en horizontal : de 1 à 15.
 	 * @param sizeY
-	 * 			Le nombre d'éléments maximum en vertical.
+	 * 			Le nombre d'éléments * leur hauteur spécifiée maximal en vertical : de 1 à 15.
 	 */
 	public PersoDialog(JFrame parent, String title, boolean modal, int sizeX, int sizeY)
 	{
 		super(parent, title, modal);
+		sizeX = (sizeX > 15) ? 15 : sizeX;
+		sizeX = (sizeX < 1) ? 1 : sizeX;
+		sizeY = (sizeY > 15) ? 15 : sizeY;
+		sizeY = (sizeY < 1) ? 1 : sizeY;
 		
 		elementsPanel = new PanelElement(sizeX, sizeY);
+		Border b = BorderFactory.createLoweredBevelBorder();
+		elementsPanel.setBorder(b);
 		contentPane.add(elementsPanel);
+	}
+	
+	/**
+	 * Modifie le texte d'introduction. Ce texte est affiché comme titre du panneau d'éléments.
+	 * 
+	 * @param texte
+	 *        Le nouveau texte d'introduction
+	 */
+	public void setTextIntro(String texte)
+	{
+		textIntro = texte;
+		Border b = BorderFactory.createLoweredBevelBorder();
+		elementsPanel.setBorder(new TitledBorder(b, "Aléatoire"));
+		pack();
 	}
 
 	@Override
@@ -42,20 +68,6 @@ public class PersoDialog extends AbstractDialog
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		this.pack();
-    }
-
-	@Override
-    public void setTextOkButton(String texte)
-    {
-		okButton.setText(texte);
-		pack();
-    }
-
-	@Override
-    public void setTextCancelButton(String texte)
-    {
-		cancelButton.setText(texte);
-		pack();
     }
 	
 	public void addElement(ElementDialog<?> el)
@@ -102,4 +114,44 @@ public class PersoDialog extends AbstractDialog
 
 		});
     }
+	
+	/**
+	 * Ajoute une condition pour rendre sélectionnable ou non un élément en fonction de la valeur d'un autre.
+	 * 
+	 * Un même élément peut dépendre de plusieurs conditions pour être acitf. Il ne sera alors actif que si toutes ces conditions sont réunies.
+	 * 
+	 * @param el
+	 * 			L'élément auquel on veut rajouter une condition.
+	 * @param elCond
+	 * 			L'élément qui contient la condition.
+	 * @param cond
+	 * 			La valeur de la condition : String - "0"/"1" pour des booleans.
+	 */
+	public void addCondActive(ElementDialog<?> el, ElementDialog<?> elCond, String cond)
+	{
+		el.addCondActive((JComponent) elCond.getValeur(), cond);
+	}
+	
+	/**
+	 * Ajoute une condition pour rendre sélectionnable ou non plusieurs éléments en fonction de la valeur d'un autre.
+	 * 
+	 * Un même élément peut dépendre de plusieurs conditions pour être acitf. Il ne sera alors actif que si toutes ces conditions sont réunies.
+	 * 
+	 * @param el
+	 * 			Les éléments auxquels on veut rajouter une condition.
+	 * @param elCond
+	 * 			L'élément qui contient la condition.
+	 * @param cond
+	 * 			La valeur de la condition : String - "0"/"1" pour des booleans.
+	 */
+	public void addCondActive(ArrayList<ElementDialog<?>> el, ElementDialog<?> elCond, String cond)
+	{
+		int nbrEl = el.size();
+		for(int i = 0 ; i < nbrEl ; i ++)
+		{
+			el.get(i).addCondActive((JComponent) elCond.getValeur(), cond);
+		}
+	}
+	
+	
 }

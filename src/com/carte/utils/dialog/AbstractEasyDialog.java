@@ -7,8 +7,11 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 @SuppressWarnings("serial")
 public abstract class AbstractEasyDialog extends AbstractDialog
@@ -50,15 +53,26 @@ public abstract class AbstractEasyDialog extends AbstractDialog
 	{
 		elementsPanel = new JPanel();
 		elementsPanel.setLayout(new GridBagLayout());
-		elementsPanel.add(textIntro, new GridBagConstraints(0, 0, 2, 1, 1.0, 0.0,
-		        GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(
-		                15, 20, 15, 20), 0, 0));
 		add(elementsPanel, BorderLayout.CENTER);
 		this.titles = titres;
 		returns = new String[titles.length];
 	}
 
 	public abstract void getData();
+	
+	/**
+	 * Modifie le texte d'introduction. Ce texte est affiché comme titre du panneau d'éléments.
+	 * 
+	 * @param texte
+	 *        Le nouveau texte d'introduction
+	 */
+	public void setTextIntro(String texte)
+	{
+		textIntro = texte;
+		Border b = BorderFactory.createRaisedBevelBorder();
+		elementsPanel.setBorder(new TitledBorder(b, "Aléatoire"));
+		pack();
+	}
 	
 	/**
 	 * Affiche la fenêtre
@@ -107,6 +121,4 @@ public abstract class AbstractEasyDialog extends AbstractDialog
 
 		});
 	}
-	
-
 }

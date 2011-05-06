@@ -262,11 +262,11 @@ public class Editeur
 		menuFichier.add(menuQuit);
 		menuFichier.setMnemonic('C');
 
-		menuOptions.addActionListener(new SetOptionsListener());
+		menuOptions.addActionListener(new MenuOptionsListener());
 		menuOptions.setMnemonic('O');
 		menuOutils.add(menuOptions);
 		
-		menuDefaultParam.addActionListener(new SetParameterListener());
+		menuDefaultParam.addActionListener(new MenuDefaultParameterListener());
 		menuDefaultParam.setMnemonic('P');
 		menuOutils.add(menuDefaultParam);
 		
@@ -314,6 +314,7 @@ public class Editeur
 			        getParametersFromProperties(parametres, parametersKeys);
 			InputDialog dialogNew =
 			        new InputDialog(null, "Nouvelle carte", true, titles);
+			dialogNew.setTextIntro("Veuillez entrer les paramètres de la nouvelle carte :");
 			dialogNew.setDefaults(defaults);
 			dialogNew.setTextOkButton("Créer");
 
@@ -931,7 +932,7 @@ public class Editeur
 	/**
 	 * Ecouteur du menu Default parameters
 	 */
-	public class SetParameterListener implements ActionListener
+	public class MenuDefaultParameterListener implements ActionListener
 	{
 		@Override
 		public void actionPerformed(ActionEvent arg0)
@@ -969,7 +970,7 @@ public class Editeur
 	/**
 	 * Ecouteur du menu Options
 	 */
-	public class SetOptionsListener implements ActionListener
+	public class MenuOptionsListener implements ActionListener
 	{
 		@Override
 		public void actionPerformed(ActionEvent arg0)
@@ -990,7 +991,7 @@ public class Editeur
 			
 			dialogOptions.setTextOkButton("Sauvegarder");
 			dialogOptions.setTextCancelButton("Annuler");
-//			dialogOptions.setTextIntro("Paramètres par défaut : ");
+			dialogOptions.setTextIntro("Options de l'éditeur de carte :");
 			boolean validated = dialogOptions.showDialog();
 						
 			if (validated)

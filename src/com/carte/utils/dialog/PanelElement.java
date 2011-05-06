@@ -14,6 +14,12 @@ public class PanelElement extends JPanel
 	private int sizeY;
 	private Component[][] positions;
 	
+	/**
+	 * Construit un panel contenant des éléments de dialogues de la taille sizeX*sizeY.
+	 * 
+	 * @param sizeX
+	 * @param sizeY
+	 */
 	public PanelElement(int sizeX, int sizeY)
 	{
 		this.sizeX = sizeX;
@@ -62,6 +68,7 @@ public class PanelElement extends JPanel
 
 	public void addElement(ElementDialog<?> el, int posX, int posY, int width, int height)
 	{
+		
 		posX = (posX >= 0 || posX < sizeX) ? posX : getNextPos(width, height)[0];
 		posY = (posY>= 0 || posY < sizeY) ? posY : getNextPos(width, height)[1];
 		
