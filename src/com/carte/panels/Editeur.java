@@ -26,8 +26,6 @@ import java.util.Properties;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;

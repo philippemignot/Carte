@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -60,16 +58,12 @@ public class PersoDialog extends AbstractDialog
 		elementsPanel.setBorder(new TitledBorder(b, textIntro));
 		pack();
 	}
-
-	@Override
-    public void initDialog()
-    {
-		this.setLocationRelativeTo(null);
-		this.setResizable(false);
-		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		this.pack();
-    }
 	
+	/**
+	 * Ajoute un élément à la boite de dialogue.
+	 * 
+	 * @param el
+	 */
 	public void addElement(PersoDialogElement el)
 	{
 		elementsPanel.addElement(el, 1, 1);

@@ -33,7 +33,7 @@ public class PCheckBox extends JCheckBox implements PersoDialogElement
 	@Override
     public boolean checkStateActive()
     {
-		boolean active = true;
+		active = true;
 		if(!condActive.isEmpty())
 		{
 			 Enumeration<String> eValues = condActive.elements();
