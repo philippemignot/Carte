@@ -4,12 +4,17 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 
+@SuppressWarnings("serial")
 public class PCheckBox extends JCheckBox implements PersoDialogElement
 {
 	private Hashtable<PersoDialogElement, String> condActive = new Hashtable<PersoDialogElement, String>();
-	private boolean active;
+	private boolean active = true;
+
+	public PCheckBox(String title)
+    {
+		super(title);
+    }
 
 	@Override
     public void addCondActive(PersoDialogElement parent, String cond)
@@ -41,6 +46,13 @@ public class PCheckBox extends JCheckBox implements PersoDialogElement
             		 active = false;
             	 }
              }
+		}
+		if(!active)
+		{
+			this.setSelected(false);
+		}else
+		{
+			this.setSelected(true);
 		}
 	    return active;
     }

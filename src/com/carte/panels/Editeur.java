@@ -43,8 +43,8 @@ import javax.swing.KeyStroke;
 import com.carte.sprites.Sprite;
 import com.carte.utils.CarteFileChooser;
 import com.carte.utils.CrtEdFileFilter;
-import com.carte.utils.dialog.ElementDialog;
 import com.carte.utils.dialog.InputDialog;
+import com.carte.utils.dialog.PCheckBox;
 import com.carte.utils.dialog.PersoDialog;
 
 
@@ -976,33 +976,33 @@ public class Editeur
 		public void actionPerformed(ActionEvent arg0)
 		{
 			// Création des éléments
-			JCheckBox nivPersoActive = new JCheckBox("Niveau fixe pour les personnages");
-			ElementDialog<JCheckBox> elNivPersoActive = new ElementDialog<JCheckBox>(nivPersoActive);
+			PCheckBox nivPersoActive = new PCheckBox("Niveau fixe pour les personnages");
 			
-			String[] niveaux = new String[nbrNiveaux];
-			for(int i = 1 ; i <= nbrNiveaux ; i++)
-			{
-				niveaux[i - 1] = "Niveau " + i;
-			}
-			JComboBox nivPerso = new JComboBox(niveaux);
-			ElementDialog<JComboBox> elNivPerso = new ElementDialog<JComboBox>(nivPerso);
+//			String[] niveaux = new String[nbrNiveaux];
+//			for(int i = 1 ; i <= nbrNiveaux ; i++)
+//			{
+//				niveaux[i - 1] = "Niveau " + i;
+//			}
+//			JComboBox nivPerso = new JComboBox(niveaux);
+			
+			PCheckBox testNiveau = new PCheckBox("Niveau 3");
 			
 			PersoDialog dialogOptions = new PersoDialog(null, "Options", true, 2, 4);
-			dialogOptions.addElement(elNivPersoActive);
-			dialogOptions.addElement(elNivPerso);
+			dialogOptions.addElement(nivPersoActive);
+			dialogOptions.addElement(testNiveau);
 			
 			dialogOptions.setTextOkButton("Sauvegarder");
 			dialogOptions.setTextCancelButton("Annuler");
 			dialogOptions.setTextIntro("Options de l'éditeur de carte");
 			
-			dialogOptions.addCondActive(elNivPerso, elNivPersoActive, "1");
+			dialogOptions.addCondActive(testNiveau, nivPersoActive, "1");
 			boolean validated = dialogOptions.showDialog();
 						
 			if (validated)
 			{
 				if(nivPersoActive.isSelected())
 				{
-					System.out.println("Oui : " + ((String) nivPerso.getSelectedItem()));
+					System.out.println("Oui : " + (testNiveau.isSelected() ? "niveau 3" : "pas de niveaux séléctionnés"));
 				}else
 				{
 					System.out.println("Non");
