@@ -70,17 +70,17 @@ public class PersoDialog extends AbstractDialog
 		this.pack();
     }
 	
-	public void addElement(ElementDialog<?> el)
+	public void addElement(PersoDialogElement el)
 	{
 		elementsPanel.addElement(el, 1, 1);
 	}
 
-	public void addElement(ElementDialog<?> el, int width, int height)
+	public void addElement(PersoDialogElement el, int width, int height)
 	{
 		elementsPanel.addElement(el, width, height);
 	}
 
-	public void addElement(ElementDialog<?> el, int posX, int posY, int width, int height)
+	public void addElement(PersoDialogElement el, int posX, int posY, int width, int height)
 	{
 		elementsPanel.addElement(el, posX, posY, width, height);
 	}
@@ -118,7 +118,7 @@ public class PersoDialog extends AbstractDialog
 	/**
 	 * Ajoute une condition pour rendre sélectionnable ou non un élément en fonction de la valeur d'un autre.
 	 * 
-	 * Un même élément peut dépendre de plusieurs conditions pour être acitf. Il ne sera alors actif que si toutes ces conditions sont réunies.
+	 * Un même élément peut dépendre de plusieurs conditions pour être actif. Il ne sera alors actif que si toutes ces conditions sont réunies.
 	 * 
 	 * @param el
 	 * 			L'élément auquel on veut rajouter une condition.
@@ -127,9 +127,9 @@ public class PersoDialog extends AbstractDialog
 	 * @param cond
 	 * 			La valeur de la condition : String - "0"/"1" pour des booleans.
 	 */
-	public void addCondActive(ElementDialog<?> el, ElementDialog<?> elCond, String cond)
+	public void addCondActive(PersoDialogElement el, PersoDialogElement elCond, String cond)
 	{
-		el.addCondActive((JComponent) elCond.getValeur(), cond);
+		el.addCondActive(elCond, cond);
 		
 	}
 	
@@ -145,12 +145,12 @@ public class PersoDialog extends AbstractDialog
 	 * @param cond
 	 * 			La valeur de la condition : String - "0"/"1" pour des booleans.
 	 */
-	public void addCondActive(ArrayList<ElementDialog<?>> el, ElementDialog<?> elCond, String cond)
+	public void addCondActive(ArrayList<PersoDialogElement> el, PersoDialogElement elCond, String cond)
 	{
 		int nbrEl = el.size();
 		for(int i = 0 ; i < nbrEl ; i ++)
 		{
-			el.get(i).addCondActive((JComponent) elCond.getValeur(), cond);
+			el.get(i).addCondActive(elCond, cond);
 		}
 	}
 	

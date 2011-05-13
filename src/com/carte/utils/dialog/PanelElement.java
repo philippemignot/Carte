@@ -30,12 +30,12 @@ public class PanelElement extends JPanel
 
 	}
 	
-	public void addElement(ElementDialog<?> el)
+	public void addElement(PersoDialogElement el)
 	{
 		addElement(el, 1, 1);
 	}
 
-	public void addElement(ElementDialog<?> el, int width, int height)
+	public void addElement(PersoDialogElement el, int width, int height)
 	{
 		int[] nextPos = getNextPos(width, height);
 		System.out.println(nextPos[0] + " " + nextPos[1]);
@@ -66,7 +66,7 @@ public class PanelElement extends JPanel
 	    return nextPos;
     }
 
-	public void addElement(ElementDialog<?> el, int posX, int posY, int width, int height)
+	public void addElement(PersoDialogElement el, int posX, int posY, int width, int height)
 	{
 		
 		posX = (posX >= 0 || posX < sizeX) ? posX : getNextPos(width, height)[0];
@@ -77,7 +77,7 @@ public class PanelElement extends JPanel
 		
 		cleanArea(posX, posY, width, height);
 		
-		add((Component) el.getValeur(), new GridBagConstraints(posX, posY, width,
+		add((Component) el, new GridBagConstraints(posX, posY, width,
 					height, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
 			        new Insets(5, 5, 5, 5), 0, 0));
 		
@@ -85,7 +85,7 @@ public class PanelElement extends JPanel
 		{
 			for(int j = 0 ; j < width ; j ++)
 			{
-				positions[i][j] = (Component) el.getValeur();
+				positions[i][j] = (Component) el;
 			}
 		}
 		
