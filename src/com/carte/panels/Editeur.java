@@ -43,6 +43,7 @@ import com.carte.utils.CarteFileChooser;
 import com.carte.utils.CrtEdFileFilter;
 import com.carte.utils.dialog.InputDialog;
 import com.carte.utils.dialog.PCheckBox;
+import com.carte.utils.dialog.PComboBox;
 import com.carte.utils.dialog.PersoDialog;
 
 
@@ -976,31 +977,33 @@ public class Editeur
 			// Création des éléments
 			PCheckBox nivPersoActive = new PCheckBox("Niveau fixe pour les personnages");
 			
-//			String[] niveaux = new String[nbrNiveaux];
-//			for(int i = 1 ; i <= nbrNiveaux ; i++)
-//			{
-//				niveaux[i - 1] = "Niveau " + i;
-//			}
-//			JComboBox nivPerso = new JComboBox(niveaux);
+			String[] niveaux = new String[nbrNiveaux];
+			for(int i = 1 ; i <= nbrNiveaux ; i++)
+			{
+				niveaux[i - 1] = "Niveau " + i;
+			}
+			PComboBox nivPerso = new PComboBox(niveaux);
 			
-			PCheckBox testNiveau = new PCheckBox("Niveau 3");
+			PCheckBox quadriStart = new PCheckBox("Quadrillage affiché au démarrage");
 			
 			PersoDialog dialogOptions = new PersoDialog(null, "Options", true, 2, 4);
 			dialogOptions.addElement(nivPersoActive);
-			dialogOptions.addElement(testNiveau);
+			dialogOptions.addElement(nivPerso);
+			
+			dialogOptions.addElement(quadriStart, 0, 1, 1, 1);
 			
 			dialogOptions.setTextOkButton("Sauvegarder");
-			dialogOptions.setTextCancelButton("Annuler");
 			dialogOptions.setTextIntro("Options de l'éditeur de carte");
 			
-			dialogOptions.addCondActive(testNiveau, nivPersoActive, "1");
+			dialogOptions.addCondActive(nivPerso, nivPersoActive, "1");
 			boolean validated = dialogOptions.showDialog();
 						
 			if (validated)
 			{
 				if(nivPersoActive.isSelected())
 				{
-					System.out.println("Oui : " + (testNiveau.isSelected() ? "niveau 3" : "pas de niveaux séléctionnés"));
+					System.out.println("Oui : " + (String) nivPerso.getSelectedItem() + " / Quaddrillage " + 
+							(quadriStart.isSelected() ? "affiché" : "masqué") + " au démarrage");
 				}else
 				{
 					System.out.println("Non");

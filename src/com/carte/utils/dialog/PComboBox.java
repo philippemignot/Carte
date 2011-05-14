@@ -5,17 +5,17 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.swing.AbstractButton;
-import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 
-@SuppressWarnings("serial")
-public class PCheckBox extends JCheckBox implements PersoDialogElement
+public class PComboBox extends JComboBox implements PersoDialogElement
 {
+
 	private Hashtable<PersoDialogElement, String> condActive = new Hashtable<PersoDialogElement, String>();
 	private boolean active = true;
 
-	public PCheckBox(String title)
+	public PComboBox(String[] values)
     {
-		super(title);
+		super(values);
 		checkStateActive();
     }
 
@@ -66,7 +66,7 @@ public class PCheckBox extends JCheckBox implements PersoDialogElement
     {
 		boolean hasValue = false;
 		
-		if ((value.equals("0") && !this.isSelected()) || (value.equals("1") && this.isSelected()))
+		if (((String) this.getSelectedItem()).equals(value))
 		{
 			hasValue = true;
 		}
@@ -79,4 +79,5 @@ public class PCheckBox extends JCheckBox implements PersoDialogElement
     {
 		checkStateActive();
     }
+
 }
