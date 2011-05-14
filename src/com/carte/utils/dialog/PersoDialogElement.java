@@ -1,6 +1,8 @@
 package com.carte.utils.dialog;
 
-public interface PersoDialogElement
+import java.awt.event.ActionListener;
+
+public interface PersoDialogElement extends ActionListener
 {	
 	/**
 	 * Rajoute une condition sur l'activation de cet élément par rapport à l'état d'un autre.
@@ -33,5 +35,5 @@ public interface PersoDialogElement
 	 * 			false - L'élément n'est pas dans l'état demandé ou la valeur soumise ne correspond à rien pour cet élément.
 	 */
 	public boolean hasValue(String value);
-
+	
 }

@@ -1,8 +1,11 @@
 package com.carte.utils.dialog;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import javax.swing.AbstractButton;
 import javax.swing.JCheckBox;
 
 @SuppressWarnings("serial")
@@ -14,6 +17,7 @@ public class PCheckBox extends JCheckBox implements PersoDialogElement
 	public PCheckBox(String title)
     {
 		super(title);
+		checkStateActive();
     }
 
 	@Override
@@ -27,6 +31,7 @@ public class PCheckBox extends JCheckBox implements PersoDialogElement
 		{
 			condActive.put(parent, cond);
 		}
+		((AbstractButton) parent).addActionListener(this);
 		checkStateActive();
     }
 
@@ -49,10 +54,10 @@ public class PCheckBox extends JCheckBox implements PersoDialogElement
 		}
 		if(!active)
 		{
-			this.setSelected(false);
+			this.setEnabled(false);
 		}else
 		{
-			this.setSelected(true);
+			this.setEnabled(true);
 		}
 	    return active;
     }
@@ -70,4 +75,9 @@ public class PCheckBox extends JCheckBox implements PersoDialogElement
 	    return hasValue;
     }
 
+	@Override
+    public void actionPerformed(ActionEvent e)
+    {
+		checkStateActive();
+    }
 }
