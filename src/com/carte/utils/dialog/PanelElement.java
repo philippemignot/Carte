@@ -8,11 +8,16 @@ import java.awt.Insets;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class PanelElement extends JPanel
+public class PanelElement extends JPanel implements PersoLayoutUtils
 {
 	private int sizeX;
 	private int sizeY;
 	private Component[][] positions;
+	
+	/**
+	 * Le layout actuellement utilisé.
+	 */
+	private PersoDialogLayout layout;
 	
 	/**
 	 * Construit un panel contenant des éléments de dialogues de la taille sizeX*sizeY.
@@ -116,4 +121,47 @@ public class PanelElement extends JPanel
 	{
 		return sizeY;
 	}
+	
+	/**
+	 * Utiliser un layout parmis les 4 proposés : Horizontal, Vertical, Placement et Grid.
+	 * 
+	 * @param layout
+	 * 			Prend l'une des 4 valeurs : Horizontal, Vertical, Placement et Grid.
+	 */
+	public void setLayout(int layoutId)
+	{
+		if(layoutId >= 0 && layoutId < 4)
+		{
+			this.layout = new PersoDialogLayout(layoutId);
+		}
+	}
+	
+	public PersoDialogLayout getPersoLayout()
+	{
+		return this.layout;
+	}
+
+	@Override
+    public void setNumberRows(int nbrRows)
+    {
+		layout.setNumberRows(nbrRows);
+    }
+
+	@Override
+    public void setNumberCols(int nbrCols)
+    {
+		layout.setNumberCols(nbrCols);
+    }
+
+	@Override
+    public int getNulberRows()
+    {
+	    return layout.getNulberRows();
+    }
+
+	@Override
+    public int getNulberCols()
+    {
+	    return layout.getNulberCols();
+    }
 }

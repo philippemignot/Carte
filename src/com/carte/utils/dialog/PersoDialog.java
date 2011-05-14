@@ -10,13 +10,15 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 @SuppressWarnings("serial")
-public class PersoDialog extends AbstractDialog
+public class PersoDialog extends AbstractDialog implements PersoLayoutUtils
 {
 	private String[] returns = {"1"};
 	
+	/**
+	 * Le conteneur des différents éléments.
+	 */
 	private PanelElement elementsPanel;
-	
-	
+		
 	/**
 	 * Créer une nouvelle boîte de dialog personnalisée.
 	 * 
@@ -148,5 +150,52 @@ public class PersoDialog extends AbstractDialog
 		}
 	}
 	
+	/**
+	 * Utiliser un layout parmis les 4 proposés : Horizontal, Vertical, Placement et Grid.
+	 * 
+	 * @param layout
+	 * 			Prend l'une des 4 valeurs : Horizontal, Vertical, Placement et Grid.
+	 */
+	public void setLayout(int layout)
+	{
+		if(layout >= 0 && layout < 4)
+		{
+			elementsPanel.setLayout(layout);
+		}
+	}
 	
+	/**
+	 * Renvoie le layout actuellement utilisé pour la boîte de dialogue personnalisée.
+	 * 
+	 * @return
+	 * 		Le layout actuellement utilisé.
+	 */
+	public PersoDialogLayout getPersoLayout()
+	{
+		return elementsPanel.getPersoLayout();
+	}
+
+	@Override
+    public void setNumberRows(int nbrRows)
+    {
+		elementsPanel.setNumberRows(nbrRows);
+    }
+
+	@Override
+    public void setNumberCols(int nbrCols)
+    {
+		elementsPanel.setNumberCols(nbrCols);
+    }
+
+	@Override
+    public int getNulberRows()
+    {
+	    return elementsPanel.getNulberRows();
+    }
+
+	@Override
+    public int getNulberCols()
+    {
+	    return elementsPanel.getNulberCols();
+    }
 }
