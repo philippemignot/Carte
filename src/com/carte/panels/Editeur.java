@@ -284,14 +284,12 @@ public class Editeur
 	 */
 	public class NewCarteListener implements ActionListener
 	{
-		private boolean isFirstDialog = false; // Indique si l'on est sur l'écran de démarrage
-
 		/**
 		 * Crée un nouvea listener
 		 */
 		public NewCarteListener()
 		{
-			this.isFirstDialog = false;
+			isFirstDialog = false;
 		}
 
 		/**
@@ -302,7 +300,7 @@ public class Editeur
 		 */
 		public NewCarteListener(boolean firstDialog)
 		{
-			this.isFirstDialog = firstDialog;
+			isFirstDialog = firstDialog;
 		}
 		
 		@Override
