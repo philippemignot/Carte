@@ -10,10 +10,6 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class PanelElement extends JPanel implements PersoLayoutUtils
 {
-	private int sizeX;
-	private int sizeY;
-	private Component[][] positions;
-	
 	/**
 	 * Le layout actuellement utilisé.
 	 */
@@ -22,106 +18,56 @@ public class PanelElement extends JPanel implements PersoLayoutUtils
 	/**
 	 * Construit un panel contenant des éléments de dialogues de la taille sizeX*sizeY.
 	 * 
-	 * @param sizeX
-	 * @param sizeY
+	 * @param layoutId
+	 * 				L'id du layout utilisé pour ce panneau.
 	 */
-	public PanelElement(int sizeX, int sizeY)
+	public PanelElement(int layoutId)
 	{
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
-		positions = new Component[sizeY*2][sizeX*2];
-		
 		setLayout(new GridBagLayout());
-
+		this.layout = new PersoDialogLayout(layoutId);
 	}
 	
 	public void addElement(PersoDialogElement el)
 	{
-		addElement(el, 1, 1);
+		addElement(el, false);
 	}
 
-	public void addElement(PersoDialogElement el, int width, int height)
+	public void addElement(PersoDialogElement el, boolean fill)
 	{
-		int[] nextPos = getNextPos(width, height);
-		System.out.println(nextPos[0] + " " + nextPos[1]);
-		addElement(el, nextPos[0], nextPos[1], width, height);
+		int[] nextPos = layout.addNextPosition();
+		int[] size = {1, 1};
+		if(fill)
+		{
+			int[] filled = layout.fill();
+			size[0] += filled[0];
+			size[1] += filled[1];
+		}
+
+		showElement(el, nextPos[0], nextPos[1], size[0], size[1]);
 	}
-	
-	public int[] getNextPos(int width, int height)
-    {
-		int i = 0;
-		int j = 0;
-		int[] nextPos = {sizeX - 1, sizeY - 1};
-		boolean posFounded = false;
-	    while(!(i >= sizeY || posFounded))
-	    {
-	    	while(!(j >= sizeX || posFounded))
-	    	{
-	    		if(positions[i][j] == null)
-	    		{
-	    			posFounded = true;
-	    			nextPos[0] = j;
-	    			nextPos[1] = i;
-	    		}
-	    		j++;
-	    	}
-	    	i++;
-	    }
-	    
-	    return nextPos;
-    }
 
 	public void addElement(PersoDialogElement el, int posX, int posY, int width, int height)
+	{		
+		posX = (posX >= 0 ) ? posX : 0;
+		posY = (posY >= 0 ) ? posY : 0;
+		
+		width = (width >= 1) ? width : 1;
+		height = (height >= 1) ? height : 1;
+				
+		layout.addElement();
+		
+		showElement(el, posX, posY, width, height);
+	}
+	
+	private void showElement(PersoDialogElement el, int posX, int posY, int width, int height)
 	{
-		
-		posX = (posX >= 0 || posX < sizeX) ? posX : getNextPos(width, height)[0];
-		posY = (posY>= 0 || posY < sizeY) ? posY : getNextPos(width, height)[1];
-		
-		width = (!((width + posX) >= sizeX || width < 1)) ? width : 1;
-		height = (!((height + posY) >= sizeY || height < 1)) ? height : 1;
-		
-		cleanArea(posX, posY, width, height);
-		
 		add((Component) el, new GridBagConstraints(posX, posY, width,
-					height, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-			        new Insets(5, 5, 5, 5), 0, 0));
-		
-		for(int i = 0 ; i < height ; i ++)
-		{
-			for(int j = 0 ; j < width ; j ++)
-			{
-				positions[i][j] = (Component) el;
-			}
-		}
-		
+				height, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+				new Insets(5, 5, 5, 5), 0, 0));
 		validate();
 		repaint();
 	}
 
-	private void cleanArea(int posX, int posY, int width, int height)
-    {
-		for(int i = posY ; i < height ; i ++)
-		{
-			for(int j = posX ; j < width ; j ++)
-			{
-				if(positions[i][j] != null)
-				{
-					remove(positions[i][j]);
-				}
-			}
-		}
-    }
-	
-	public int getSiseX()
-	{
-		return sizeX;
-	}
-	
-	public int getSiseY()
-	{
-		return sizeY;
-	}
-	
 	/**
 	 * Utiliser un layout parmis les 4 proposés : Horizontal, Vertical, Placement et Grid.
 	 * 

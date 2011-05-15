@@ -1,9 +1,7 @@
 package com.carte.utils.dialog;
 
 import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -69,7 +67,7 @@ public abstract class AbstractEasyDialog extends AbstractDialog
 	public void setTextIntro(String texte)
 	{
 		textIntro = texte;
-		Border b = BorderFactory.createRaisedBevelBorder();
+		Border b = BorderFactory.createLoweredBevelBorder();
 		elementsPanel.setBorder(new TitledBorder(b, textIntro));
 		pack();
 	}

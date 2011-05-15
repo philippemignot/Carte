@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import javax.swing.AbstractButton;
 import javax.swing.JComboBox;
 
+@SuppressWarnings("serial")
 public class PComboBox extends JComboBox implements PersoDialogElement
 {
 

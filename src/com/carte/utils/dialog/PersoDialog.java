@@ -33,15 +33,11 @@ public class PersoDialog extends AbstractDialog implements PersoLayoutUtils
 	 * @param sizeY
 	 * 			Le nombre d'éléments * leur hauteur spécifiée maximal en vertical : de 1 à 15.
 	 */
-	public PersoDialog(JFrame parent, String title, boolean modal, int sizeX, int sizeY)
+	public PersoDialog(JFrame parent, String title, boolean modal, int layoutId)
 	{
 		super(parent, title, modal);
-		sizeX = (sizeX > 15) ? 15 : sizeX;
-		sizeX = (sizeX < 1) ? 1 : sizeX;
-		sizeY = (sizeY > 15) ? 15 : sizeY;
-		sizeY = (sizeY < 1) ? 1 : sizeY;
 		
-		elementsPanel = new PanelElement(sizeX, sizeY);
+		elementsPanel = new PanelElement(layoutId);
 		Border b = BorderFactory.createLoweredBevelBorder();
 		elementsPanel.setBorder(b);
 		contentPane.add(elementsPanel);
@@ -68,12 +64,12 @@ public class PersoDialog extends AbstractDialog implements PersoLayoutUtils
 	 */
 	public void addElement(PersoDialogElement el)
 	{
-		elementsPanel.addElement(el, 1, 1);
+		elementsPanel.addElement(el);
 	}
 
-	public void addElement(PersoDialogElement el, int width, int height)
+	public void addElement(PersoDialogElement el, boolean fill)
 	{
-		elementsPanel.addElement(el, width, height);
+		elementsPanel.addElement(el, fill);
 	}
 
 	public void addElement(PersoDialogElement el, int posX, int posY, int width, int height)

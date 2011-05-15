@@ -45,6 +45,7 @@ import com.carte.utils.dialog.InputDialog;
 import com.carte.utils.dialog.PCheckBox;
 import com.carte.utils.dialog.PComboBox;
 import com.carte.utils.dialog.PersoDialog;
+import com.carte.utils.dialog.PersoDialogLayout;
 
 
 public class Editeur
@@ -986,11 +987,11 @@ public class Editeur
 			
 			PCheckBox quadriStart = new PCheckBox("Quadrillage affiché au démarrage");
 			
-			PersoDialog dialogOptions = new PersoDialog(null, "Options", true, 2, 4);
+			PersoDialog dialogOptions = new PersoDialog(null, "Options", true, PersoDialogLayout.Grid);
+			dialogOptions.setNumberCols(3);
 			dialogOptions.addElement(nivPersoActive);
-			dialogOptions.addElement(nivPerso);
-			
-			dialogOptions.addElement(quadriStart, 0, 1, 1, 1);
+			dialogOptions.addElement(nivPerso, true);
+			dialogOptions.addElement(quadriStart);
 			
 			dialogOptions.setTextOkButton("Sauvegarder");
 			dialogOptions.setTextIntro("Options de l'éditeur de carte");
@@ -1002,12 +1003,12 @@ public class Editeur
 			{
 				if(nivPersoActive.isSelected())
 				{
-					System.out.println("Oui : " + (String) nivPerso.getSelectedItem() + " / Quaddrillage " + 
-							(quadriStart.isSelected() ? "affiché" : "masqué") + " au démarrage");
+					System.out.println("Oui : " + (String) nivPerso.getSelectedItem());
 				}else
 				{
 					System.out.println("Non");
 				}
+				System.out.println("Quaddrillage " + (quadriStart.isSelected() ? "affiché" : "masqué") + " au démarrage");
 			}
 		}
 	}
