@@ -55,6 +55,13 @@ public class PersoDialogLayout implements PersoLayoutUtils
 		if(layoutId >= 0 && layoutId < 4)
 		{
 			this.layoutId = layoutId;
+			if(layoutId == 0)
+			{
+				setNumberRows(1);
+			}else if(layoutId == 1)
+			{
+				setNumberCols(1);
+			}
 		}
 	}
 

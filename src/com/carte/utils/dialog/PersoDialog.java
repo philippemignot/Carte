@@ -52,9 +52,8 @@ public class PersoDialog extends AbstractDialog implements PersoLayoutUtils
 	public void setTextIntro(String texte)
 	{
 		textIntro = texte;
-		Border b = BorderFactory.createLoweredBevelBorder();
-		elementsPanel.setBorder(new TitledBorder(b, textIntro));
-		pack();
+		elementsPanel.addTitle(texte);
+		pack();	
 	}
 	
 	/**
@@ -194,4 +193,29 @@ public class PersoDialog extends AbstractDialog implements PersoLayoutUtils
     {
 	    return elementsPanel.getNulberCols();
     }
+	
+	public PanelElement createGroup(int layoutId)
+	{
+		return new PanelElement(layoutId);
+	}
+	
+	/**
+	 * Ajoute un groupe à la boite de dialogue.
+	 * 
+	 * @param el
+	 */
+	public void addGroup(PanelElement group)
+	{
+		elementsPanel.addGroup(group);
+	}
+
+	public void addGroup(PanelElement group, boolean fill)
+	{
+		elementsPanel.addGroup(group, fill);
+	}
+
+	public void addGroup(PanelElement group, int posX, int posY, int width, int height)
+	{
+		elementsPanel.addGroup(group, posX, posY, width, height);
+	}
 }

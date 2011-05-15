@@ -44,6 +44,7 @@ import com.carte.utils.CrtEdFileFilter;
 import com.carte.utils.dialog.InputDialog;
 import com.carte.utils.dialog.PCheckBox;
 import com.carte.utils.dialog.PComboBox;
+import com.carte.utils.dialog.PanelElement;
 import com.carte.utils.dialog.PersoDialog;
 import com.carte.utils.dialog.PersoDialogLayout;
 
@@ -987,10 +988,12 @@ public class Editeur
 			
 			PCheckBox quadriStart = new PCheckBox("Quadrillage affiché au démarrage");
 			
-			PersoDialog dialogOptions = new PersoDialog(null, "Options", true, PersoDialogLayout.Grid);
-			dialogOptions.setNumberCols(3);
-			dialogOptions.addElement(nivPersoActive);
-			dialogOptions.addElement(nivPerso, true);
+			
+			PersoDialog dialogOptions = new PersoDialog(null, "Options", true, PersoDialogLayout.Vertical);
+			PanelElement groupNiv = dialogOptions.createGroup(PersoDialogLayout.Horizontal);
+			groupNiv.addElement(nivPersoActive);
+			groupNiv.addElement(nivPerso, true);
+			dialogOptions.addGroup(groupNiv);
 			dialogOptions.addElement(quadriStart);
 			
 			dialogOptions.setTextOkButton("Sauvegarder");

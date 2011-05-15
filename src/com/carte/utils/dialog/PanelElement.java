@@ -5,7 +5,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 @SuppressWarnings("serial")
 public class PanelElement extends JPanel implements PersoLayoutUtils
@@ -14,6 +17,8 @@ public class PanelElement extends JPanel implements PersoLayoutUtils
 	 * Le layout actuellement utilisé.
 	 */
 	private PersoDialogLayout layout;
+	
+	private Border b = BorderFactory.createLoweredBevelBorder();
 	
 	/**
 	 * Construit un panel contenant des éléments de dialogues de la taille sizeX*sizeY.
@@ -25,6 +30,7 @@ public class PanelElement extends JPanel implements PersoLayoutUtils
 	{
 		setLayout(new GridBagLayout());
 		this.layout = new PersoDialogLayout(layoutId);
+		this.setBorder(b);
 	}
 	
 	public void addElement(PersoDialogElement el)
@@ -34,20 +40,51 @@ public class PanelElement extends JPanel implements PersoLayoutUtils
 
 	public void addElement(PersoDialogElement el, boolean fill)
 	{
-		int[] nextPos = layout.addNextPosition();
+		int[] nextPos = addToLayout();
 		int[] size = {1, 1};
 		if(fill)
 		{
-			int[] filled = layout.fill();
-			size[0] += filled[0];
-			size[1] += filled[1];
+			size = fillLayout();
 		}
 
-		showElement(el, nextPos[0], nextPos[1], size[0], size[1]);
+		showElement((Component) el, nextPos[0], nextPos[1], size[0], size[1]);
 	}
 
 	public void addElement(PersoDialogElement el, int posX, int posY, int width, int height)
-	{		
+	{	
+		addPlacementLayout((Component) el, posX, posY, width, height);
+	}
+	
+	private void showElement(Component comp, int posX, int posY, int width, int height)
+	{
+		add(comp, new GridBagConstraints(posX, posY, width,
+				height, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+				new Insets(5, 5, 5, 5), 0, 0));
+		validate();
+		repaint();
+	}
+	
+	private int[] addToLayout()
+	{
+		int[] nextPos = layout.addNextPosition();
+		
+		return nextPos;
+	}
+	
+	private int[] fillLayout()
+	{
+		int[] size = {1, 1};
+		
+		int[] filled = layout.fill();
+		size[0] += filled[0];
+		size[1] += filled[1];
+		
+		return size;
+	}
+	
+	public void addPlacementLayout(Component comp, int posX, int posY, int width, int height)
+	{
+		
 		posX = (posX >= 0 ) ? posX : 0;
 		posY = (posY >= 0 ) ? posY : 0;
 		
@@ -56,16 +93,7 @@ public class PanelElement extends JPanel implements PersoLayoutUtils
 				
 		layout.addElement();
 		
-		showElement(el, posX, posY, width, height);
-	}
-	
-	private void showElement(PersoDialogElement el, int posX, int posY, int width, int height)
-	{
-		add((Component) el, new GridBagConstraints(posX, posY, width,
-				height, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-				new Insets(5, 5, 5, 5), 0, 0));
-		validate();
-		repaint();
+		showElement(comp, posX, posY, width, height);
 	}
 
 	/**
@@ -109,5 +137,33 @@ public class PanelElement extends JPanel implements PersoLayoutUtils
     public int getNulberCols()
     {
 	    return layout.getNulberCols();
+    }
+
+	public void addGroup(PanelElement group)
+    {
+	    addGroup(group, false);
+    }
+
+	public void addGroup(PanelElement group, boolean fill)
+    {
+		int[] nextPos = addToLayout();
+		int[] size = {1, 1};
+		if(fill)
+		{
+			size = fillLayout();
+		}
+
+		showElement(group, nextPos[0], nextPos[1], size[0], size[1]);
+    }
+
+	public void addGroup(PanelElement group, int posX, int posY, int width,
+            int height)
+    {
+		addPlacementLayout(group, posX, posY, width, height);
+    }
+
+	public void addTitle(String texte)
+    {
+		this.setBorder(new TitledBorder(b, texte));
     }
 }
