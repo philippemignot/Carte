@@ -12,12 +12,20 @@ public class PCheckBox extends JCheckBox implements PersoDialogElement
 {
 	private Hashtable<PersoDialogElement, String> condActive = new Hashtable<PersoDialogElement, String>();
 	private boolean active = true;
+	private String title = "";
 
-	public PCheckBox(String title)
+	public PCheckBox(String label)
     {
-		super(title);
+		super(label);
 		checkStateActive();
     }
+	
+	public PCheckBox(String label, String title)
+	{
+		super(label);
+		this.title = title;
+		checkStateActive();
+	}
 
 	@Override
     public void addCondActive(PersoDialogElement parent, String cond)
@@ -79,4 +87,15 @@ public class PCheckBox extends JCheckBox implements PersoDialogElement
     {
 		checkStateActive();
     }
+	
+	public String getTitle()
+	{
+		return this.title;
+	}
+	
+	public boolean hasTitle()
+	{
+		boolean hasTitle = (title != null && !title.isEmpty()) ? true : false;
+		return hasTitle;
+	}
 }

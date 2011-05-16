@@ -44,6 +44,7 @@ import com.carte.utils.CrtEdFileFilter;
 import com.carte.utils.dialog.InputDialog;
 import com.carte.utils.dialog.PCheckBox;
 import com.carte.utils.dialog.PComboBox;
+import com.carte.utils.dialog.PTextField;
 import com.carte.utils.dialog.PanelElement;
 import com.carte.utils.dialog.PersoDialog;
 import com.carte.utils.dialog.PersoDialogLayout;
@@ -985,14 +986,16 @@ public class Editeur
 			PComboBox nivPerso = new PComboBox(niveaux);
 			
 			PCheckBox quadriStart = new PCheckBox("Quadrillage affiché au démarrage");
-			
+			PTextField testTextField = new PTextField("1", "Entrez un nombre :");
 			
 			PersoDialog dialogOptions = new PersoDialog(null, "Options", true, PersoDialogLayout.Vertical);
 			PanelElement groupNiv = dialogOptions.createGroup(PersoDialogLayout.Horizontal);
+			groupNiv.addTitle("Niveaux fixes");
 			groupNiv.addElement(nivPersoActive);
 			groupNiv.addElement(nivPerso, true);
 			dialogOptions.addGroup(groupNiv);
 			dialogOptions.addElement(quadriStart);
+			dialogOptions.addElement(testTextField);
 			
 			dialogOptions.setTextOkButton("Sauvegarder");
 			dialogOptions.setTextIntro("Options de l'éditeur de carte");
@@ -1010,6 +1013,7 @@ public class Editeur
 					System.out.println("Non");
 				}
 				System.out.println("Quaddrillage " + (quadriStart.isSelected() ? "affiché" : "masqué") + " au démarrage");
+				System.out.println("Nombre " + testTextField.getText());
 			}
 		}
 	}

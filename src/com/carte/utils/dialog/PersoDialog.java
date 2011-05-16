@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
 
 @SuppressWarnings("serial")
 public class PersoDialog extends AbstractDialog implements PersoLayoutUtils
@@ -63,7 +62,16 @@ public class PersoDialog extends AbstractDialog implements PersoLayoutUtils
 	 */
 	public void addElement(PersoDialogElement el)
 	{
-		elementsPanel.addElement(el);
+		if(el.hasTitle())
+		{
+			PanelElement elementGroup = new PanelElement(PersoDialogLayout.Horizontal, PanelElement.NoBorder);
+			elementGroup.addElement(new PLabel(el.getTitle()));
+			elementGroup.addElement(el);
+			elementsPanel.addGroup(elementGroup);
+		}else
+		{
+			elementsPanel.addElement(el);
+		}
 	}
 
 	public void addElement(PersoDialogElement el, boolean fill)

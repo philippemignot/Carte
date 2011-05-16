@@ -5,28 +5,21 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.swing.AbstractButton;
-import javax.swing.JComboBox;
+import javax.swing.JLabel;
 
 @SuppressWarnings("serial")
-public class PComboBox extends JComboBox implements PersoDialogElement
+public class PLabel extends JLabel implements PersoDialogElement
 {
 
 	private Hashtable<PersoDialogElement, String> condActive = new Hashtable<PersoDialogElement, String>();
 	private boolean active = true;
 	private String title = "";
 
-	public PComboBox(String[] values)
+	public PLabel(String defaut)
     {
-		super(values);
+		super(defaut);
 		checkStateActive();
     }
-
-	public PComboBox(String[] values, String title)
-	{
-		super(values);
-		this.title = title;
-		checkStateActive();
-	}
 
 	@Override
     public void addCondActive(PersoDialogElement parent, String cond)
@@ -75,7 +68,7 @@ public class PComboBox extends JComboBox implements PersoDialogElement
     {
 		boolean hasValue = false;
 		
-		if (((String) this.getSelectedItem()).equals(value))
+		if (((String) this.getText()).equals(value))
 		{
 			hasValue = true;
 		}
@@ -89,11 +82,13 @@ public class PComboBox extends JComboBox implements PersoDialogElement
 		checkStateActive();
     }
 	
+	@Override
 	public String getTitle()
 	{
 		return this.title;
 	}
 	
+	@Override
 	public boolean hasTitle()
 	{
 		boolean hasTitle = (title != null && !title.isEmpty()) ? true : false;

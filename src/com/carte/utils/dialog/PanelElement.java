@@ -18,7 +18,10 @@ public class PanelElement extends JPanel implements PersoLayoutUtils
 	 */
 	private PersoDialogLayout layout;
 	
-	private Border b = BorderFactory.createLoweredBevelBorder();
+	private Border b;
+	public static int NoBorder = 0;
+	public static int RaisedBorder = 1;
+	public static int LoweredBorder = 2;
 	
 	/**
 	 * Construit un panel contenant des éléments de dialogues de la taille sizeX*sizeY.
@@ -30,7 +33,26 @@ public class PanelElement extends JPanel implements PersoLayoutUtils
 	{
 		setLayout(new GridBagLayout());
 		this.layout = new PersoDialogLayout(layoutId);
+		b = BorderFactory.createLoweredBevelBorder();
 		this.setBorder(b);
+	}
+	
+	/**
+	 * Construit un panel contenant des éléments de dialogues de la taille sizeX*sizeY.
+	 * 
+	 * @param layoutId
+	 * 				L'id du layout utilisé pour ce panneau.
+	 */
+	public PanelElement(int layoutId, int border)
+	{
+		setLayout(new GridBagLayout());
+		this.layout = new PersoDialogLayout(layoutId);
+		if(border != 0)
+		{
+			b = (border == 1) ? BorderFactory.createRaisedBevelBorder() : null;
+			b = (border == 2) ? BorderFactory.createLoweredBevelBorder() : null;
+			this.setBorder(b);
+		}
 	}
 	
 	public void addElement(PersoDialogElement el)
@@ -58,7 +80,7 @@ public class PanelElement extends JPanel implements PersoLayoutUtils
 	private void showElement(Component comp, int posX, int posY, int width, int height)
 	{
 		add(comp, new GridBagConstraints(posX, posY, width,
-				height, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+				height, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
 				new Insets(5, 5, 5, 5), 0, 0));
 		validate();
 		repaint();

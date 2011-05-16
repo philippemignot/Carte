@@ -36,4 +36,20 @@ public interface PersoDialogElement extends ActionListener
 	 */
 	public boolean hasValue(String value);
 	
+	/**
+	 * Retourne le titre associé à cet élément.
+	 * 
+	 * @return
+	 * 		Le titre associé à cet élément.
+	 */
+	public String getTitle();
+	
+	/**
+	 * Indique si l'élément à un titre non vide.
+	 * 
+	 * @return
+	 * 			true - Un titre est associé à cet élément.
+	 * 			false - Le titre est vide, ce qui signifie qu'aucun titre n'a été spécifié pour cet élément.
+	 */
+	public boolean hasTitle();
 }

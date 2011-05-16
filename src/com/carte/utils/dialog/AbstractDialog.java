@@ -123,6 +123,7 @@ public abstract class AbstractDialog extends JDialog
 	 */
 	public boolean showDialog()
 	{
+		this.pack();
 		this.setVisible(true);
 
 		return validated;
