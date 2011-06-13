@@ -455,7 +455,8 @@ public class Sprite implements Serializable, Observable
 	
 	public void setImgStat(int img)
 	{
+		img = (img >= getMaxStatImg()) ? imgStatActive : img;
 		imgStatActive = img;
-		updateObservateur();
+		refreshImg();
 	}
 }

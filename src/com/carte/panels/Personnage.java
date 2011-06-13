@@ -1,5 +1,7 @@
 package com.carte.panels;
 
+import java.awt.Image;
+
 import com.carte.sprites.Sprite;
 
 public class Personnage
@@ -30,23 +32,31 @@ public class Personnage
 	
 	public void rotationHaut()
 	{
-		sprite.setImgStat(1);
+		sprite.setImgStat(2);
 	}
 	
 	public void rotationDroite()
 	{
-		sprite.setImgStat(2);
+		sprite.setImgStat(1);
 	}
 	
 	public void rotationBas()
 	{
-		sprite.setImgStat(3);
+		sprite.setImgStat(0);
 	}
 	
 	public void rotationGauche()
 	{
-		sprite.setImgStat(4);
+		sprite.setImgStat(3);
 	}
+
+	public Image getDrawImage()
+    {
+	    return sprite.getDrawImage();
+    }
 	
-	
+	public Sprite getSprite()
+	{
+		return sprite;
+	}
 }
