@@ -453,5 +453,9 @@ public class Sprite implements Serializable, Observable
 		return isAnimated;
     }
 	
-	
+	public void setImgStat(int img)
+	{
+		imgStatActive = img;
+		updateObservateur();
+	}
 }

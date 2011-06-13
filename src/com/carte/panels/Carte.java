@@ -12,14 +12,20 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import com.carte.sprites.CaseNiveaux;
@@ -61,6 +67,8 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 	private boolean aleatoire = true; // indique si le mode aléatoire de pose
 									  // est activé
 	private int perctAlea = 100; // le pourcentage de vide dans l'aléatoire
+	
+	private JButton tester; // Pour lancer le testeur
 
 	/**
 	 * @param l
@@ -121,8 +129,33 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 		this.setBorder(BorderFactory.createRaisedBevelBorder());
 		this.add(pCases, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 		        GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
-		                20, 20, 20, 20), 0, 0));
+		                20, 20, 5, 20), 0, 0));
 
+		tester = new JButton("Tester");
+		tester.addActionListener(new ActionListener(){
+
+			@Override
+            public void actionPerformed(ActionEvent e)
+            {
+				File dossierPerso = new File("images/03_perso/");
+				File imagePerso = dossierPerso.listFiles()[0];
+				String codeImage = imagePerso.getName().substring(0, 5);
+	            try
+                {
+	                new Testeur(Carte.this, new Sprite(ImageIO.read(imagePerso), codeImage, largeurCase, hauteurCase));
+                }
+                catch (IOException e1)
+                {
+	                // TODO Auto-generated catch block
+	                e1.printStackTrace();
+                }
+            }
+			
+		});
+		this.add(tester, new GridBagConstraints(0, 2, 2, 1, 0.0, 0.0,
+		        GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
+		                0, 10, 5, 10), 0, 0));
+		
 		repaint();
 	}
 
@@ -774,5 +807,32 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
     {
 	    // TODO Auto-generated method stub
 	    
+    }
+	
+	public Sprite[][][] getSprites()
+	{
+		Sprite[][][] sprites = new Sprite[hauteur][largeur][nbrNiveaux];
+		for (int i = 0 ; i < hauteur ; i ++)
+		{
+			for (int j = 0 ; j < largeur ; j ++)
+			{
+				for (int n = 0 ; n < nbrNiveaux ; n ++)
+				{
+					sprites[i][j][n] = new Sprite(cases[i][j].getSprite(n + 1));
+				}
+			}
+		}
+		
+		return sprites;
+	}
+
+	public int[] getTailleInfos()
+    {
+	    int[] tailles = new int[4];
+	    tailles[0] = largeur;
+	    tailles[1] = hauteur;
+	    tailles[2] = nbrNiveaux;
+	    
+	    return tailles;
     }
 }
