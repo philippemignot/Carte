@@ -11,9 +11,6 @@ import java.util.ArrayList;
 import com.carte.utils.Observable;
 import com.carte.utils.Observateur;
 
-
-
-
 @SuppressWarnings("serial")
 public class Sprite implements Serializable, Observable
 {

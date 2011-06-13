@@ -6,8 +6,9 @@ import com.carte.sprites.Sprite;
 
 public class Personnage
 {
-	private Sprite sprite;
-	
+	private Sprite 	sprite;
+	private int		x = 0;
+	private int		y = 0;
 	/**
 	 * L'orientation du personnage
 	 * 
@@ -17,7 +18,12 @@ public class Personnage
 	 * 2 - bas
 	 * 3 - gauche
 	 */
-	private int orientation = 1;
+	private int orientation = HAUT;
+	
+	public static int HAUT = 2;
+	public static int DROITE = 1;
+	public static int BAS = 0;
+	public static int GAUCHE = 3;
 	
 	public Personnage(Sprite sprite)
 	{
@@ -30,24 +36,19 @@ public class Personnage
 		this.orientation = orientation;
 	}
 	
-	public void rotationHaut()
+	public void placer(int x, int y)
 	{
-		sprite.setImgStat(2);
+		this.x = x;
+		this.y = y;
 	}
 	
-	public void rotationDroite()
+	public void rotation(int direction)
 	{
-		sprite.setImgStat(1);
-	}
-	
-	public void rotationBas()
-	{
-		sprite.setImgStat(0);
-	}
-	
-	public void rotationGauche()
-	{
-		sprite.setImgStat(3);
+		if (direction >= 0 && direction <= 4)
+		{
+			sprite.setImgStat(direction);
+			orientation = direction;
+		}
 	}
 
 	public Image getDrawImage()
@@ -59,4 +60,45 @@ public class Personnage
 	{
 		return sprite;
 	}
+	
+	public int getOrientation()
+	{
+		return this.orientation;
+	}
+
+	public void deplacer(int direction)
+    {
+	    switch (direction)
+	    {
+	    	// bas
+	    	case 0 :
+	    		y ++;
+	    	break;
+	    	
+	    	// droite
+	    	case 1 :
+	    		x ++;
+	    	break;
+	    	
+	    	// haut
+	    	case 2 :
+	    		y --;
+	    	break;
+	    	
+	    	// gauche
+	    	case 3 :
+	    		x --;
+	    	break;
+	    }
+    }
+	
+	public int getX()
+	{
+		return x;
+	}
+
+	public int getY()
+    {
+	    return y;
+    }
 }

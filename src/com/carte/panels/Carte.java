@@ -826,6 +826,15 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 		return sprites;
 	}
 
+	/**
+	 * Renvoie les informations de taille.
+	 * 
+	 * Les informations renvoyées sont :
+	 * 0 - largeur : nombre de colonnes
+	 * 1 - hauteur : nombre de lignes
+	 * 2 - nbrNiveaux : Le nombre de niveaux
+	 * @return
+	 */
 	public int[] getTailleInfos()
     {
 	    int[] tailles = new int[4];

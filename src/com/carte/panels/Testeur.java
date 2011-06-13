@@ -18,8 +18,11 @@ public class Testeur
 	private TestEcran ecran;
 	private Carte carte;
 	private Personnage persoActif;
-	private int[]	posPerso;
 	
+	private int nbrCol;
+	private int nbrLignes;
+	private int nbrNiveaux;
+		
 	public Testeur(Carte carte, Sprite sprite)
 	{
 		this(carte, new Personnage(sprite));
@@ -28,8 +31,13 @@ public class Testeur
 	public Testeur(Carte carte, Personnage perso)
 	{
 		this.carte = carte;
+		
 		int[] tailles = carte.getTailleInfos();
-		this.ecran = new TestEcran(carte.getSprites(), tailles[0], tailles[1], tailles[2]);
+		this.nbrCol = tailles[0];
+		this.nbrLignes = tailles[1];
+		this.nbrNiveaux = tailles[2];
+		
+		this.ecran = new TestEcran(carte.getSprites(), nbrCol, nbrLignes, nbrNiveaux );
 		
 		selectPersoActif(perso);
 		
@@ -49,7 +57,7 @@ public class Testeur
     {
 		ecran.setPersoActif(perso);
 		persoActif = perso;
-		
+		persoActif.placer(nbrCol / 2, nbrLignes / 2);
 		persoActif.getSprite().addObservateur(ecran);
     }
 
@@ -91,8 +99,15 @@ public class Testeur
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
-			perso.rotationHaut();
-//			Testeur.this.ecran.repaint();
+			if (perso.getOrientation() == Personnage.HAUT)
+			{
+				perso.deplacer(Personnage.HAUT);
+			} else
+			{
+				perso.rotation(Personnage.HAUT);
+			}
+			
+			ecran.repaint();
 		}
 	}
 	
@@ -110,8 +125,14 @@ public class Testeur
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
-			perso.rotationDroite();
-//			Testeur.this.ecran.repaint();
+			if (perso.getOrientation() == Personnage.DROITE)
+			{
+				perso.deplacer(Personnage.DROITE);
+			} else
+			{
+				perso.rotation(Personnage.DROITE);
+			}
+			ecran.repaint();
 		}
 	}
 	
@@ -129,8 +150,14 @@ public class Testeur
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
-			perso.rotationBas();
-//			Testeur.this.ecran.repaint();
+			if (perso.getOrientation() == Personnage.BAS)
+			{
+				perso.deplacer(Personnage.BAS);
+			} else
+			{
+				perso.rotation(Personnage.BAS);
+			}
+			ecran.repaint();
 		}
 	}
 	
@@ -148,8 +175,16 @@ public class Testeur
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
-			perso.rotationGauche();
-//			Testeur.this.ecran.repaint();
+			
+			if (perso.getOrientation() == Personnage.GAUCHE)
+			{
+				perso.deplacer(Personnage.GAUCHE);
+			} else
+			{
+				perso.rotation(Personnage.GAUCHE);
+			}
+			
+			ecran.repaint();
 		}
 	}
 }

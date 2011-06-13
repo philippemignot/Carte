@@ -62,8 +62,23 @@ public class TestEcran extends JPanel implements Observateur
 	private void paintPerso(Graphics g)
     {
 //		Graphics g = ecran.createGraphics();
+		int x = perso.getX();
+		int y = perso.getY();
 		
-	    g.drawImage(perso.getDrawImage(), (nbrCol / 2) * largeur, (nbrLignes / 2) * hauteur, largeur, hauteur, null);
+		// Si un problème de coordonnées, on remet au centre. Ne devrait pas arriver.
+		if (x < 0 || x >= nbrCol * largeur)
+		{
+			x = (nbrCol / 2);
+			perso.placer(x, y);
+		}
+
+		if (y < 0 || y >= nbrLignes * hauteur)
+		{
+			y = (nbrLignes * hauteur);
+			perso.placer(x, y);
+		}
+		
+	    g.drawImage(perso.getDrawImage(), x * largeur, y * hauteur, largeur, hauteur, null);
 	    
 	    // Dessine ce qui se trouve au-dessus des personnages.
 	    for (int i = 0 ; i < nbrLignes ; i ++)
