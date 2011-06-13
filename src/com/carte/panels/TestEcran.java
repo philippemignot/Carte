@@ -66,15 +66,15 @@ public class TestEcran extends JPanel implements Observateur
 		int y = perso.getY();
 		
 		// Si un problème de coordonnées, on remet au centre. Ne devrait pas arriver.
-		if (x < 0 || x >= nbrCol * largeur)
+		if (x < 0 || x >= nbrCol)
 		{
 			x = (nbrCol / 2);
 			perso.placer(x, y);
 		}
 
-		if (y < 0 || y >= nbrLignes * hauteur)
+		if (y < 0 || y >= nbrLignes)
 		{
-			y = (nbrLignes * hauteur);
+			y = (nbrLignes / 2);
 			perso.placer(x, y);
 		}
 		
