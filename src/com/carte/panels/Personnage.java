@@ -145,8 +145,8 @@ public class Personnage implements Observateur
 	@Override
     public void update(int[] integer)
     {
-	    deplX -= integer[0];
-	    deplY += integer[1];
+	    deplX = integer[0];
+	    deplY = integer[1];
     }
 
 	@Override

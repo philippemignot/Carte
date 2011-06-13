@@ -157,7 +157,7 @@ public class Sprite implements Serializable, Observable
 					{
 						intervalleTpsAnim[i] = 100;
 					}
-					System.out.println(">>> " + i*32 + " : " + typeAnim[i] + " " + nbrAnim[i] + " " + suiteAnim[i] + " " + intervalleTpsAnim[i]);
+//					System.out.println(">>> " + i*32 + " : " + typeAnim[i] + " " + nbrAnim[i] + " " + suiteAnim[i] + " " + intervalleTpsAnim[i]);
 							
 				}
 			}
@@ -252,26 +252,26 @@ public class Sprite implements Serializable, Observable
 		isAnimated = true;
 		translateX = 0;
 		translateY = 0;
+		int[] translate  = {largeur / nbrAnim[imgStatActive], hauteur / nbrAnim[imgStatActive]};
 		
 		for(int i = 0 ; i < nbrAnim[imgStatActive] ; i++)
 		{
 			imgAnimX = i + 2;
 			
 			// Pour un effet de déplacement en boucle
-			int[] translate  = {largeur / nbrAnim[imgStatActive], hauteur / nbrAnim[imgStatActive]};
 			switch(typeAnim[imgStatActive])
 			{
 				case 2:
-					translateY -= translate[1];
+					translateY += translate[1] + addDiff(i);
 					break;
 				case 3:
-					translateX += translate[0];
+					translateX += translate[0] + addDiff(i);
 					break;
 				case 4:
-					translateY += translate[1];
+					translateY -= translate[1] + addDiff(i);
 					break;
 				case 5:
-					translateX -= translate[0];
+					translateX -= translate[0] + addDiff(i);
 					break;
 			}
 			
@@ -293,6 +293,18 @@ public class Sprite implements Serializable, Observable
 		translateY = 0;
 		isAnimated = false;
 		refreshImg();
+    }
+
+	private int addDiff(int i)
+    {
+		int diffToAdd = 0;
+		
+		int deuxiemeAjout = (nbrAnim[imgStatActive] > 1) ? 1 : 0;
+		if (i == 0 || i == deuxiemeAjout)
+		{
+			diffToAdd = (largeur % nbrAnim[imgStatActive]) / 2;
+		}
+	    return diffToAdd;
     }
 
 	/**
