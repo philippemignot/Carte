@@ -101,7 +101,7 @@ public class Testeur
 		{
 			if (perso.getOrientation() == Personnage.HAUT)
 			{
-				perso.deplacer(Personnage.HAUT);
+				perso.deplacer();
 			} else
 			{
 				perso.rotation(Personnage.HAUT);
@@ -127,7 +127,7 @@ public class Testeur
 		{
 			if (perso.getOrientation() == Personnage.DROITE)
 			{
-				perso.deplacer(Personnage.DROITE);
+				perso.deplacer();
 			} else
 			{
 				perso.rotation(Personnage.DROITE);
@@ -152,7 +152,7 @@ public class Testeur
 		{
 			if (perso.getOrientation() == Personnage.BAS)
 			{
-				perso.deplacer(Personnage.BAS);
+				perso.deplacer();
 			} else
 			{
 				perso.rotation(Personnage.BAS);
@@ -178,7 +178,7 @@ public class Testeur
 			
 			if (perso.getOrientation() == Personnage.GAUCHE)
 			{
-				perso.deplacer(Personnage.GAUCHE);
+				perso.deplacer();
 			} else
 			{
 				perso.rotation(Personnage.GAUCHE);

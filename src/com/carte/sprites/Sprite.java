@@ -27,14 +27,25 @@ public class Sprite implements Serializable, Observable
 	private int imgAnimX = 0; // 0 : statique ; 2 et + : animation
 	private boolean	animation = false;
 	private int[]	typeAnim; // 32 : red / 10 : type d'animation :
-							  // 0 = cyclique continue; 1 = statique; 2 = depl haut; 3 = depl droite; 4 = depl bas; 5 = depl gauche
+							  // 0 = cyclique continue; 1 = statique; 4 = depl haut; 3 = depl droite; 2 = depl bas; 5 = depl gauche
+	public static int ANIM_CYCLE = 0;
+	public static int ANIM_STATIQUE = 1;
+	public static int ANIM_DEPL_BAS = 2;
+	public static int ANIM_DEPL_DROITE = 3;
+	public static int ANIM_DEPL_HAUT = 4;
+	public static int ANIM_DEPL_GAUCHE = 5;
+	
 	private int[]	nbrAnim;  // 32 : green / 5 : nombre d'images composant l'animation
 	private int[]	suiteAnim;// 32 : blue / 5 : image statique à afficher ensuite
 	private int[]	intervalleTpsAnim; // 33 : red + green + blue : Intervalle de temps entre chaque image de l'animation ; 
 	private int		translateX = 0; // Translation des coordonnées du graphique en abscisse
 	private int		translateY = 0; // Translation des coordonnées du graphique en ordonnées
-	private int typeAnimationAff = 0; // Type d'animation : 2 => Fixe (pas de déplacement ; 1 => Boucle (déplacement répété pour simuler 2 cases) ; 0 => Normal (joue l'animation prévue)
+	private int 	typeAnimationAff = 0; // Type d'animation : 2 => Fixe (pas de déplacement ; 1 => Boucle (déplacement répété pour simuler 2 cases) ; 0 => Normal (joue l'animation prévue)
 	
+	public static int ANIM_PLAY_FIXE = 2;
+	public static int ANIM_PLAY_BOUCLE = 1;
+	public static int ANIM_PLAY_NORMAL = 0;
+
 	// Liste des observateurs
 	private ArrayList<Observateur> listeObservateur =
 	        new ArrayList<Observateur>();
@@ -161,14 +172,17 @@ public class Sprite implements Serializable, Observable
 	 */
 	public void draw(Graphics g) 
 	{
+		// Avec déplacement
 		if(typeAnimationAff < 2)
 		{
 			g.translate(translateX, translateY);
 		}
+		
 		if(image != null)
 		{	
 			g.drawImage(imgDraw, 0, 0, largeur, hauteur, null);
 			
+			// pour un effet de boucle
 			if(typeAnimationAff == 1)
 			{
 				if(translateX > 0)
@@ -215,58 +229,72 @@ public class Sprite implements Serializable, Observable
 		typeAnimationAff = (typeAnimAff < 3 && typeAnimAff >= 0) ? typeAnimAff : 0;
 		if(animation)
 		{
-			new Thread(new Runnable() 
-			{  
-				public void run() 
-				{ 
-					isAnimated = true;
-					translateX = 0;
-					translateY = 0;
-					
-					for(int i = 0 ; i < nbrAnim[imgStatActive] ; i++)
-					{
-						imgAnimX = i + 2;
-						
-						// Pour un effet de déplacement en boucle
-						switch(typeAnim[imgStatActive])
-						{
-							case 2:
-								translateY -= hauteur / nbrAnim[imgStatActive];
-								break;
-							case 3:
-								translateX += largeur / nbrAnim[imgStatActive];
-								break;
-							case 4:
-								translateY += hauteur / nbrAnim[imgStatActive];
-								break;
-							case 5:
-								translateX -= largeur / nbrAnim[imgStatActive];
-								break;
-						}
-						
-						try
-						{
-							Thread.sleep(intervalleTpsAnim[imgStatActive]);
-						}catch(InterruptedException e2)
-						{
-							System.err.println("Pause du thread interrompue dans ImagePanel.startAnimation()");
-						}
-						refreshImg();
+			if (typeAnimationAff == 0)
+			{
+				animer();
+			} else
+			{
+				new Thread(new Runnable() 
+				{  
+					public void run() 
+					{ 
+						animer();
 					}
-					imgAnimX = 0;
 					
-					imgStatActive = suiteAnim[imgStatActive];
-					translateX = 0;
-					translateY = 0;
-					isAnimated = false;
-					refreshImg();
-				}
-				
-			}).start(); 
+				}).start(); 
+			}
 		}
 		
 	}
 	
+	private void animer()
+    {
+		isAnimated = true;
+		translateX = 0;
+		translateY = 0;
+		
+		for(int i = 0 ; i < nbrAnim[imgStatActive] ; i++)
+		{
+			imgAnimX = i + 2;
+			
+			// Pour un effet de déplacement en boucle
+			int[] translate  = {largeur / nbrAnim[imgStatActive], hauteur / nbrAnim[imgStatActive]};
+			switch(typeAnim[imgStatActive])
+			{
+				case 2:
+					translateY -= translate[1];
+					break;
+				case 3:
+					translateX += translate[0];
+					break;
+				case 4:
+					translateY += translate[1];
+					break;
+				case 5:
+					translateX -= translate[0];
+					break;
+			}
+			
+			try
+			{
+				Thread.sleep(intervalleTpsAnim[imgStatActive]);
+			}catch(InterruptedException e2)
+			{
+				System.err.println("Pause du thread interrompue dans ImagePanel.startAnimation()");
+			}
+			refreshImg();
+		}
+		
+		// Fin de l'animation
+		imgAnimX = 0;
+		
+		imgStatActive = suiteAnim[imgStatActive];
+		translateX = 0;
+		translateY = 0;
+		isAnimated = false;
+		refreshImg();
+    }
+
 	/**
 	 * Modifie l'image statique par défaut et active.
 	 * 
@@ -436,6 +464,11 @@ public class Sprite implements Serializable, Observable
 		for (Observateur obs : listeObservateur)
 		{
 			obs.update();
+//			if (translateX != 0 || translateY != 0)
+//			{
+				int[] translate = {translateX, translateY};
+				obs.update(translate);
+//			}
 		}
 	}
 

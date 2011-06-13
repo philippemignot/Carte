@@ -78,7 +78,7 @@ public class TestEcran extends JPanel implements Observateur
 			perso.placer(x, y);
 		}
 		
-	    g.drawImage(perso.getDrawImage(), x * largeur, y * hauteur, largeur, hauteur, null);
+	    g.drawImage(perso.getDrawImage(), x * largeur + perso.getDeplX(), y * hauteur + perso.getDeplY(), largeur, hauteur, null);
 	    
 	    // Dessine ce qui se trouve au-dessus des personnages.
 	    for (int i = 0 ; i < nbrLignes ; i ++)

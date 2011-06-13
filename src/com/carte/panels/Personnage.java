@@ -1,14 +1,19 @@
 package com.carte.panels;
 
 import java.awt.Image;
+import java.util.ArrayList;
 
 import com.carte.sprites.Sprite;
+import com.carte.utils.Observateur;
 
-public class Personnage
+public class Personnage implements Observateur
 {
 	private Sprite 	sprite;
 	private int		x = 0;
 	private int		y = 0;
+	private int 	deplX = 0;
+	private int		deplY = 0;
+	private boolean anime = false;
 	/**
 	 * L'orientation du personnage
 	 * 
@@ -34,6 +39,7 @@ public class Personnage
 	{
 		this.sprite = sprite;
 		this.orientation = orientation;
+		this.sprite.addObservateur(this);
 	}
 	
 	public void placer(int x, int y)
@@ -66,30 +72,42 @@ public class Personnage
 		return this.orientation;
 	}
 
-	public void deplacer(int direction)
+	public void deplacer()
     {
-	    switch (direction)
-	    {
-	    	// bas
-	    	case 0 :
-	    		y ++;
-	    	break;
-	    	
-	    	// droite
-	    	case 1 :
-	    		x ++;
-	    	break;
-	    	
-	    	// haut
-	    	case 2 :
-	    		y --;
-	    	break;
-	    	
-	    	// gauche
-	    	case 3 :
-	    		x --;
-	    	break;
-	    }
+		anime = true;
+		
+		new Thread(new Runnable() 
+		{  
+			public void run() 
+			{ 
+				sprite.startAnimation(Sprite.ANIM_PLAY_NORMAL);
+				
+				switch (orientation)
+				{
+					// bas
+					case 0 :
+						y ++;
+						break;
+						
+						// droite
+					case 1 :
+						x ++;
+						break;
+						
+						// haut
+					case 2 :
+						y --;
+						break;
+						
+						// gauche
+					case 3 :
+						x --;
+						break;
+				}
+			}
+			
+		}).start(); 
+		
     }
 	
 	public int getX()
@@ -100,5 +118,48 @@ public class Personnage
 	public int getY()
     {
 	    return y;
+    }
+	
+	public int getDeplX()
+	{
+		return deplX;
+	}
+	
+	public int getDeplY()
+	{
+		return deplY;
+	}
+
+	@Override
+    public void update(ArrayList<Sprite> sprites, String source)
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+
+	@Override
+    public void update(boolean[] bool)
+    {
+    }
+
+	@Override
+    public void update(int[] integer)
+    {
+	    deplX -= integer[0];
+	    deplY += integer[1];
+    }
+
+	@Override
+    public void update()
+    {
+	    // TODO Auto-generated method stub
+	    
+    }
+
+	@Override
+    public void update(String[] string)
+    {
+	    // TODO Auto-generated method stub
+	    
     }
 }
