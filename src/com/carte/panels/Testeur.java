@@ -2,6 +2,7 @@ package com.carte.panels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.InputMap;
@@ -83,6 +84,8 @@ public class Testeur
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 		.put(KeyStroke.getKeyStroke("LEFT"), "action depl gauche");
 		fenetre.getRootPane().getActionMap().put("action depl gauche", deplGaucheAction);
+		
+		fenetre.addKeyListener(new ClavierListener(persoActif));
     }
 	
 	@SuppressWarnings("serial")
@@ -187,4 +190,85 @@ public class Testeur
 			ecran.repaint();
 		}
 	}
+	
+	class ClavierListener implements KeyListener
+	{
+		private Personnage perso;
+		
+    	public ClavierListener(Personnage perso)
+    	{
+    		this.perso = perso;
+    	}
+    	
+		public void keyPressed(KeyEvent event)
+		{
+			if (!perso.getSprite().isAnimated())
+			{
+				
+			switch(event.getKeyCode())
+			{
+				case 83:
+					if (perso.getOrientation() == Personnage.BAS)
+					{
+						perso.deplacer();
+					} else
+					{
+						perso.rotation(Personnage.BAS);
+					}
+					ecran.repaint();
+				break;
+				case 68:
+					if (perso.getOrientation() == Personnage.DROITE)
+					{
+						perso.deplacer();
+					} else
+					{
+						perso.rotation(Personnage.DROITE);
+					}
+					ecran.repaint();
+					break;
+				case 90:
+					if (perso.getOrientation() == Personnage.HAUT)
+					{
+						perso.deplacer();
+					} else
+					{
+						perso.rotation(Personnage.HAUT);
+					}
+					ecran.repaint();
+					break;
+				case 81:
+					if (perso.getOrientation() == Personnage.GAUCHE)
+					{
+						perso.deplacer();
+					} else
+					{
+						perso.rotation(Personnage.GAUCHE);
+					}
+					ecran.repaint();
+					break;
+			}
+			}
+		}
+
+		public void keyReleased(KeyEvent event)
+		{
+		}
+
+		public void keyTyped(KeyEvent event)
+		{
+			
+		}    	
+    }
+    
+    private void pause(){
+    	try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+
+
 }
