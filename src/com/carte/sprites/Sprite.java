@@ -225,7 +225,6 @@ public class Sprite implements Serializable, Observable
 	 */
 	public void startAnimation(int typeAnimAff)
 	{
-		
 		typeAnimationAff = (typeAnimAff < 3 && typeAnimAff >= 0) ? typeAnimAff : 0;
 		if(animation)
 		{
@@ -252,7 +251,8 @@ public class Sprite implements Serializable, Observable
 		isAnimated = true;
 		translateX = 0;
 		translateY = 0;
-		int[] translate  = {largeur / nbrAnim[imgStatActive], hauteur / nbrAnim[imgStatActive]};
+		int[] translate  = {largeur / (nbrAnim[imgStatActive] + 1), hauteur / (nbrAnim[imgStatActive] + 1)};
+		int[] diffToAdd = getDiffToAdd();
 		
 		for(int i = 0 ; i < nbrAnim[imgStatActive] ; i++)
 		{
@@ -262,25 +262,28 @@ public class Sprite implements Serializable, Observable
 			switch(typeAnim[imgStatActive])
 			{
 				case 2:
-					translateY += translate[1] + addDiff(i);
+					translateY += translate[1] + diffToAdd[i];
 					break;
 				case 3:
-					translateX += translate[0] + addDiff(i);
+					translateX += translate[0] + diffToAdd[i];
 					break;
 				case 4:
-					translateY -= translate[1] + addDiff(i);
+					translateY -= translate[1] + diffToAdd[i];
 					break;
 				case 5:
-					translateX -= translate[0] + addDiff(i);
+					translateX -= translate[0] + diffToAdd[i];
 					break;
 			}
 			
-			try
+			if (i != 0)
 			{
-				Thread.sleep(intervalleTpsAnim[imgStatActive]);
-			}catch(InterruptedException e2)
-			{
-				System.err.println("Pause du thread interrompue dans ImagePanel.startAnimation()");
+				try
+				{
+					Thread.sleep(intervalleTpsAnim[imgStatActive]);
+				}catch(InterruptedException e2)
+				{
+					System.err.println("Pause du thread interrompue dans ImagePanel.startAnimation()");
+				}
 			}
 			refreshImg();
 		}
@@ -292,18 +295,23 @@ public class Sprite implements Serializable, Observable
 		translateX = 0;
 		translateY = 0;
 		isAnimated = false;
-		refreshImg();
+		System.out.println("Fin animation");
     }
 
-	private int addDiff(int i)
+	private int[] getDiffToAdd()
     {
-		int diffToAdd = 0;
+		int[] diffToAdd = new int [nbrAnim[imgStatActive]];
 		
-		int deuxiemeAjout = (nbrAnim[imgStatActive] > 1) ? 1 : 0;
-		if (i == 0 || i == deuxiemeAjout)
+		for (int i = 0 ; i < largeur % nbrAnim[imgStatActive] ; i ++)
 		{
-			diffToAdd = (largeur % nbrAnim[imgStatActive]) / 2;
+			diffToAdd[i] = 1;
 		}
+		
+		for (int i = largeur % nbrAnim[imgStatActive] ; i < nbrAnim[imgStatActive] ; i ++)
+		{
+			diffToAdd[i] = 0;
+		}
+		
 	    return diffToAdd;
     }
 
@@ -348,13 +356,14 @@ public class Sprite implements Serializable, Observable
 	/**
 	 * Mets à jour l'image à afficher
 	 */
-	private void refreshImg()
+	public void refreshImg()
     {
 //		g2D.clearRect(0, 0, largeur, hauteur);
 		imgDraw = new BufferedImage(largeur, hauteur, BufferedImage.TYPE_INT_ARGB);
 		g2D = imgDraw.createGraphics();
 		g2D.drawImage(image, -imgAnimX*32, -imgStatActive*32, image.getWidth(null), image.getHeight(null), null);
 		updateObservateur();
+		System.out.println("refresh");
     }
 
 	/**
@@ -501,4 +510,9 @@ public class Sprite implements Serializable, Observable
 		imgStatActive = img;
 		refreshImg();
 	}
+
+	public int getIntervalleTpsAnim()
+    {
+	    return intervalleTpsAnim[imgStatActive];
+    }
 }

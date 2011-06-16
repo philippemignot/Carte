@@ -135,7 +135,7 @@ public class TestEcran extends JPanel implements Observateur
     public void update()
     {
 //		paintPerso(ecran.createGraphics());
-	    this.repaint();
+	    this.paintImmediately(0, 0, nbrCol * largeur, nbrLignes * hauteur);
     }
 
 	@Override

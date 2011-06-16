@@ -194,65 +194,72 @@ public class Testeur
 	class ClavierListener implements KeyListener
 	{
 		private Personnage perso;
+		private boolean[] keyPressed;
 		
     	public ClavierListener(Personnage perso)
     	{
     		this.perso = perso;
+    		keyPressed = new boolean[500];
     	}
     	
 		public void keyPressed(KeyEvent event)
 		{
+			keyPressed[event.getKeyCode()] = true;
+			perso.setNextStatut(event.getKeyCode(), true);
 			if (!perso.getSprite().isAnimated())
 			{
-				
-			switch(event.getKeyCode())
+				switch(event.getKeyCode())
+				{
+					case 83:
+						if (perso.getY() < nbrLignes - 1)
+						{
+							deplPerso(Personnage.BAS, 83);
+						}
+					break;
+					case 68:
+						if (perso.getX() < nbrCol - 1)
+						{
+							deplPerso(Personnage.DROITE, 68);
+						}
+						break;
+					case 90:
+						if (perso.getY() > 0)
+						{
+							deplPerso(Personnage.HAUT, 90);
+						}
+						break;
+					case 81:
+						if (perso.getX() > 0)
+						{
+							deplPerso(Personnage.GAUCHE, 81);
+						}
+						break;
+				}
+			}
+			
+		}
+
+		private void deplPerso(int direction, int keyCode)
+		{
+			if (perso.getOrientation() == direction)
 			{
-				case 83:
-					if (perso.getOrientation() == Personnage.BAS)
-					{
-						perso.deplacer();
-					} else
-					{
-						perso.rotation(Personnage.BAS);
-					}
-					ecran.repaint();
-				break;
-				case 68:
-					if (perso.getOrientation() == Personnage.DROITE)
-					{
-						perso.deplacer();
-					} else
-					{
-						perso.rotation(Personnage.DROITE);
-					}
-					ecran.repaint();
-					break;
-				case 90:
-					if (perso.getOrientation() == Personnage.HAUT)
-					{
-						perso.deplacer();
-					} else
-					{
-						perso.rotation(Personnage.HAUT);
-					}
-					ecran.repaint();
-					break;
-				case 81:
-					if (perso.getOrientation() == Personnage.GAUCHE)
-					{
-						perso.deplacer();
-					} else
-					{
-						perso.rotation(Personnage.GAUCHE);
-					}
-					ecran.repaint();
-					break;
+				perso.deplacer();
+			} else
+			{
+				perso.rotation(direction);
 			}
-			}
+			
+//			if (!keyPressed[keyCode])
+//			{
+//				perso.getSprite().refreshImg();
+//			}
+//			ecran.repaint();
 		}
 
 		public void keyReleased(KeyEvent event)
 		{
+			keyPressed[event.getKeyCode()] = false;
+			perso.setNextStatut(event.getKeyCode(), false);
 		}
 
 		public void keyTyped(KeyEvent event)

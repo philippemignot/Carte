@@ -14,6 +14,10 @@ public class Personnage implements Observateur
 	private int 	deplX = 0;
 	private int		deplY = 0;
 	private boolean anime = false;
+	private int		statutAnim = -1; // -1 - immobile
+	private ArrayList<Integer>	nextStatut = new ArrayList<Integer>();
+	private static Integer STATUT_NULL = new Integer(-1);
+
 	/**
 	 * L'orientation du personnage
 	 * 
@@ -40,6 +44,7 @@ public class Personnage implements Observateur
 		this.sprite = sprite;
 		this.orientation = orientation;
 		this.sprite.addObservateur(this);
+		this.nextStatut.add(-1);
 	}
 	
 	public void placer(int x, int y)
@@ -80,8 +85,11 @@ public class Personnage implements Observateur
 		{  
 			public void run() 
 			{ 
+				statutAnim = orientation;
 				sprite.startAnimation(Sprite.ANIM_PLAY_NORMAL);
 				
+				deplX = 0;
+				deplY = 0;
 				switch (orientation)
 				{
 					// bas
@@ -104,6 +112,20 @@ public class Personnage implements Observateur
 						x --;
 						break;
 				}
+				if (!nextStatut.contains(STATUT_NULL))
+				{
+					try
+					{
+						Thread.sleep(sprite.getIntervalleTpsAnim());
+						System.out.println("pause");
+					}catch(InterruptedException e2)
+					{
+						System.err.println("Pause du thread interrompue dans ImagePanel.startAnimation()");
+					}
+				}
+				sprite.refreshImg();
+				statutAnim = -1;
+//				sprite.refreshImg();
 			}
 			
 		}).start(); 
@@ -161,5 +183,47 @@ public class Personnage implements Observateur
     {
 	    // TODO Auto-generated method stub
 	    
+    }
+	
+	public void setNextStatut(int keyCode, boolean pressed)
+	{
+		switch(keyCode)
+		{
+			case 83:
+				updateNextStatut(0, pressed);
+			break;
+			case 68:
+				updateNextStatut(1, pressed);
+				break;
+			case 90:
+				updateNextStatut(2, pressed);
+				break;
+			case 81:
+				updateNextStatut(3, pressed);
+				break;
+		}
+		
+		if (nextStatut.isEmpty())
+		{
+			nextStatut.add(STATUT_NULL);
+		}
+	}
+
+	private void updateNextStatut(Integer statutCode, boolean pressed)
+    {
+	    if (pressed)
+	    {
+	    	if (nextStatut.contains(STATUT_NULL))
+	    	{
+	    		nextStatut.remove(STATUT_NULL);
+	    	}
+	    	nextStatut.add(statutCode);
+	    } else
+	    {
+	    	if (nextStatut.contains(statutCode))
+	    	{
+	    		nextStatut.remove(statutCode);
+	    	}
+	    }
     }
 }
