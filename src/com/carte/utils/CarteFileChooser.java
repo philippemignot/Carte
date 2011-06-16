@@ -19,7 +19,6 @@ public class CarteFileChooser extends JFileChooser
     {
 		String absolutetPath = super.getSelectedFile().getAbsolutePath();
 		String[] fileNameParts = super.getSelectedFile().getName().split("\\.");
-		System.out.println(super.getFileFilter().getClass());
 
 		FileFilter actualFileFilter = super.getFileFilter();
 		if(actualFileFilter.getClass().getCanonicalName().endsWith("CrtEdFileFilter") && fileNameParts.length == 1)

@@ -117,7 +117,6 @@ public class Personnage implements Observateur
 					try
 					{
 						Thread.sleep(sprite.getIntervalleTpsAnim());
-						System.out.println("pause");
 					}catch(InterruptedException e2)
 					{
 						System.err.println("Pause du thread interrompue dans ImagePanel.startAnimation()");

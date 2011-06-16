@@ -275,15 +275,12 @@ public class Sprite implements Serializable, Observable
 					break;
 			}
 			
-			if (i != 0)
+			try
 			{
-				try
-				{
-					Thread.sleep(intervalleTpsAnim[imgStatActive]);
-				}catch(InterruptedException e2)
-				{
-					System.err.println("Pause du thread interrompue dans ImagePanel.startAnimation()");
-				}
+				Thread.sleep(intervalleTpsAnim[imgStatActive]);
+			}catch(InterruptedException e2)
+			{
+				System.err.println("Pause du thread interrompue dans ImagePanel.startAnimation()");
 			}
 			refreshImg();
 		}
@@ -295,7 +292,6 @@ public class Sprite implements Serializable, Observable
 		translateX = 0;
 		translateY = 0;
 		isAnimated = false;
-		System.out.println("Fin animation");
     }
 
 	private int[] getDiffToAdd()
@@ -363,7 +359,6 @@ public class Sprite implements Serializable, Observable
 		g2D = imgDraw.createGraphics();
 		g2D.drawImage(image, -imgAnimX*32, -imgStatActive*32, image.getWidth(null), image.getHeight(null), null);
 		updateObservateur();
-		System.out.println("refresh");
     }
 
 	/**
