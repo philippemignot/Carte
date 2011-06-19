@@ -825,7 +825,7 @@ public class Carte extends JPanel implements Observateur, MouseListener, Seriali
 		
 		return sprites;
 	}
-
+	
 	/**
 	 * Renvoie les informations de taille.
 	 * 

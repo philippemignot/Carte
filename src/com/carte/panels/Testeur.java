@@ -234,6 +234,9 @@ public class Testeur
 							deplPerso(Personnage.GAUCHE, 81);
 						}
 						break;
+					case 32:
+						declencherAnim();
+						break;
 				}
 			}
 			
@@ -266,6 +269,68 @@ public class Testeur
 		{
 			
 		}    	
+		
+		public void declencherAnim()
+		{
+			for (int n = 0 ; n < nbrNiveaux ; n ++)
+			{
+				Sprite spr1 = carte.getCase(persoActif.getX(), persoActif.getY()).getSprite(n + 1);
+				if (spr1.hasAnimation())
+				{
+					spr1.startAnimation(Sprite.ANIM_PLAY_NORMAL);
+				}
+				
+				int[] spriteSuivant = {0,0};
+				boolean bordure = false;
+				switch (persoActif.getOrientation())
+				{
+					case 0:
+						if (persoActif.getY() == nbrCol - 1)
+						{
+							bordure = true;
+						} else
+						{
+							spriteSuivant[1] = 1;
+						}
+					break;
+					case 1:
+						if (persoActif.getX() == nbrLignes - 1)
+						{
+							bordure = true;
+						} else
+						{
+							spriteSuivant[0] = 1;
+						}
+					break;
+					case 2:
+						if (persoActif.getY() == 0)
+						{
+							bordure = true;
+						} else
+						{
+							spriteSuivant[1] = -1;
+						}
+					break;
+					case 3:
+						if (persoActif.getX() == 0)
+						{
+							bordure = true;
+						} else
+						{
+							spriteSuivant[0] = -1;
+						}
+					break;
+				}
+				if (!bordure)
+				{
+					Sprite spr2 = carte.getCase(persoActif.getX() + spriteSuivant[0], persoActif.getY() + spriteSuivant[1]).getSprite(n + 1);
+					if (spr2.hasAnimation())
+					{
+						spr2.startAnimation(Sprite.ANIM_PLAY_NORMAL);
+					}
+				}
+			}
+		}
     }
     
     private void pause(){
@@ -276,6 +341,5 @@ public class Testeur
 			e.printStackTrace();
 		}
     }
-
 
 }

@@ -117,7 +117,7 @@ public class Sprite implements Serializable, Observable
 
 			// Si on a plusieurs lignes, alors on set les infos d'animation
 			int nbLignes = getMaxStatImg();
-			animation = (nbLignes > 0 ) ? true : false;
+			animation = (nbLignes > 1 ) ? true : false;
 			if(animation)
 			{
 				typeAnim =  new int[nbLignes];
@@ -504,6 +504,11 @@ public class Sprite implements Serializable, Observable
 		img = (img >= getMaxStatImg()) ? imgStatActive : img;
 		imgStatActive = img;
 		refreshImg();
+	}
+	
+	public boolean hasAnimation()
+	{
+		return animation;
 	}
 
 	public int getIntervalleTpsAnim()

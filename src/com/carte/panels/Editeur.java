@@ -862,7 +862,6 @@ public class Editeur
 											carte.getCases()[a][b].setSprite(spr,
 													k + 1);
 										}
-
 									}
 								}			        		
 							} catch (ClassNotFoundException e) 
