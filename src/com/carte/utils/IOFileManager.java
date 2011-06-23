@@ -5,12 +5,6 @@ import java.util.ArrayList;
 
 public abstract class IOFileManager
 {
-	@SuppressWarnings("rawtypes")
-	protected ArrayList elementsToSave;
-	@SuppressWarnings("rawtypes")
-    protected ArrayList elementsLoaded;
-	@SuppressWarnings("rawtypes")
-	protected ArrayList elementsStructure;
 	protected String dirPath;
 	protected String fileName;
 	protected String fileExtension;
@@ -30,10 +24,6 @@ public abstract class IOFileManager
 		this(new File(""));
 	}
 
-	public abstract boolean save();
-
-	public abstract ArrayList load();
-
 	public void selectFile(String dirPath, String fileName, String fileExtension)
 	{
 		this.dirPath = dirPath;
@@ -41,21 +31,6 @@ public abstract class IOFileManager
 		this.fileExtension = fileExtension;
 
 		this.file = new File(dirPath + "/" + fileName + "." + fileExtension);
-	}
-
-	@SuppressWarnings("rawtypes")
-    public void setGivenElements(ArrayList elements)
-	{
-		this.elementsToSave = elements;
-	}
-
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	public void addGivenElements(ArrayList elementsSupp)
-	{
-		for (int i = 0; i < elementsSupp.size(); i++)
-		{
-			this.elementsToSave.add(elementsSupp);
-		}
 	}
 	
 	public String getDirPath()
@@ -76,16 +51,5 @@ public abstract class IOFileManager
 	public File getFile()
 	{
 		return file;
-	}
-	
-	@SuppressWarnings("rawtypes")
-    public ArrayList getGivenElements()
-	{
-		return elementsToSave;
-	}
-	
-	public void setElementsStructure(ArrayList elementsStructure)
-	{
-		this.elementsStructure = elementsStructure;
 	}
 }
