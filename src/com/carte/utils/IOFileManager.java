@@ -15,8 +15,9 @@ public abstract class IOFileManager
 		this.file = file;
 
 		dirPath = file.getParent();
-		fileName = file.getName().split("\\.", 1)[0];
-		fileExtension = file.getName().split("\\.", 1)[1];
+		String[] fileInfo = file.getName().split("\\.", 2);
+		fileName = fileInfo[0];
+		fileExtension = fileInfo[1];
 	}
 
 	public IOFileManager()
