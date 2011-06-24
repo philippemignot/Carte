@@ -34,25 +34,39 @@ public class IBinaryFileManager extends IOFileManager
 	{
 		elementsStructure = elementsToLoad;
 		indexLoading = 0;
-		return load(indexLoading, elementsStructure.size(), false);
+		return load(indexLoading, elementsStructure.size(), false, false);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public ArrayList load(ArrayList elementsToLoad, boolean openStream)
+	{
+		elementsStructure = elementsToLoad;
+		indexLoading = 0;
+		return load(indexLoading, elementsStructure.size(), openStream, false);
 	}
 	
 	@SuppressWarnings("rawtypes")
     public ArrayList load(int nbToLoad)
 	{
-		return load(indexLoading, nbToLoad, false);
+		return load(indexLoading, nbToLoad, false, false);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public ArrayList load(int nbToLoad, boolean openStream)
+	{
+		return load(indexLoading, nbToLoad, openStream, false);
 	}
 	
 	@SuppressWarnings("rawtypes")
     public ArrayList loadAll(boolean openStream, boolean closeStream)
 	{
-		return load(0, elementsStructure.size(), closeStream);
+		return load(0, elementsStructure.size(), openStream, closeStream);
 	}
 	
 	@SuppressWarnings("rawtypes")
     public ArrayList loadLasting()
 	{
-		return load(indexLoading, elementsStructure.size() - indexLoading, true);
+		return load(indexLoading, elementsStructure.size() - indexLoading, false, true);
 	}
 	
 	public boolean closeInputStream()
@@ -101,8 +115,12 @@ public class IBinaryFileManager extends IOFileManager
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	protected ArrayList load(int startLoadingIndex, int nbToLoad, boolean readingFinished)
+	protected ArrayList load(int startLoadingIndex, int nbToLoad, boolean startNewStream, boolean readingFinished)
 	{
+		if (startNewStream)
+		{
+			this.openInputStream();
+		}
 		elementsLoaded = new ArrayList();
 		
 		try {

@@ -1,6 +1,7 @@
 package com.carte.panels;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -23,6 +24,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
@@ -44,6 +46,7 @@ import com.carte.sprites.Sprite;
 import com.carte.utils.CarteFileChooser;
 import com.carte.utils.CrtEdFileFilter;
 import com.carte.utils.IBinaryFileManager;
+import com.carte.utils.ITextFileManager;
 import com.carte.utils.OBinaryFileManager;
 import com.carte.utils.OTextFileManager;
 import com.carte.utils.dialog.InputDialog;
@@ -60,14 +63,14 @@ public class Editeur
 	private Insets insetsScreen; // Insets de l'écran
 	private Dimension maxSize; // Dimension maximale possible
 	private boolean isFirstDialog = true; // Indique si il s'agit de la fenêtre
-										  // d'ouverture
+	// d'ouverture
 
 	// Paramètres
 	private Properties parametres; // Les paramètres nécessaires à la création
-								   // d'une carte
+	// d'une carte
 	// Clés des paramètres
 	private String[] parametersKeys = {"nbrNiveaux", "nbrPixels", "nbrLignes",
-	        "nbrColonnes"};
+	"nbrColonnes"};
 	private int nbrNiveaux = 4; // nombre total de niveaux
 	private int nbrPixels = 32; // nombre de pixel du coté d'une case (carrée)
 	private int nbrLignes = 12; // nombre de lignes de la carte
@@ -102,9 +105,9 @@ public class Editeur
 	private JPanel conteneur; // Le conteneur général
 	CarteFileChooser fileChooser = new CarteFileChooser("sauvegardes/");
 	CrtEdFileFilter filtreCrt = new CrtEdFileFilter(".carte",
-	        "Fichier Editeur de carte");
+	"Fichier Editeur de carte");
 	CrtEdFileFilter filtreCrtTxt = new CrtEdFileFilter(".carte.txt",
-	        "Fichier Carte explicite");
+	"Fichier Carte explicite");
 
 	// Actions
 	private EchapAction echapAction; // Action de la touche Echap
@@ -164,7 +167,7 @@ public class Editeur
 			else
 			{
 				parametres.setProperty(parametersKeys[i],
-				        String.valueOf(param[i]));
+						String.valueOf(param[i]));
 			}
 		}
 
@@ -191,7 +194,7 @@ public class Editeur
 		// Gestion du clavier
 		initActions();
 		fileChooser.removeChoosableFileFilter(fileChooser
-		        .getAcceptAllFileFilter());
+				.getAcceptAllFileFilter());
 		fileChooser.addChoosableFileFilter(filtreCrtTxt);
 		fileChooser.addChoosableFileFilter(filtreCrt);
 
@@ -207,9 +210,9 @@ public class Editeur
 		Dimension d = tk.getScreenSize();
 		insetsScreen = tk.getScreenInsets(fenetre.getGraphicsConfiguration());
 		int width =
-		        (int) (d.getWidth() - insetsScreen.left - insetsScreen.right);
+			(int) (d.getWidth() - insetsScreen.left - insetsScreen.right);
 		int height =
-		        (int) (d.getHeight() - (insetsScreen.top + insetsScreen.bottom));
+			(int) (d.getHeight() - (insetsScreen.top + insetsScreen.bottom));
 		maxSize = new Dimension(width, height);
 		fenetre.setMaximumSize(maxSize);
 
@@ -246,19 +249,19 @@ public class Editeur
 	{
 		menuNew.addActionListener(new NewCarteListener(isFirstDialog));
 		menuNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
-		        KeyEvent.CTRL_MASK));
+				KeyEvent.CTRL_MASK));
 		menuNew.setMnemonic('N');
 		menuFichier.add(menuNew);
 
 		menuSave.addActionListener(new SauvegarderListener());
 		menuSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-		        KeyEvent.CTRL_MASK));
+				KeyEvent.CTRL_MASK));
 		menuSave.setMnemonic('S');
 		menuFichier.add(menuSave);
 
 		menuLoad.addActionListener(new ChargerListener());
 		menuLoad.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L,
-		        KeyEvent.CTRL_MASK));
+				KeyEvent.CTRL_MASK));
 		menuLoad.setMnemonic('L');
 		menuFichier.add(menuLoad);
 
@@ -318,12 +321,12 @@ public class Editeur
 		public void actionPerformed(ActionEvent arg0)
 		{
 			String[] titles =
-			        {"Nombre de niveaux", "Taille d'un sprite (en px)",
-			                "Nombre de lignes", "Nombre de colonne"};
+			{"Nombre de niveaux", "Taille d'un sprite (en px)",
+					"Nombre de lignes", "Nombre de colonne"};
 			String[] defaults =
-			        getParametersFromProperties(parametres, parametersKeys);
+				getParametersFromProperties(parametres, parametersKeys);
 			InputDialog dialogNew =
-			        new InputDialog(null, "Nouvelle carte", true, titles);
+				new InputDialog(null, "Nouvelle carte", true, titles);
 			dialogNew.setTextIntro("Paramètres de la nouvelle carte");
 			dialogNew.setDefaults(defaults);
 			dialogNew.setTextOkButton("Créer");
@@ -392,7 +395,7 @@ public class Editeur
 			{
 				File fichier = fileChooser.getSelectedFile();
 				if (fileChooser.getFileFilter() == filtreCrt
-				        && filtreCrt.accept(fichier))
+						&& filtreCrt.accept(fichier))
 				{
 					System.out.println("Sauvegarde carte binaire en cours...");
 					ArrayList elementsToSave = new ArrayList();
@@ -408,7 +411,7 @@ public class Editeur
 							for (int k = 0; k < nbrNiveaux; k++)
 							{
 								elementsToSave.add(carte.getCases()[i][j]
-								        .getSprite(k + 1).getCode());
+								                                       .getSprite(k + 1).getCode());
 							}
 
 						}
@@ -419,10 +422,10 @@ public class Editeur
 					iobfm.save();
 				}
 				else if (fileChooser.getFileFilter() == filtreCrtTxt
-				        && filtreCrtTxt.accept(fichier))
+						&& filtreCrtTxt.accept(fichier))
 				{
 					System.out
-					        .println("Sauvegarde carte explicite en cours...");
+					.println("Sauvegarde carte explicite en cours...");
 					ArrayList elementsToSave = new ArrayList();
 					elementsToSave.add(nbrPixels);
 					elementsToSave.add(nbrLignes);
@@ -432,7 +435,7 @@ public class Editeur
 					OTextFileManager otfm = new OTextFileManager(fichier);
 					otfm.addElementsToSave(elementsToSave, true);
 					elementsToSave.clear();
-					
+
 					elementsToSave.add("codeImage");
 					otfm.addElementsToSave(elementsToSave, true);
 					elementsToSave.clear();
@@ -446,17 +449,17 @@ public class Editeur
 							for (int k = 1; k <= nbrNiveaux; k++)
 							{
 								if (!cases[i][j].getSprite(k).getCode()
-								        .isEmpty())
+										.isEmpty())
 								{
+									elementsToSave.add(j);
+									elementsToSave.add(i);
+									elementsToSave.add(k);
 									elementsToSave.add(cases[i][j].getSprite(k)
-									        .getCode());
+											.getCode());
+									otfm.addElementsToSave(elementsToSave);
+									elementsToSave.clear();
 								}
-								else
-								{
-									elementsToSave.add("00000");
-								}
-								otfm.addElementsToSave(elementsToSave);
-								elementsToSave.clear();
+
 							}
 						}
 					}
@@ -466,10 +469,10 @@ public class Editeur
 				{
 					// Si vous n'avez pas spécifié une extension valide !
 					JOptionPane
-					        .showMessageDialog(
-					                null,
-					                "Erreur d'extension de fichier ! \nLa sauvegarde a échoué !",
-					                "Erreur", JOptionPane.ERROR_MESSAGE);
+					.showMessageDialog(
+							null,
+							"Erreur d'extension de fichier ! \nLa sauvegarde a échoué !",
+							"Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -484,290 +487,92 @@ public class Editeur
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
-
-			// String[] titles = {""};
-			// File racine = new File("sauvegardes");
-			// int t = 0;
-			// ArrayList<String> fichiersText = new ArrayList<String>();
-			// for (String s : racine.list())
-			// {
-			// if (!new File("sauvegardes/" + s).isDirectory() &&
-			// s.endsWith("txt"))
-			// {
-			// fichiersText.add(s);
-			// t++;
-			// }
-			// }
-			// int textNumber = fichiersText.size();
-			// int[] groupes = new int[textNumber];
-			//
-			// if(textNumber > 0)
-			// {
-			// titles = new String[textNumber];
-			// for(int tx = 0 ; tx < textNumber ; tx ++)
-			// {
-			// titles[tx] = fichiersText.get(tx);
-			// groupes[tx] = 1;
-			// }
-			// }
-			//
-			// RadioDialog dialogNew =
-			// new RadioDialog(null, "Chargement", true, titles, groupes);
-			// dialogNew.setTextIntro("Fichier à charger :");
-			// dialogNew.setTextOkButton("Charger");
-			//
-			// String[] results = (dialogNew.showDialog());
-			// boolean cancelled = true;
-			//
-			// // Test de la réponse : si tout est vide, on ne fait rien
-			// for (int j = 0; j < results.length; j++)
-			// {
-			// if (!results[j].equals("-1"))
-			// {
-			// cancelled = false;
-			// results[0] = results[j];
-			// }
-			// }
-			//
-			// if (!cancelled)
-			// {
 			if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 			{
+				String[][][] codesCases;
+				boolean donneesOk = true;
+				String fileName = "";
 				File fichier = fileChooser.getSelectedFile();
-				if (fileChooser.getFileFilter().accept(fichier))
+				if (fileChooser.getFileFilter() == filtreCrtTxt
+						&& filtreCrtTxt.accept(fichier))
 				{
+					ITextFileManager itfm = new ITextFileManager(fichier);
+					ArrayList donneesLues = itfm.load(1, true);
 
-					// fileChooser.approveSelection();
+					if (donneesLues.size() >= 4)
+					{
+						nbrPixels = new Integer((Integer) donneesLues.get(0));
+						nbrLignes = new Integer((Integer) donneesLues.get(1));
+						nbrColonnes = new Integer((Integer) donneesLues.get(2));
+						nbrNiveaux = new Integer((Integer) donneesLues.get(3));
+					} else
+					{
+						donneesOk = false;
+					}
 
-					// try
-					// {
-					// FileReader fw =
-					// new FileReader(new File(results[0] + ".txt"));
-					//
-					// int i;
-					// // On remet tous les caractères lus dans un String
-					// String str = "";
-					// boolean donneesOk = true;
-					//
-					// // Lecture des paramètres
-					// while ((i = fw.read()) != 10)
-					// {
-					// if (i != 10 && i != 13)
-					// str += (char) i;
-					// }
-					//
-					// System.out.println(str);
-					//
-					// String[] param = str.split(" ");
-					//
-					// // On vérifie que l'on a bien le bon nombre de paramètres
-					// et
-					// // que ce sont des nombres
-					// if (param.length == parametersKeys.length)
-					// {
-					// for (int n = 0; n < parametersKeys.length; n++)
-					// {
-					// System.out.print("[" + param[n] + "]");
-					// if (!param[n].matches("[0-9]*"))
-					// {
-					// donneesOk = false;
-					// }
-					// }
-					// System.out.println("");
-					// }
-					// else
-					// {
-					// donneesOk = false;
-					// }
-					//
-					// if (donneesOk)
-					// {
-					// nbrPixels = new Integer(param[0]);
-					// nbrLignes = new Integer(param[1]);
-					// nbrColonnes = new Integer(param[2]);
-					// nbrNiveaux = new Integer(param[3]);
-					//
-					// // Lecture des codes images
-					// int nbrCases = nbrLignes * nbrColonnes;
-					// String[] codesCases = new String[nbrCases];
-					// int n = 0;
-					// codesCases[0] = "";
-					// while ((i = fw.read()) != -1)
-					// {
-					//
-					// if (i != 10 && i != 13)
-					// {
-					// codesCases[n] += (char) i;
-					// }
-					//
-					// if (i == 10 && n < (nbrCases - 1))
-					// {
-					// n++;
-					// codesCases[n] = "";
-					// }
-					// }
-					//
-					// // Si il y a eu moins de lignes chargées, on charge
-					// // quand même mais cela donnera peut-être n'importe quoi
-					// // C'est à l'utilisateur de donner un bon fichier
-					// if (n < nbrCases - 1)
-					// {
-					// JOptionPane
-					// .showMessageDialog(
-					// null,
-					// "Nombre de lignes",
-					// "Il y a moins de données qu'attendues. Il est possible que la carte ne se charge pas correctement.",
-					// JOptionPane.INFORMATION_MESSAGE);
-					// }
-					//
-					// CaseNiveaux[][] casesChargees =
-					// new CaseNiveaux[nbrLignes][nbrColonnes];
-					//
-					//
-					//
-					//
-					//
-					// for (int a = 0; a < nbrLignes; a++)
-					// {
-					// for (int b = 0; b < nbrColonnes; b++)
-					// {
-					// // On lit les codes de chaque case
-					// String[] codes =
-					// codesCases[a * nbrColonnes + b]
-					// .split(" ");
-					// // Si il y a moins de niveaux, on peut quand
-					// // même charger
-					// if (codes.length <= nbrNiveaux)
-					// {
-					// for (int k = 0; k < codes.length; k++)
-					// {
-					// Sprite spr = new Sprite(nbrPixels, nbrPixels);
-					// if (codes[k].matches("[0-9]{5}")
-					// && !codes[k].equals("00000"))
-					// {
-					// Image img = chargerImage(codes[k]);
-					// spr.setImage(img, new String(
-					// codes[k]));
-					// if (img != null)
-					// System.out.println(codes[k]
-					// + " : Image chargée");
-					// else
-					// System.err
-					// .println("Image chargée nulle");
-					// System.out.flush();
-					// }
-					// else
-					// {
-					// spr.setImage(null, "");
-					// System.err.println(codes[k]
-					// + " : code incorrect");
-					// System.out.flush();
-					// }
-					// casesChargees[a][b] =
-					// new CaseNiveaux(nbrPixels,
-					// nbrPixels, Color.red,
-					// Color.white, nbrNiveaux);
-					// casesChargees[a][b].setSprite(spr,
-					// k + 1);
-					// System.out
-					// .println("Fin chargement  : ["
-					// + a
-					// + "]["
-					// + b
-					// + "] niveau "
-					// + (k + 1)
-					// + " "
-					// + casesChargees[a][b]
-					// .getSprite(
-					// k + 1)
-					// .getCode());
-					// System.out.flush();
-					// }
-					// }
-					// }
-					// }
-					//
-					//
-					// // On crée la nouvelle carte puis on lui charge les
-					// // données récupérées
-					// for (int x = 0; x < nbrLignes; x++)
-					// {
-					// for (int y = 0; y < nbrColonnes; y++)
-					// {
-					// for (int k = 1; k <= nbrNiveaux; k++)
-					// {
-					// System.out.println("Après chargement  : ["
-					// + x
-					// + "]["
-					// + y
-					// + "] niveau "
-					// + k
-					// + " "
-					// + casesChargees[x][y].getSprite(k)
-					// .getCode());
-					// }
-					// }
-					// }
-					// if (carte != null)
-					// cleanCarte();
-					//
-					// createCarte();
-					//
-					// carte.copieCases(casesChargees, carte.getCases());
-					// // for (int x = 0; x < nbrLignes; x++)
-					// // {
-					// // for (int y = 0; y < nbrColonnes; y++)
-					// // {
-					// // for (int k = 1; k <= nbrNiveaux; k++)
-					// // {
-					// //
-					// System.out.println(casesChargees[x][y].getSprite(k).getCode()
-					// // + " -> " +
-					// // carte.getCases()[x][y].getSprite(k).getCode());
-					// // }
-					// // }
-					// // }
-					// // fenetre.repaint();
-					// System.out.println("Carte chargée");
-					// }
-					// else
-					// {
-					// JOptionPane
-					// .showMessageDialog(
-					// null,
-					// "Les paramètres contenus au début du fichier sont invalides.\nFormat attendu : int int int int\nLa carte n'a pas pu être chargée.",
-					// "Paramètres invalides",
-					// JOptionPane.ERROR_MESSAGE);
-					//
-					// System.err
-					// .println("Paramètres invalides dans le fichier à charger");
-					// }
-					//
-					// fw.close();
-					//
-					// }
-					// catch (FileNotFoundException e1)
-					// {
-					// JOptionPane.showMessageDialog(null, "IO Error ",
-					// "Le fichier spécifié n'existe pas.",
-					// JOptionPane.ERROR_MESSAGE);
-					//
-					// System.err.println("Fichier non trouvé : "
-					// + e1.getMessage());
-					// }
-					// catch (IOException e)
-					// {
-					// JOptionPane
-					// .showMessageDialog(
-					// null,
-					// "IO Error ",
-					// "Un problème est survenu lors de la lecture du fichier !",
-					// JOptionPane.ERROR_MESSAGE);
-					//
-					// System.err.println("IO erreur pendant l'enregistrement : "
-					// + e.getMessage());
-					// }
+					// Lecture des codes images
+					//					int nbrCases = nbrLignes * nbrColonnes;
+					//					String[] codesCases = new String[nbrCases];
+					//					int n = 0;
+					//					codesCases[0] = "";
 
+					//					CaseNiveaux[][] casesChargees =
+					//						new CaseNiveaux[nbrLignes][nbrColonnes];
+
+					//					for (int a = 0; a < nbrLignes; a++)
+					//					{
+					//						for (int b = 0; b < nbrColonnes; b++)
+					//						{
+					//							for (int k = 0; k < nbrNiveaux; k++)
+					//							{
+					//								casesChargees[a][b] =
+					//									new CaseNiveaux(nbrPixels,
+					//											nbrPixels, Color.red,
+					//											Color.white, nbrNiveaux);
+					//							}
+					//						}
+					//					}
+					//					
+					if (donneesOk)
+					{
+						codesCases =
+							new String[nbrLignes][nbrColonnes][nbrNiveaux];
+
+						// Initialisation
+						for (int i = 0; i < nbrLignes; i++)
+						{
+							for (int j = 0; j < nbrColonnes; j++)
+							{
+								for (int k = 0; k < nbrNiveaux; k++)
+								{
+
+									codesCases[i][j][k] = "";
+								}
+
+							}
+						}
+
+						donneesLues = itfm.load(3);
+						donneesLues = itfm.loadLasting();
+
+						Iterator ite = donneesLues.iterator();
+						while (ite.hasNext())
+						{
+							ArrayList line = (ArrayList) ite.next();
+							if (line.size() >= 4)
+							{
+								codesCases[(Integer) line.get(0)][(Integer) line.get(1)][(Integer) line.get(2) - 1] = (String) line.get(3);
+							}
+							else
+							{
+								donneesOk = false;
+							}
+						}
+					}
+					fileName = itfm.getFileName();
+				}
+				else
+				{
 					IBinaryFileManager iobfm = new IBinaryFileManager(fichier);
 
 					ArrayList elementsType = new ArrayList();
@@ -784,14 +589,14 @@ public class Editeur
 					nbrColonnes = (Integer) carteLoaded.get(3);
 
 					elementsType.clear();
-					elementsType.add(new String("00000"));
+					elementsType.add(new String(""));
 					nbOfElements[0] = nbrNiveaux * nbrLignes * nbrColonnes;
 					iobfm.addNewElementsStructure(elementsType, nbOfElements);
 
 					carteLoaded.clear();
 					carteLoaded = iobfm.loadAll(false, true);
-					String[][][] codesCases =
-					        new String[nbrLignes][nbrColonnes][nbrNiveaux];
+					codesCases =
+						new String[nbrLignes][nbrColonnes][nbrNiveaux];
 
 					int nb = 0;
 					for (int i = 0; i < nbrLignes; i++)
@@ -802,17 +607,35 @@ public class Editeur
 							{
 
 								codesCases[i][j][k] =
-								        (String) carteLoaded.get(nb);
+									(String) carteLoaded.get(nb);
 								nb++;
 							}
-
 						}
 					}
-
+					fileName = iobfm.getFileName();
+				}
+				if (donneesOk)
+				{
 					if (carte != null)
 						cleanCarte();
 
 					createCarte();
+					
+					// Initialisation
+					codesCases = new String[nbrLignes][nbrColonnes][nbrNiveaux];
+					for (int i = 0; i < nbrLignes; i++)
+					{
+						for (int j = 0; j < nbrColonnes; j++)
+						{
+							for (int k = 0; k < nbrNiveaux; k++)
+							{
+
+								codesCases[i][j][k] = "";
+							}
+
+						}
+					}
+					
 					for (int a = 0; a < nbrLignes; a++)
 					{
 						for (int b = 0; b < nbrColonnes; b++)
@@ -825,15 +648,15 @@ public class Editeur
 							{
 								Sprite spr = new Sprite(nbrPixels, nbrPixels);
 								if (codesCases[a][b][k].matches("[0-9]{5}")
-								        && !codesCases[a][b][k].equals("00000"))
+										&& !codesCases[a][b][k].equals("00000"))
 								{
 									Image img =
-									        chargerImage(codesCases[a][b][k]);
+										chargerImage(codesCases[a][b][k]);
 									spr.setImage(img, new String(
-									        codesCases[a][b][k]), 0);
+											codesCases[a][b][k]), 0);
 									if (img == null)
 										System.err
-										        .println("Image chargée nulle");
+										.println("Image chargée nulle");
 								}
 								else
 								{
@@ -846,21 +669,29 @@ public class Editeur
 					}
 
 					fenetre.setTitle("Editeur de carte - "
-					        + iobfm.getFileName());
-
-				}
-				else
+							+ fileName);
+				} else
 				{
-					// Si vous n'avez pas spécifié une extension valide !
 					JOptionPane
-					        .showMessageDialog(
-					                null,
-					                "Erreur d'extension de fichier ! \nLe chargement a échoué !",
-					                "Erreur", JOptionPane.ERROR_MESSAGE);
+					.showMessageDialog(
+							null,
+							"Mauvaises donnees : parametrage impossible",
+							"Problème lors du chargement", JOptionPane.ERROR_MESSAGE);
 				}
 			}
+			else
+			{
+				// Si vous n'avez pas spécifié une extension valide !
+				JOptionPane
+				.showMessageDialog(
+						null,
+						"Erreur d'extension de fichier ! \nLe chargement a échoué !",
+						"Erreur", JOptionPane.ERROR_MESSAGE);
+			}
 		}
+
 	}
+
 
 	/**
 	 * Ecouteur du menu Default parameters
@@ -871,14 +702,14 @@ public class Editeur
 		public void actionPerformed(ActionEvent arg0)
 		{
 			String[] titles =
-			        {"Nombre de niveaux", "Taille d'un sprite (en px)",
-			                "Nombre de lignes", "Nombre de colonne"};
+			{"Nombre de niveaux", "Taille d'un sprite (en px)",
+					"Nombre de lignes", "Nombre de colonne"};
 
 			String[] defaults =
-			        getParametersFromProperties(parametres, parametersKeys);
+				getParametersFromProperties(parametres, parametersKeys);
 
 			InputDialog dialogParam =
-			        new InputDialog(null, "Paramètres par défaut", true, titles);
+				new InputDialog(null, "Paramètres par défaut", true, titles);
 			dialogParam.setDefaults(defaults);
 			dialogParam.setTextOkButton("Sauvegarder");
 			dialogParam.setTextIntro("Paramètres par défaut");
@@ -909,7 +740,7 @@ public class Editeur
 		{
 			// Création des éléments
 			PCheckBox nivPersoActive =
-			        new PCheckBox("Niveau fixe pour les personnages");
+				new PCheckBox("Niveau fixe pour les personnages");
 
 			String[] niveaux = new String[nbrNiveaux];
 			for (int i = 1; i <= nbrNiveaux; i++)
@@ -919,15 +750,15 @@ public class Editeur
 			PComboBox nivPerso = new PComboBox(niveaux);
 
 			PCheckBox quadriStart =
-			        new PCheckBox("Quadrillage affiché au démarrage");
+				new PCheckBox("Quadrillage affiché au démarrage");
 			PTextField testTextField =
-			        new PTextField("1", "Entrez un nombre :");
+				new PTextField("1", "Entrez un nombre :");
 
 			PersoDialog dialogOptions =
-			        new PersoDialog(null, "Options", true,
-			                PersoDialogLayout.Vertical);
+				new PersoDialog(null, "Options", true,
+						PersoDialogLayout.Vertical);
 			PanelElement groupNiv =
-			        dialogOptions.createGroup(PersoDialogLayout.Horizontal);
+				dialogOptions.createGroup(PersoDialogLayout.Horizontal);
 			groupNiv.addTitle("Niveaux fixes");
 			groupNiv.addElement(nivPersoActive);
 			groupNiv.addElement(nivPerso, true);
@@ -946,15 +777,15 @@ public class Editeur
 				if (nivPersoActive.isSelected())
 				{
 					System.out.println("Oui : "
-					        + (String) nivPerso.getSelectedItem());
+							+ (String) nivPerso.getSelectedItem());
 				}
 				else
 				{
 					System.out.println("Non");
 				}
 				System.out.println("Quaddrillage "
-				        + (quadriStart.isSelected() ? "affiché" : "masqué")
-				        + " au démarrage");
+						+ (quadriStart.isSelected() ? "affiché" : "masqué")
+						+ " au démarrage");
 				System.out.println("Nombre " + testTextField.getText());
 			}
 		}
@@ -969,8 +800,8 @@ public class Editeur
 		// tableau taille×taille de cases nbrPixels×nbrPixels
 		// possédant un nombre de niveaux nbrNiveaux
 		carte =
-		        new Carte(nbrColonnes, nbrLignes, nbrPixels, nbrPixels,
-		                nbrNiveaux);
+			new Carte(nbrColonnes, nbrLignes, nbrPixels, nbrPixels,
+					nbrNiveaux);
 
 		// Création du panneau d'option : il possède nbrNiveaux niveaux
 		options = new Options(nbrNiveaux);
@@ -997,28 +828,28 @@ public class Editeur
 		scrollProprietes = new JScrollPane(caseProp);
 
 		scrollCarte
-		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollCarte
-		        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
 		scrollOptions
-		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollOptions
-		        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
 		scrollSelection
-		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollSelection
-		        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
 		scrollProprietes
-		        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollProprietes
-		        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
 		jspV =
-		        new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollCarte,
-		                scrollOptions);
+			new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollCarte,
+					scrollOptions);
 		jspV.setResizeWeight(0.85);
 		jspV.setOneTouchExpandable(true);
 
@@ -1027,8 +858,8 @@ public class Editeur
 		jspH.setOneTouchExpandable(true);
 
 		jspV2 =
-		        new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollProprietes,
-		                jspH);
+			new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollProprietes,
+					jspH);
 		jspV2.setResizeWeight(0.85);
 		jspV2.setOneTouchExpandable(true);
 
@@ -1081,14 +912,14 @@ public class Editeur
 								try
 								{
 									img =
-									        ImageIO.read(new File("images/" + s
-									                + "/" + f));
+										ImageIO.read(new File("images/" + s
+												+ "/" + f));
 								}
 								catch (IOException e)
 								{
 									System.err
-									        .println("IO erreur pendant le chargement de l'image : "
-									                + e.getMessage());
+									.println("IO erreur pendant le chargement de l'image : "
+											+ e.getMessage());
 								}
 							}
 						}
@@ -1131,8 +962,8 @@ public class Editeur
 		try
 		{
 			dos =
-			        new DataOutputStream(new BufferedOutputStream(
-			                new FileOutputStream(config)));
+				new DataOutputStream(new BufferedOutputStream(
+						new FileOutputStream(config)));
 			try
 			{
 				prop.store(dos, null); // Le second argument permet
@@ -1142,7 +973,7 @@ public class Editeur
 			{
 				saveOk = false;
 				System.err.println("IO erreur pendant l'enregistrement : "
-				        + e.getMessage());
+						+ e.getMessage());
 			}
 			try
 			{
@@ -1151,14 +982,14 @@ public class Editeur
 			catch (IOException e)
 			{
 				System.err.println("IO erreur pendant la fermeture du fux : "
-				        + e.getMessage());
+						+ e.getMessage());
 			}
 		}
 		catch (FileNotFoundException e1)
 		{
 			saveOk = false;
 			System.err.println("Fichier de configuration non trouvé : "
-			        + e1.getMessage());
+					+ e1.getMessage());
 		}
 
 		return saveOk;
@@ -1195,7 +1026,7 @@ public class Editeur
 		catch (FileNotFoundException e)
 		{
 			System.err.println("Fichier de configuration non trouvé : "
-			        + e.getMessage());
+					+ e.getMessage());
 		}
 		catch (IOException e)
 		{
@@ -1250,7 +1081,7 @@ public class Editeur
 		// options.getDeselecButton().setMnemonic(new Integer(KeyEvent.VK_L));
 
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke.getKeyStroke("ESCAPE"), "action escape");
+		.put(KeyStroke.getKeyStroke("ESCAPE"), "action escape");
 		fenetre.getRootPane().getActionMap().put("action escape", echapAction);
 
 		// actions des chiffres 1-9
@@ -1265,60 +1096,60 @@ public class Editeur
 		chiffre9Action = new Chiffre9Action();
 
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke.getKeyStroke('1'), "action chiffre 1");
+		.put(KeyStroke.getKeyStroke('1'), "action chiffre 1");
 		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 1", chiffre1Action);
+		.put("action chiffre 1", chiffre1Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke.getKeyStroke('2'), "action chiffre 2");
+		.put(KeyStroke.getKeyStroke('2'), "action chiffre 2");
 		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 2", chiffre2Action);
+		.put("action chiffre 2", chiffre2Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke.getKeyStroke('3'), "action chiffre 3");
+		.put(KeyStroke.getKeyStroke('3'), "action chiffre 3");
 		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 3", chiffre3Action);
+		.put("action chiffre 3", chiffre3Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke.getKeyStroke('4'), "action chiffre 4");
+		.put(KeyStroke.getKeyStroke('4'), "action chiffre 4");
 		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 4", chiffre4Action);
+		.put("action chiffre 4", chiffre4Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke.getKeyStroke('5'), "action chiffre 5");
+		.put(KeyStroke.getKeyStroke('5'), "action chiffre 5");
 		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 5", chiffre5Action);
+		.put("action chiffre 5", chiffre5Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke.getKeyStroke('6'), "action chiffre 6");
+		.put(KeyStroke.getKeyStroke('6'), "action chiffre 6");
 		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 6", chiffre6Action);
+		.put("action chiffre 6", chiffre6Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke.getKeyStroke('7'), "action chiffre 7");
+		.put(KeyStroke.getKeyStroke('7'), "action chiffre 7");
 		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 7", chiffre7Action);
+		.put("action chiffre 7", chiffre7Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke.getKeyStroke('8'), "action chiffre 8");
+		.put(KeyStroke.getKeyStroke('8'), "action chiffre 8");
 		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 8", chiffre8Action);
+		.put("action chiffre 8", chiffre8Action);
 		fenetre.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke.getKeyStroke('9'), "action chiffre 9");
+		.put(KeyStroke.getKeyStroke('9'), "action chiffre 9");
 		fenetre.getRootPane().getActionMap()
-		        .put("action chiffre 9", chiffre9Action);
+		.put("action chiffre 9", chiffre9Action);
 
 		// Actions du menu
 		undoAction = new UndoAction();
 
 		fenetre.getRootPane()
-		        .getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke
-		                .getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK),
-		                "action undo");
+		.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+		.put(KeyStroke
+				.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK),
+		"action undo");
 		fenetre.getRootPane().getActionMap().put("action undo", undoAction);
 
 		// Actions du mode aleatoire
 		aleaAction = new AleaAction();
 
 		fenetre.getRootPane()
-		        .getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-		        .put(KeyStroke
-		                .getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK),
-		                "action alea");
+		.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+		.put(KeyStroke
+				.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK),
+		"action alea");
 		fenetre.getRootPane().getActionMap().put("action alea", aleaAction);
 	}
 

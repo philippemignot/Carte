@@ -15,7 +15,7 @@ import com.carte.utils.Observateur;
 public class Sprite implements Serializable, Observable
 {
 	private Image image; // L'image du sprite
-	private String codeImage = "00000"; // Le code image correspondant au sprite
+	private String codeImage = ""; // Le code image correspondant au sprite
 	private int defImage; // L'image par défaut à afficher du sprite
 	private int largeur; // La largeur du sprite
 	private int hauteur; // La hauteur du sprite
