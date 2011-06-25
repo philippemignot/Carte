@@ -24,6 +24,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -489,7 +490,7 @@ public class Editeur
 		{
 			if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 			{
-				String[][][] codesCases;
+				String[][][] codesCases = null;
 				boolean donneesOk = true;
 				String fileName = "";
 				File fichier = fileChooser.getSelectedFile();
@@ -499,40 +500,17 @@ public class Editeur
 					ITextFileManager itfm = new ITextFileManager(fichier);
 					ArrayList donneesLues = itfm.load(1, true);
 
-					if (donneesLues.size() >= 4)
+					if (((ArrayList) donneesLues.get(0)).size() >= 4)
 					{
-						nbrPixels = new Integer((Integer) donneesLues.get(0));
-						nbrLignes = new Integer((Integer) donneesLues.get(1));
-						nbrColonnes = new Integer((Integer) donneesLues.get(2));
-						nbrNiveaux = new Integer((Integer) donneesLues.get(3));
+						nbrPixels = new Integer(stringToInteger( (String)((ArrayList) donneesLues.get(0)).get(0), ""));
+						nbrLignes = new Integer(stringToInteger( (String) ((ArrayList) donneesLues.get(0)).get(1), ""));
+						nbrColonnes = new Integer(stringToInteger( (String) ((ArrayList) donneesLues.get(0)).get(2), ""));
+						nbrNiveaux = new Integer(stringToInteger( (String) ((ArrayList) donneesLues.get(0)).get(3), ""));
 					} else
 					{
 						donneesOk = false;
 					}
 
-					// Lecture des codes images
-					//					int nbrCases = nbrLignes * nbrColonnes;
-					//					String[] codesCases = new String[nbrCases];
-					//					int n = 0;
-					//					codesCases[0] = "";
-
-					//					CaseNiveaux[][] casesChargees =
-					//						new CaseNiveaux[nbrLignes][nbrColonnes];
-
-					//					for (int a = 0; a < nbrLignes; a++)
-					//					{
-					//						for (int b = 0; b < nbrColonnes; b++)
-					//						{
-					//							for (int k = 0; k < nbrNiveaux; k++)
-					//							{
-					//								casesChargees[a][b] =
-					//									new CaseNiveaux(nbrPixels,
-					//											nbrPixels, Color.red,
-					//											Color.white, nbrNiveaux);
-					//							}
-					//						}
-					//					}
-					//					
 					if (donneesOk)
 					{
 						codesCases =
@@ -561,9 +539,13 @@ public class Editeur
 							ArrayList line = (ArrayList) ite.next();
 							if (line.size() >= 4)
 							{
-								codesCases[(Integer) line.get(0)][(Integer) line.get(1)][(Integer) line.get(2) - 1] = (String) line.get(3);
+								int colonne = stringToInteger( (String)line.get(0), "");
+								int ligne = stringToInteger( (String)line.get(1), "");
+								int niveau = stringToInteger( (String)line.get(2), "") - 1;
+								codesCases[ligne][colonne][niveau] = (String) line.get(3);
+//								System.out.println(ligne + " " + colonne + " " + niveau + " : " + (String) line.get(3));
 							}
-							else
+							else if (!(line.size() == 1 && line.get(0) == ""))
 							{
 								donneesOk = false;
 							}
@@ -598,6 +580,8 @@ public class Editeur
 					codesCases =
 						new String[nbrLignes][nbrColonnes][nbrNiveaux];
 
+					// Initialisation
+					codesCases = new String[nbrLignes][nbrColonnes][nbrNiveaux];
 					int nb = 0;
 					for (int i = 0; i < nbrLignes; i++)
 					{
@@ -620,21 +604,6 @@ public class Editeur
 						cleanCarte();
 
 					createCarte();
-					
-					// Initialisation
-					codesCases = new String[nbrLignes][nbrColonnes][nbrNiveaux];
-					for (int i = 0; i < nbrLignes; i++)
-					{
-						for (int j = 0; j < nbrColonnes; j++)
-						{
-							for (int k = 0; k < nbrNiveaux; k++)
-							{
-
-								codesCases[i][j][k] = "";
-							}
-
-						}
-					}
 					
 					for (int a = 0; a < nbrLignes; a++)
 					{

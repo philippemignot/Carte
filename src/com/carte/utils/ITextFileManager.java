@@ -109,25 +109,27 @@ public class ITextFileManager extends IOFileManager
 		
 		try
 		{
-			int i;
+			int i = 0;
 			int nbLine = 0;
 			// On remet tous les caractères lus dans un String
 			String str = "";
 			boolean donneesOk = true;
 
 			// Lecture des paramètres
-			while ((i = fr.read()) != -1 && (nbLine != nbLineToLoad))
+			while (i != -1 && (nbLine != nbLineToLoad))
 			{
+				str = "";
 				// On lit la ligne
-				while ((i = fr.read()) != 10)
+				while (!((i = fr.read()) == 10 || i == -1))
 				{
-					// 10 et 13 correspondent aux fins de ligne
+//					System.out.println(i);
+//					 10 et 13 correspondent aux fins de ligne
 					if (i != 10 && i != 13)
 					{
 						str += (char) i;
 					}
 				}
-				System.out.println(str);
+//				System.out.println(str);
 
 				String[] element = str.split(" ");
 				ArrayList line = new ArrayList();
@@ -136,7 +138,10 @@ public class ITextFileManager extends IOFileManager
 					line.add(element[k]);
 				}
 				elementsLoaded.add(line);
-				nbLine = (nbLineToLoad > 0) ? nbLine ++ : 0;
+				if (nbLineToLoad > 0)
+				{
+					nbLine ++;
+				}
 			}
 
 			if (readingFinished)
